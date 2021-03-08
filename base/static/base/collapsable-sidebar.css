@@ -1,0 +1,66 @@
+/* Collapsable sidebar CSS */
+
+.sidebar-contrast-dark {
+    color: aliceblue;
+}
+
+.sidebar-container {
+    margin: 0 auto;
+}
+
+button.btn {
+    color: aliceblue;
+}
+
+button.btn:hover {
+    background: rgb(55, 60, 97);
+    color: aliceblue;
+}
+
+#wrapper {
+    overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: 0;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .list-group {
+    width: 10rem;
+}
+
+.bg-sidebar {
+    background: rgb(36, 40, 65);
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: -10rem;
+}
+
+@media (max-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: -8rem;
+    }
+
+    #sidebar-wrapper .list-group {
+        width: 8rem;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,55 @@
+body {
+    background: rgb(16, 18, 29);
+}
+
+/* Navigation Section */
+nav .navbar-custom {
+    background-color: azure;
+}
+
+nav.navbar-lighter-dark {
+    background: rgb(36, 40, 65);
+}
+
+nav a.nav-link {
+    color:honeydew;
+}
+
+div ul li button.btn-mod {
+    color: grey;
+}
+
+div ul li button.btn-mod:hover {
+    color: whitesmoke;
+}
+
+
+
+/* Body Section */
+div.container {
+    margin-top: 3%;
+}
+
+div h1, h2, h3 {
+    color: honeydew
+}
+
+div h4.subtitles, p.subtitles {
+    color:lightgrey
+}
+
+div.card-quote-title {
+    background: rgb(58, 63, 68);
+}
+
+div.card-quote-body {
+    background: rgb(16, 18, 29);
+}
+
+div.card-height {
+    height: 400px;
+}
+
+div footer.quote-footer {
+    color: honeydew
+}
