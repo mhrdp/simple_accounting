@@ -31,11 +31,12 @@ button.btn:hover {
 }
 
 #sidebar-wrapper .list-group {
-    width: 10rem;
+    width: 5rem;
 }
 
 .bg-sidebar {
     background: rgb(36, 40, 65);
+    margin-top: 56px;
 }
 
 #page-content-wrapper {
@@ -43,16 +44,22 @@ button.btn:hover {
 }
 
 #wrapper.toggled #sidebar-wrapper {
-    margin-left: -10rem;
+    margin-left: -5rem;
+}
+
+.toggle-sidebar-mod {
+    margin-top: 4rem;
+    margin-left: 1rem;
+    display: inline-block;
 }
 
 @media (max-width: 768px) {
     #sidebar-wrapper {
-        margin-left: -8rem;
+        margin-left: -5rem;
     }
 
     #sidebar-wrapper .list-group {
-        width: 8rem;
+        width: 5rem;
     }
 
     #page-content-wrapper {

@@ -1,4 +1,5 @@
 {% extends 'base/base_login.html' %}
+{% load crispy_forms_tags %}
 
 {% block title%}
     Vislane Business
@@ -91,14 +92,15 @@
                 <h2 class="text-center">Login</h2>
                 <p class="subtitles">Please Log In With Your Account Here</p>
 
-                <form>
+                <form method="POST">
+                    {% csrf_token %}
                     <div class="form-group">
-                        <p class="subtitles">Username</p>
-                        <input type="text" class="form-control">
+                        <p class="subtitles">Username/Email</p>
+                        {{form.username}}
                     </div>
                     <div class="form-group">
                         <p class="subtitles">Password</p>
-                        <input type="password" class="form-control">
+                        {{form.password}}
                     </div>
                     <button class="btn btn-primary">Login</button>
                 </form>
