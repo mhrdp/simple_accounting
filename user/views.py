@@ -22,32 +22,47 @@ class LoginView(auth_views.LoginView):
 def company_profile(request):
     UserModel = get_user_model()
     profile = get_object_or_404(UserModel, username=request.user.username)
+    company_description = get_object_or_404(CompanyDetail, username=request.user.pk)
+    company_industry = get_object_or_404(CompanyIndustry, username=request.user.pk)
     content = {
-        'profile': profile
+        'profile': profile,
+        'company_description': company_description,
+        'company_industry': company_industry,
     }
     return render(request, 'user/profile.html', content)
 
+@login_required
 def company_profile_edit(request):
-    form_description = CompanyDetailForm()
-    form_industry = CompanyIndustryForm()
-    if form_description and form_industry:
+    description_empty = CompanyDetail.objects.filter(username=request.user.pk)
+    industry_empty = CompanyIndustry.objects.filter(username=request.user.pk)
+    if not description_empty and not industry_empty:
         form_description = CompanyDetailForm()
         form_industry = CompanyIndustryForm()
+        if request.method == 'POST':
+            form_description = CompanyDetailForm(request.POST or None)
+            form_industry = CompanyIndustryForm(request.POST or None)
+            if form_description.is_valid() and form_industry.is_valid():
+                save_form_description = form_description.save(commit=False)
+                save_form_industry = form_industry.save(commit=False)
+
+                save_form_description.username = request.user
+                save_form_industry.username = request.user
+                save_form_industry.save()
+                save_form_description.save()
     else:
         description = get_object_or_404(CompanyDetail, username=request.user.pk)
         industry = get_object_or_404(CompanyIndustry, username=request.user.pk)
-        if not description and not industry:
-            form_description = CompanyDetailForm(
-                request.POST or None, instance=description
-                )
-            form_industry = CompanyIndustryForm(
-                request.POST or None, instance=industry
+        form_description = CompanyDetailForm(
+            request.POST or None, instance=description
             )
-            if form_description.is_valid() and form_industry.is_valid():
-                form_description.save()
-                form_industry.save()
+        form_industry = CompanyIndustryForm(
+            request.POST or None, instance=industry
+        )
+        if form_description.is_valid() and form_industry.is_valid():
+            form_description.save()
+            form_industry.save()
 
-                return redirect('profile')
+            return redirect('profile')
     
     content = {
         'form_description': form_description,
@@ -57,7 +72,9 @@ def company_profile_edit(request):
 
 @login_required
 def user_logout(request):
-    logout(request)
+    logging_out = logout(request)
+    if logging_out:
+        return redirect('logout')
     content = {
         
     }

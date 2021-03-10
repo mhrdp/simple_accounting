@@ -108,4 +108,23 @@
         </div>  
     </div>
 </div>
+
+<div id="quotes"></div>
+
 {% endblock content%}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        var loginQuotes = new Array();
+        loginQuotes[0] = "<h2>Test1</h2>";
+        loginQuotes[1] = "<h2>Test2</h2>";
+        loginQuotes[2] = "<h2>Test3</h2>";
+        loginQuotes[3] = "<h2>Test4</h2>";
+
+        var randomPicker = Math.floor(Math.random()*loginQuotes.length);
+        $("#quotes").html(loginQuotes[randomPicker]);
+    })
+</script>
+
+{% endblock js%}

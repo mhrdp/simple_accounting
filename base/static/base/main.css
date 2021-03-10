@@ -30,8 +30,16 @@ div h1, h2, h3 {
     color: honeydew
 }
 
-div h4.subtitles, p.subtitles {
+.subtitles {
     color:lightgrey
+}
+
+.link-btn {
+    color: lightgrey
+}
+
+.link-btn:hover {
+    text-decoration: none;
 }
 
 div.card-quote-title {
