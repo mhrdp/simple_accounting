@@ -1,5 +1,6 @@
 div.sub-container-bg-light{
-    background: black;
-    width: 500px;
-    height: 500px
+    background: rgb(36, 40, 65);
+    padding: 10px;
+    border-radius: 10px;
+    min-height: 60vh;
 }

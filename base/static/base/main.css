@@ -2,9 +2,15 @@ body {
     background: rgb(16, 18, 29);
 }
 
+.margin-auto {
+    margin: 0 auto;
+}
+
 /* Navigation Section */
 nav .navbar-custom {
-    background-color: azure;
+    position: relative;
+    display: inline-block;
+    margin-left: 0;
 }
 
 nav.navbar-lighter-dark {
@@ -28,6 +34,10 @@ div ul li button.btn-mod:hover {
 /* Body Section */
 div h1, h2, h3 {
     color: honeydew
+}
+
+.error-notification {
+    color: tomato
 }
 
 .subtitles {

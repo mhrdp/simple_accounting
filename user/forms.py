@@ -1,4 +1,10 @@
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm, PasswordChangeForm, PasswordResetForm
+    )
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 from django import forms
 
@@ -8,14 +14,53 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(
         label='Email/Username',
         widget=forms.TextInput(
-            attrs={'class':'form-control'}
+            attrs={
+                'class':'form-control',
+                'placeholder': 'Username/Email',
+                }
         )
     )
     password = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'class':'form-control'}
+            attrs={
+                'class':'form-control',
+                'placeholder': 'Password',
+                }
         )
     )
+
+class ChangePasswordForm(PasswordChangeForm):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+
+class ResetPasswordForm(PasswordResetForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'example@email.com',
+                },
+        )
+    )
+    def clean_email(self):
+        UserModel = get_user_model()
+        email = self.cleaned_data['email']
+        if not UserModel.objects.filter(email__iexact=email, is_active=True).exists():
+            raise ValidationError(_('Sorry, no such email in our database'), code='invalid')
+        return email
 
 class CompanyDetailForm(forms.ModelForm):
     company_name = forms.CharField(

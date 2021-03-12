@@ -9,46 +9,63 @@
 {% endblock css%}
 
 {% block content %}
-<div class="float-right">
-    <div class="row">
-    <h3>{{company_description.company_name}}</h3>
+<div class="row">
+    <div class="mb-3 mr-5" style="margin-left:0">
+        <div class="mb-3 ml-3">
+            <h2>{{company_description.company_name}}</h3>
+            <h4 class="subtitles">Company Profile</h4>
+        </div>
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col">
+                    <a href="{% url 'edit' %}" class="link-btn">
+                        <button class="btn btn-md">
+                            Profile Edit
+                        </button>
+                    </a>
+                </div>
+                <!--
+                <div class="col-7">
+                    <a href="{% url 'logout' %}" class="link-btn">
+                        <button class="btn btn-md ml-2">
+                            Logout
+                        </button>
+                    </a>
+                </div>
+                -->
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <a href="{% url 'change_password' %}">
+                        <button class="btn btn-danger">
+                            Change Password
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="sub-container-bg-light">
+            <h5 class="subtitles">Username:</h5>
+            <span class="subtitles">{{profile.username}}</span>
+            <br /><br />
+
+            <h5 class="subtitles">Email:</h5>
+            <span class="subtitles">{{profile.email}}</span>
+            <br /><br />
+
+            <h5 class="subtitles">Company's Industry:</h5>
+            <span class="subtitles">{{company_industry.industry}}</span>
+            <br /><br />
+
+            <h5 class="subtitles">Description:</h5>
+            <span class="subtitles">{{company_description.company_description}}</span>
+        </div>
     </div>
 
-    <div class="row">
-    <div class="col-5">
-    <a href="{% url 'edit' %}" class="link-btn">
-        <button class="btn btn-md">
-            Edit
-        </button>
-    </a>
-    </div>
-    <div class="col-7">
-    <a href="{% url 'logout' %}" class="link-btn">
-        <button class="btn btn-md ml-2">
-            Logout
-        </button>
-    </a>
-    </div>
-    </div>
+    
 </div>
-
-<div class="col-md-8">
-    <div class="sub-container-bg-light">
-    <h5 class="subtitles">Username:</h5>
-    <span class="subtitles">{{profile.username}}</span>
-    <br /><br />
-
-    <h5 class="subtitles">Email:</h5>
-    <span class="subtitles">{{profile.email}}</span>
-    <br /><br />
-
-    <h5 class="subtitles">Company's Industry:</h5>
-    <span class="subtitles">{{company_industry.industry}}</span>
-    <br /><br />
-
-    <h5 class="subtitles">Description:</h5>
-    <span class="subtitles">{{company_description.company_description}}</span>
-    </div>
-</div>
-
 {% endblock content %}

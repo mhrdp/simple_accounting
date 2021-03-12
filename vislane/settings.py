@@ -149,6 +149,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# SMTP Server
+# For developmentn we use built in django SMTP, but we need to cbange it for production
+# 'filebased' EMAIL_BACKEND is to make a file everytime email sended, only for development, you can change it to 'smtp' to make django sent it into your server console
+# The path of the files specified within EMAIL_FILE_PATH
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
 AUTH_USER_MODEL = 'user.UserExtended'
 AUTHENTICATION_BACKENDS = ['user.backends.EmailBackends']
 

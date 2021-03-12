@@ -9,8 +9,8 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../static/base/main.css">
-    <link href="../../static/base/collapsable-sidebar.css" rel="stylesheet">
+    <link rel="stylesheet" href="/../../static/base/main.css">
+    <link href="/../../static/base/collapsable-sidebar.css" rel="stylesheet">
 
     {% block css %}{% endblock css %}
 
@@ -18,10 +18,24 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar-lighter-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-lighter-dark sticky-top">
       <div>
-      <a href="#" class="navbar-brand nav-link"><b>Vislane Business</b></a>
-      {% block navbar %}{% endblock navbar%}
+        <a href="#" class="navbar-brand nav-link"><b>Vislane Business</b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-custom">
+          <a href="{% url 'profile' %}">
+            <button class="btn btn-mod">Profile</button>
+          </a>
+          
+          <a href="{% url 'logout' %}">
+            <button class="btn btn-mod">Logout</button>
+          </a>
+        </div>
+
+        {% block navbar %}{% endblock navbar%}
       </div>
     </nav>
 

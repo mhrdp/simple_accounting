@@ -36,7 +36,7 @@ button.btn:hover {
 
 .bg-sidebar {
     background: rgb(36, 40, 65);
-    margin-top: 56px;
+    /*margin-top: 56px;*/
 }
 
 #page-content-wrapper {
@@ -48,7 +48,7 @@ button.btn:hover {
 }
 
 .toggle-sidebar-mod {
-    margin-top: 4rem;
+    margin-top: 1rem;
     margin-left: 1rem;
     display: inline-block;
 }
