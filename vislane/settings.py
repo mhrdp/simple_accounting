@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     'base.apps.BaseConfig',
     'user.apps.UserConfig',
+    'journal.apps.JournalConfig',
 
     'crispy_forms',
 ]
@@ -156,7 +157,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
+# Default for django.contrib.auth.get_user_model()
 AUTH_USER_MODEL = 'user.UserExtended'
+
+# Email backend
 AUTHENTICATION_BACKENDS = ['user.backends.EmailBackends']
 
 STATIC_URL = '/static/'

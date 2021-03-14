@@ -1,5 +1,6 @@
 body {
-    background: rgb(45, 56, 60);
+    /*background: rgb(45, 56, 60);*/
+    background: #192428;
 }
 
 .margin-auto {
@@ -14,7 +15,9 @@ nav .navbar-custom {
 }
 
 nav.navbar-lighter-dark {
-    background: rgb(36, 40, 65);
+    /*background: rgb(36, 40, 65);*/
+    background: #2d383c;
+    border-bottom: 1px #192428;
 }
 
 nav a.nav-link {
@@ -29,11 +32,19 @@ div ul li button.btn-mod:hover {
     color: whitesmoke;
 }
 
+.dropdown-dark {
+    background: #2d383c;
+}
+
+.dropdown-menu {
+    min-width: 7rem;
+}
+
 
 
 /* Body Section */
 div h1, h2, h3 {
-    color: honeydew
+    color: #bcccdc;
 }
 
 .error-notification {
@@ -41,7 +52,7 @@ div h1, h2, h3 {
 }
 
 .subtitles {
-    color:lightgrey
+    color: #bcccdc;
 }
 
 .link-btn {
@@ -66,4 +77,8 @@ div.card-height {
 
 div footer.quote-footer {
     color: honeydew
+}
+
+.red-dgr {
+    color: papayawhip
 }

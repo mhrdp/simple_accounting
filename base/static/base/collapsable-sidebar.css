@@ -37,8 +37,9 @@ button.btn:hover {
 }
 
 .bg-sidebar {
-    background: rgb(36, 40, 65);
+    /*background: rgb(36, 40, 65);*/
     /*margin-top: 56px;*/
+    background: #2d383c;
 }
 
 #page-content-wrapper {
