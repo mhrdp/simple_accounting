@@ -19,10 +19,12 @@ button.btn:hover {
 
 #wrapper {
     overflow-x: hidden;
+
+    min-height: 90vh
 }
 
 #sidebar-wrapper {
-    min-height: 100vh;
+    min-height: 91vh;
     margin-left: 0;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
@@ -45,12 +47,6 @@ button.btn:hover {
 
 #wrapper.toggled #sidebar-wrapper {
     margin-left: -5rem;
-}
-
-.toggle-sidebar-mod {
-    margin-top: 1rem;
-    margin-left: 1rem;
-    display: inline-block;
 }
 
 @media (max-width: 768px) {

@@ -9,45 +9,29 @@
 {% endblock css%}
 
 {% block content %}
+<!-- First Row in Page -->
 <div class="row">
-    <div class="mb-3 mr-5" style="margin-left:0">
-        <div class="mb-3 ml-3">
-            <h2>{{company_description.company_name}}</h3>
-            <h4 class="subtitles">Company Profile</h4>
+    <div class="col-5 mb-3" style="margin-left:0">
+        <div class="mb-3">
+            <h4 class="subtitles">
+                {{company_description.company_name}}
+            </h4>
+            <h6 class="subtitles">Company Profile</h4>
         </div>
-
-        <div class="col-12">
-            <div class="row">
-                <div class="col">
-                    <a href="{% url 'edit' %}" class="link-btn">
-                        <button class="btn btn-md">
-                            Profile Edit
-                        </button>
-                    </a>
-                </div>
-                <!--
-                <div class="col-7">
-                    <a href="{% url 'logout' %}" class="link-btn">
-                        <button class="btn btn-md ml-2">
-                            Logout
-                        </button>
-                    </a>
-                </div>
-                -->
-            </div>
-            <div class="row mt-2">
-                <div class="col">
-                    <a href="{% url 'change_password' %}">
-                        <button class="btn btn-danger">
-                            Change Password
-                        </button>
-                    </a>
-                </div>
-            </div>
-        </div>
+        
     </div>
-    
-    <div class="col-md-8">
+
+    <div class="col-4">
+        <h4 class="subtitles">Monthly Performances</h3>
+    </div>
+    <div class="col-3">
+        <h4 class="subtitles">Monthly Expenses</h4>
+    </div>
+</div>
+
+<!-- Second Row -->
+<div class="row"> 
+    <div class="col-10">
         <div class="sub-container-bg-light">
             <h5 class="subtitles">Username:</h5>
             <span class="subtitles">{{profile.username}}</span>
@@ -65,7 +49,22 @@
             <span class="subtitles">{{company_description.company_description}}</span>
         </div>
     </div>
-
-    
+    <div class="col-2">
+        <div class="sub-container-bg-light">
+            <div>
+                <a href="{% url 'edit' %}" class="link-btn">
+                    <button class="btn btn-md w-100">
+                        Profile Edit
+                    </button>
+                </a>
+            </div>
+            <div class="mt-2">
+                <a href="{% url 'change_password' %}" class="btn-link">
+                    <button class="btn btn-danger w-100">
+                        Change Password
+                    </button>
+                </a> 
+        </div>
+    </div>
 </div>
 {% endblock content %}
