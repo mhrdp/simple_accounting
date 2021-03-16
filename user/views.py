@@ -10,10 +10,10 @@ from django.views import generic
 from django.urls import reverse_lazy
 
 from .forms import (
-    LoginForm, CompanyDetailForm, CompanyIndustryForm,
-    ChangePasswordForm
+    LoginForm, CompanyDetailForm,
+    ChangePasswordForm, UserForm
     )
-from .models import CompanyDetail, CompanyIndustry
+from .models import CompanyDetail
 
 # Create your views here.
 # Class Based
@@ -30,60 +30,77 @@ def company_profile(request):
     profile = get_object_or_404(UserModel, username=request.user.username)
 
     description_empty = CompanyDetail.objects.filter(username=request.user.pk)
-    industry_empty = CompanyIndustry.objects.filter(username=request.user.pk)
-    if not description_empty and not industry_empty:
+
+    if not description_empty:
         return redirect('edit')
     else:
         company_description = get_object_or_404(CompanyDetail, username=request.user.pk)
-        company_industry = get_object_or_404(CompanyIndustry, username=request.user.pk)
 
     content = {
         'profile': profile,
         'company_description': company_description,
-        'company_industry': company_industry,
     }
     return render(request, 'user/profile.html', content)
 
 @login_required
 def company_profile_edit(request):
+    first_time_msg = ''
     description_empty = CompanyDetail.objects.filter(username=request.user.pk)
-    industry_empty = CompanyIndustry.objects.filter(username=request.user.pk)
-    if not description_empty and not industry_empty:
+
+    # if fields empty
+    if not description_empty:
+        first_time_msg = 'For your convenience, please fill this form'
         form_description = CompanyDetailForm()
-        form_industry = CompanyIndustryForm()
         if request.method == 'POST':
             form_description = CompanyDetailForm(request.POST or None)
-            form_industry = CompanyIndustryForm(request.POST or None)
-            if form_description.is_valid() and form_industry.is_valid():
+            if form_description.is_valid():
                 save_form_description = form_description.save(commit=False)
-                save_form_industry = form_industry.save(commit=False)
 
                 save_form_description.username = request.user
-                save_form_industry.username = request.user
-                save_form_industry.save()
-                save_form_description.save()
 
+                save_form_description.save()
                 return redirect('profile')
     else:
         description = get_object_or_404(CompanyDetail, username=request.user.pk)
-        industry = get_object_or_404(CompanyIndustry, username=request.user.pk)
-        form_description = CompanyDetailForm(
-            request.POST or None, instance=description
-            )
-        form_industry = CompanyIndustryForm(
-            request.POST or None, instance=industry
-        )
-        if form_description.is_valid() and form_industry.is_valid():
-            form_description.save()
-            form_industry.save()
 
-            return redirect('profile')
+        if request.method == 'POST':
+            form_description = CompanyDetailForm(
+                request.POST or None, instance=description
+                )
+            if form_description.is_valid():
+                form_description.save()
+
+                return redirect('profile')
+        else:
+            form_description = CompanyDetailForm(
+                request.POST or None, instance=description
+                )
     
     content = {
         'form_description': form_description,
-        'form_industry': form_industry,
+        'first_time_msg': first_time_msg,
     }
     return render(request, 'user/update.html', content)
+
+@login_required
+def user_profile_edit(request):
+    update_error = ''
+    if request.method == 'POST':
+        user_form = UserForm(request.POST or None, instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+
+            return redirect('profile')
+        else:
+            update_error = 'There\'s an error in data'
+    else:
+        user_form = UserForm(instance=request.user)
+    
+    content = {
+        'user_form': user_form,
+        'update_error': update_error,
+    }
+    return render(request, 'user/user_update.html', content)
 
 @login_required
 def user_logout(request):

@@ -1,13 +1,26 @@
 {% extends 'base/base_all.html' %}
 
 {% block title %}
-Edit Profile
+Edit Company Profile
 {% endblock title %}
 
+{% block css %}
+<link rel="stylesheet" href="/../../static/user/profile.css">
+{% endblock css%}
+
 {% block content %}
+<a>
+    <button class='btn disabled'>Company Profile</button>
+</a>
+
+<a href="{% url 'user_edit' %}">
+    <button class='btn btn-color-primary'>User Profile</button>
+</a>
+
 <form method="POST">
     {% csrf_token %}
     <fieldset class="form-group mb-5">
+        <span style="color:red">{{first_time_msg}}</span>
         <legend class="mb-4 subtitles border-bottom">
             <div class="float-right mb-2">
                 <strong>Company's Details</strong>
@@ -29,11 +42,11 @@ Edit Profile
         <p class="subtitles">Industry:</p>
         <div class="row">
             <div class="col-md-3">
-                {{form_industry.industry}}
+                {{form_description.industry}}
             </div>
         </div>
     </fieldset>
-    <button type="submit" class="btn btn-info">Update!</button>
+    <button type="submit" class="btn btn-color-primary">Update!</button>
     <a href="{% url 'profile' %}" class="ml-2">Cancel</a>
 </form>
 {% endblock content%}

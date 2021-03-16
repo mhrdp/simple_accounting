@@ -7,6 +7,24 @@ body {
     margin: 0 auto;
 }
 
+.btn.btn-color-primary {
+    background-color: #028fa3;
+    border-color: #00a8cc;
+}
+
+.btn.btn-color-primary:hover {
+    background-color: #00a8cc;
+    border-color: #028fa3;
+}
+
+.btn {
+    color: aliceblue;
+}
+
+.dropdown-divider {
+    border-top: 1px solid #192428;
+}
+
 /* Navigation Section */
 nav .navbar-custom {
     position: relative;
@@ -38,6 +56,12 @@ div ul li button.btn-mod:hover {
 
 .dropdown-menu {
     min-width: 7rem;
+}
+
+.admin-inline-flex {
+    display: inline-flex;
+    display: -ms-inline-flexbox;
+    display: -webkit-inline-flex;
 }
 
 

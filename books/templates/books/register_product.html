@@ -1,0 +1,6 @@
+{{product_form_notification}}
+<form method="POST">
+    {% csrf_token %}
+    {{product_form}}
+    <button type="submit">Submit</button>
+</form>

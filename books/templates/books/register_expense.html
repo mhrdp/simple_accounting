@@ -1,0 +1,7 @@
+<!-- Front end for 'total' form fiels will be added via js -->
+
+<form method="POST">
+    {% csrf_token %}
+    {{expense_form}}
+    <button type="button">Submit</button>
+</form>

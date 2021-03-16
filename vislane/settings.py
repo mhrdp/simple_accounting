@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 
     'base.apps.BaseConfig',
     'user.apps.UserConfig',
-    'journal.apps.JournalConfig',
+    'books.apps.BooksConfig',
 
     'crispy_forms',
 ]

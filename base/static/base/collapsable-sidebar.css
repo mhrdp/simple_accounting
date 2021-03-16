@@ -8,15 +8,6 @@
     margin: 0 auto;
 }
 
-button.btn {
-    color: aliceblue;
-}
-
-button.btn:hover {
-    background: rgb(55, 60, 97);
-    color: aliceblue;
-}
-
 #wrapper {
     overflow-x: hidden;
 

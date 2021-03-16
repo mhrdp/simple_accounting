@@ -8,7 +8,9 @@ from django.utils.translation import gettext_lazy as _
 
 from django import forms
 
-from .models import CompanyDetail, CompanyIndustry
+from .models import (
+    CompanyDetail, UserExtended, Industry
+)
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
@@ -73,32 +75,65 @@ class CompanyDetailForm(forms.ModelForm):
             attrs={'class':'form-control'}
         )
     )
-    class Meta:
-        model = CompanyDetail
-        fields = [
-            'company_name', 'company_description'
-        ]
-
-class CompanyIndustryForm(forms.ModelForm):
-    FNB = 'Food and Beverages'
-    DSG = 'Design'
-    IT = 'Technology'
-    OTR = 'Others'
-    INDUSTRIES = [
-        (FNB, 'Food and Beverages'),
-        (DSG, 'Design'),
-        (IT, 'Technology'),
-        (OTR, 'Others'),
-    ]
-    
-    industry = forms.ChoiceField(
-        choices=INDUSTRIES,
+    industry = forms.ModelChoiceField(
+        queryset=Industry.objects.all().order_by('-pk'),
         widget=forms.Select(
-            attrs={'class':'form-control'},
+            attrs={'class':'form-control'}
         )
     )
     class Meta:
-        model = CompanyIndustry
+        model = CompanyDetail
         fields = [
-            'industry'
+            'company_name', 'company_description', 'industry'
         ]
+
+class UserForm(forms.ModelForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    class Meta:
+        model = UserExtended
+        fields = [
+            'username', 'email', 'first_name', 'last_name'
+        ]
+
+#class CompanyIndustryForm(forms.ModelForm):
+#    FNB = 'Food and Beverages'
+#    DSG = 'Design'
+#    IT = 'Technology'
+#    OTR = 'Others'
+#    INDUSTRIES = [
+#        (FNB, 'Food and Beverages'),
+#        (DSG, 'Design'),
+#        (IT, 'Technology'),
+#        (OTR, 'Others'),
+#    ]
+#    
+#    industry = forms.ChoiceField(
+#        choices=INDUSTRIES,
+#        widget=forms.Select(
+#            attrs={'class':'form-control'},
+#        )
+#    )
+#    class Meta:
+#        model = CompanyIndustry
+#        fields = [
+#            'industry'
+#        ]
