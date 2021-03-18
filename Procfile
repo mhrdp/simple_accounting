@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn vislane_business.wsgi
+web: gunicorn vislane-business.wsgi
