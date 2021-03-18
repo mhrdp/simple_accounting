@@ -36,7 +36,7 @@
       <div class="ml-auto admin-inline-flex">
         {% if request.user.username == 'admin' %}
           <div class="mr-2 mt-1">
-            <a href="/admin/">
+            <a href="/admin/" target="_blank">
               <button type="submit" class="btn btn-sm btn-secondary">Admin Page</button>
             </a>
           </div>
@@ -78,7 +78,7 @@
                 <p style="font-size:11px">Dashboard</p>
               </button>
             </a>
-            <a href="#">
+            <a href="{% url 'register_expense' %}">
               <button class="btn income-outcome-current mt-1">
                 <i class="fas fa-exchange-alt fa-2x sidebar-contrast-dark"></i>
                 <p style="font-size:11px">Income-Outcome</p>

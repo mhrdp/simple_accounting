@@ -1,6 +1,94 @@
+{% extends 'base/base_all.html' %}
 <!-- A front end 'total' field will be added via js -->
-<form method="POST">
+
+{% block title %}
+Add Income
+{% endblock title %}
+
+{% block content %}
+<div class="mb-3">
+    <a>
+        <button class="btn content-current disabled">Income Input</button>
+    </a>
+    <a href="{% url 'register_expense' %}">
+        <button class="btn btn-color-primary">Expense Input</button>
+    </a>
+</div>
+
+<form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}">
     {% csrf_token %}
-    {{income_form}}
-    <button type="submit">Button</button>
+    <div class="col">
+        {% for msg in messages %}
+           <p class="red-dgr"><strong>{{msg}}</strong></p>
+        {% endfor %}
+        <h4 class="subtitles">Input your income here</h4>
+    </div>
+
+    <div class="col-sm-3 subtitles">
+        <p class="red-dgr"><strong>*required field</strong></p>
+        
+        <label for="date_added">Date Added: <span class="red-dgr">*</span></label>
+        {{income_form.date_added}}
+    </div>
+
+    <div class="col-md-5 subtitles">
+        <label for="product_name">Product Name: <span class="red-dgr">*</span></label>
+        {{income_form.product_name}}
+
+        <label for="quantity">Quantity: <span class="red-dgr">*</span></label>
+        {{income_form.quantity}}
+
+        <label for="price">Price: <span class="red-dgr">*</span></label>
+        {{income_form.price}}
+
+        <label for="additional_price">Additional Price: (optional)</label>
+        {{income_form.additional_price}}
+
+        <label for="notes">Notes: (optional)</label>
+        {{income_form.notes}}
+    </div>
+    <div class="col-sm-4">
+        <h5 class="subtitles">Total:</h5>
+        <h4 id="totalPrice" class="subtitles">0</h4>
+    </div>
+
+    <div class="col">
+        <button type="submit" class="btn btn-color-primary mt-2">Submit</button>
+    </div>
 </form>
+{% endblock content %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#id_product_name").change(function(){
+            var url = $("#incomeForm").attr("data-income-url");
+            var prcId = $(this).val()
+            $.ajax({
+                url: url,
+                data: {
+                    "product_name": prcId,
+                },
+                success: function(data){
+                    // You need parseFloat so the form field could detect it as float type, or parseInt for integer type
+                    // This is applied only if your form field required a number input, refer to expense page for string type
+                    var prc = parseFloat(data);
+                    $("#id_price").val(prc)
+                }
+            })
+        })
+    });
+</script>
+<script>
+    $(function(){
+        $("#id_quantity, #id_price, #id_additional_price").keyup(function(){
+            var qty = parseFloat($("#id_quantity").val()) || 0;
+            var prc = parseFloat($("#id_price").val()) || 0;
+            var add_prc = parseFloat($("#id_additional_price").val()) || 0;
+
+            $("#totalPrice").text((qty*prc)+add_prc);
+        });
+    });
+</script>
+{% endblock js %}

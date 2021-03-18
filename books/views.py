@@ -1,25 +1,41 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
 from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory
 
+import json
+
 # Create your views here.
 
-# Ajax for categories and sub categories
+# Ajax for categories and sub categories dependent dropdown
 def expense_dropdown_ajax(request):
     categories = request.GET.get('category')
     sub_categories = SubCategory.objects.filter(
-        categories=categories
+        category=categories
     ).order_by('-sub_category')
 
     content = {
         'sub_categories': sub_categories,
     }
-    return render(request, 'books/ajax.html', content)
-# End of ajax
+    return render(request, 'books/category_ajax.html', content)
+# End of ajax categories and sub categories
+
+# Ajax for autofill income form
+def income_form_autofill_ajax(request):
+    product_name = request.GET.get('product_name')
+    price = Product.objects.filter(
+        id=product_name
+    )
+
+    content = {
+        'product_price': price,
+    }
+    return render(request, 'books/income_form_autofill.html', content)
+# end of ajax autofill income form
 
 @login_required
 def register_product(request):
@@ -46,30 +62,32 @@ def register_product(request):
 
 @login_required
 def register_income(request):
-    income_form_notification = ''
+    empty_notification = ''
     if request.method == 'POST':
-        income_form = IncomeForm(request.POST or None)
+        income_form = IncomeForm(request.user, request.POST or None)
 
-        income_form.fields['product_name'].queryset = Product.objects.filter(username=request.user.pk)
+        # Validation for product_name field
+        if Product.product_name != None:
+            # income_form.fields['product_name'].queryset = Product.objects.filter(username=request.user.pk)
+            if income_form.is_valid():
+                income_form_save = income_form.save(commit=False)
+                income_form_save.username = request.user
+                income_form_save.industry = request.user.companydetail.industry
+                income_form_save.book_category = "Debit"
 
-        if income_form.is_valid():
-            income_form_save = income_form.save(commit=False)
-            income_form_save.username = request.user
-            income_form_save.industry = request.user.companydetail.industry
-            income_form_save.book_category = "Debit"
+                income_form_save.total = (income_form_save.price*income_form_save.quantity)+income_form_save.additional_price
 
-            income_form_save.total = (income_form_save.price*income_form_save.quantity)+income_form_save.additional_price
-
-            income_form_save.save()
-            return redirect('register_income')
-        else:
-            income_form_notification = 'There\'s some error in your input!'
+                income_form_save.save()
+                messages.success(request, 'Your data has been inputted!')
+                return redirect('register_income')
+            else:
+                messages.error(request, 'There\'s something wrong in your data!')
     else:
-        income_form = IncomeForm()
+        income_form = IncomeForm(request.user)
 
     content = {
         'income_form': income_form,
-        'income_form_notification': income_form_notification,
+        'empty_notification': empty_notification,
     }
     return render(request, 'books/register_income.html', content)
 
@@ -98,3 +116,4 @@ def register_expense(request):
         'expense_form_notification': expense_form_notification,
     }
     return render(request, 'books/register_expense.html', content)
+

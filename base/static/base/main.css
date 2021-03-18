@@ -21,6 +21,10 @@ body {
     color: aliceblue;
 }
 
+.btn.content-current:hover {
+    color: wheat;
+}
+
 .dropdown-divider {
     border-top: 1px solid #192428;
 }
@@ -104,5 +108,5 @@ div footer.quote-footer {
 }
 
 .red-dgr {
-    color: papayawhip
+    color: tomato
 }
