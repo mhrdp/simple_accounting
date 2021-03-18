@@ -8,21 +8,14 @@
     margin: 0 auto;
 }
 
-button.btn {
-    color: aliceblue;
-}
-
-button.btn:hover {
-    background: rgb(55, 60, 97);
-    color: aliceblue;
-}
-
 #wrapper {
     overflow-x: hidden;
+
+    min-height: 90vh
 }
 
 #sidebar-wrapper {
-    min-height: 100vh;
+    min-height: 91vh;
     margin-left: 0;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
@@ -31,11 +24,13 @@ button.btn:hover {
 }
 
 #sidebar-wrapper .list-group {
-    width: 10rem;
+    width: 5rem;
 }
 
 .bg-sidebar {
-    background: rgb(36, 40, 65);
+    /*background: rgb(36, 40, 65);*/
+    /*margin-top: 56px;*/
+    background: #2d383c;
 }
 
 #page-content-wrapper {
@@ -43,16 +38,16 @@ button.btn:hover {
 }
 
 #wrapper.toggled #sidebar-wrapper {
-    margin-left: -10rem;
+    margin-left: -5rem;
 }
 
 @media (max-width: 768px) {
     #sidebar-wrapper {
-        margin-left: -8rem;
+        margin-left: -5rem;
     }
 
     #sidebar-wrapper .list-group {
-        width: 8rem;
+        width: 5rem;
     }
 
     #page-content-wrapper {

@@ -1,0 +1,26 @@
+div.sub-container-bg-light{
+    /*background: rgb(36, 40, 65);*/
+    background: #2d383c;
+    padding: 10px;
+    border-radius: 10px;
+    min-height: 50vh;
+    opacity: .75;
+}
+
+.profile-container-sm-dark {
+    min-height: 60%;
+    width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+    background: #2d383c;
+    opacity: .8;
+}
+
+.profile-container-sm-dgr {
+    height: 60%;
+    min-width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+    background: #c6282b;
+    opacity: .8;
+}

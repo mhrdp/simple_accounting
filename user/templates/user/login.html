@@ -1,22 +1,23 @@
 {% extends 'base/base_login.html' %}
+{% load crispy_forms_tags %}
 
 {% block title%}
     Vislane Business
 {% endblock title %}
 
 {% block navbar %}
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarNav">
     <span class="navbar-toggler-icon"></span>
 </button>
 <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
         <li class="navbar-item nav-link">
-            <button class="btn btn-mod" data-toggle="modal" data-target="#descModal">
+            <button class="btn btn-mod w-100" data-toggle="modal" data-target="#descModal">
                 What's This?
             </button>
         </li>
         <li class="nav-item nav-link">
-            <button class="btn btn-mod" data-toggle="modal" data-target="#tosModal">
+            <button class="btn btn-mod w-100 h-100" data-toggle="modal" data-target="#tosModal">
                 Term of Services
             </button>
         </li>
@@ -91,19 +92,42 @@
                 <h2 class="text-center">Login</h2>
                 <p class="subtitles">Please Log In With Your Account Here</p>
 
-                <form>
+                <form method="POST">
+                    {% csrf_token %}
                     <div class="form-group">
-                        <p class="subtitles">Username</p>
-                        <input type="text" class="form-control">
+                        <p class="subtitles">Username/Email</p>
+                        {{form.username}}
                     </div>
                     <div class="form-group">
                         <p class="subtitles">Password</p>
-                        <input type="password" class="form-control">
+                        {{form.password}}
                     </div>
                     <button class="btn btn-primary">Login</button>
+                    <a href="{% url 'reset_password' %}" class="ml-3">
+                        Forgot your password?
+                    </a>
                 </form>
             </div>
         </div>  
     </div>
 </div>
+
+<div id="quotes"></div>
+
 {% endblock content%}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        var loginQuotes = new Array();
+        loginQuotes[0] = "<h2>Test1</h2>";
+        loginQuotes[1] = "<h2>Test2</h2>";
+        loginQuotes[2] = "<h2>Test3</h2>";
+        loginQuotes[3] = "<h2>Test4</h2>";
+
+        var randomPicker = Math.floor(Math.random()*loginQuotes.length);
+        $("#quotes").html(loginQuotes[randomPicker]);
+    })
+</script>
+
+{% endblock js%}

@@ -1,14 +1,45 @@
 body {
-    background: rgb(16, 18, 29);
+    /*background: rgb(45, 56, 60);*/
+    background: #192428;
+}
+
+.margin-auto {
+    margin: 0 auto;
+}
+
+.btn.btn-color-primary {
+    background-color: #028fa3;
+    border-color: #00a8cc;
+}
+
+.btn.btn-color-primary:hover {
+    background-color: #00a8cc;
+    border-color: #028fa3;
+}
+
+.btn {
+    color: aliceblue;
+}
+
+.btn.content-current:hover {
+    color: wheat;
+}
+
+.dropdown-divider {
+    border-top: 1px solid #192428;
 }
 
 /* Navigation Section */
 nav .navbar-custom {
-    background-color: azure;
+    position: relative;
+    display: inline-block;
+    margin-left: 0;
 }
 
 nav.navbar-lighter-dark {
-    background: rgb(36, 40, 65);
+    /*background: rgb(36, 40, 65);*/
+    background: #2d383c;
+    border-bottom: 1px #192428;
 }
 
 nav a.nav-link {
@@ -23,19 +54,41 @@ div ul li button.btn-mod:hover {
     color: whitesmoke;
 }
 
+.dropdown-dark {
+    background: #2d383c;
+}
+
+.dropdown-menu {
+    min-width: 7rem;
+}
+
+.admin-inline-flex {
+    display: inline-flex;
+    display: -ms-inline-flexbox;
+    display: -webkit-inline-flex;
+}
+
 
 
 /* Body Section */
-div.container {
-    margin-top: 3%;
-}
-
 div h1, h2, h3 {
-    color: honeydew
+    color: #bcccdc;
 }
 
-div h4.subtitles, p.subtitles {
-    color:lightgrey
+.error-notification {
+    color: tomato
+}
+
+.subtitles {
+    color: #bcccdc;
+}
+
+.link-btn {
+    color: lightgrey
+}
+
+.link-btn:hover {
+    text-decoration: none;
 }
 
 div.card-quote-title {
@@ -52,4 +105,8 @@ div.card-height {
 
 div footer.quote-footer {
     color: honeydew
+}
+
+.red-dgr {
+    color: tomato
 }

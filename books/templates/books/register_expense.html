@@ -1,0 +1,103 @@
+<!-- Front end for 'total' form fiels will be added via js -->
+{% extends 'base/base_all.html' %}
+
+{% block title %}
+Add Expenses
+{% endblock title %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'register_income' %}">
+        <button class="btn btn-color-primary">Income Input</button>
+    </a>
+    <a>
+        <button class="btn content-current disabled">Expense Input</button>
+    </a>
+</div>
+
+<form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}" novalidate>
+    {% csrf_token %}
+    <div class="col">
+        <h4 class="subtitles">Input your expense here</h4>
+    </div>
+
+    <div class="col-sm-3 subtitles">
+        <p class="red-dgr"><strong>*required field</strong></p>
+        
+        <label for="date_added" class="subtitles">Date Added</label>
+        {{expense_form.date_added}}
+    </div>
+
+    <div class="col-md-5 subtitles">
+        <label for="item_name">Item Name: <span class="red-dgr">*</span></label>
+        {{expense_form.item_name}}
+
+        <label for="category">Category: <span class="red-dgr">*</span></label>
+        {{expense_form.category}}
+        
+        <div style="display:none" id="subCategoryHidden">
+            <label for="sub_category">Sub Category: <span class="red-dgr">*</span></label>
+            {{expense_form.sub_category}}
+        </div>
+
+        <label for="quantity">Quantity: <span class="red-dgr">*</span></label>
+        {{expense_form.quantity}}
+
+        <label for="price">Price: <span class="red-dgr">*</span></label>
+        {{expense_form.price}}
+
+        <label for="notes">Notes: (optional)</label>
+        {{expense_form.notes}}
+    </div>
+    
+    <div class="col-sm-4">
+        <h5 class="subtitles">Total:</h5>
+        <h4 id="totalPrice" class="subtitles">0</h4>
+    </div>
+
+    <div class="col">
+        <button type="submit" class="btn btn-color-primary mt-2">Submit</button>
+    </div>
+</form>
+{% endblock content%}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Ajax for dependent dropdown of category field and sub category field
+        $("#id_category").change(function(){
+            var url = $("#expenseForm").attr("data-expense-url");
+            var categoryId = $(this).val();
+            $.ajax({
+                url: url,
+                data: {
+                    "category": categoryId,
+                },
+                success: function(data){
+                    $("#id_sub_category").html(data);
+                }
+            });
+        });
+
+        // Show sub category field when category field filled
+        $("#id_category").change(function(){
+            var control = $(this);
+            if(control.val()){
+                $("#subCategoryHidden").show();
+            }
+        })
+    });
+</script>
+<script>
+    // Auto sum in real time
+    $(function(){
+        $("#id_quantity, #id_price").keyup(function(){
+            var qty = parseFloat($("#id_quantity").val()) || 0;
+            var prc = parseFloat($("#id_price").val()) || 0;
+
+            $("#totalPrice").text(qty*prc);
+        });
+    });
+</script>
+{% endblock js %}

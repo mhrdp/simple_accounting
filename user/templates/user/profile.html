@@ -1,0 +1,61 @@
+{% extends 'base/base_all.html' %}
+
+{% block title %}
+{{company_description.company_name}}'s Profile
+{% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="/../../static/user/profile.css">
+{% endblock css%}
+
+{% block content %}
+<!-- First Row in Page -->
+<div class="row">
+    <div class="col-sm-3 mb-3" style="margin-left:0">
+        <div class="mb-3">
+            <h4 class="subtitles">
+                {{company_description.company_name}}
+            </h4>
+            <h6 class="subtitles">Company Profile</h4>
+        </div>
+        
+    </div>
+
+    <div class="col-sm-4">
+        <h6 class="subtitles">Monthly Income</h6>
+        <div class="profile-container-sm-dark">
+            <h4 class="subtitles align-middle float-right"><b>Rp. 10,000,000,-</b></h4>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <h6 class="subtitles">Monthly Expense</h6>
+        <div class="profile-container-sm-dgr">
+            <h4 class="red-dgr float-right"><b>Rp. 9,999,999,-</b></h4>
+        </div>
+    </div>
+</div>
+
+<!-- Second Row -->
+<div class="row"> 
+    <div class="col-md-12 mt-1">
+        <strong>
+        <div class="sub-container-bg-light">
+            <h5 class="subtitles">Username:</h5>
+            <span class="subtitles">{{profile.username}}</span>
+            <br /><br />
+
+            <h5 class="subtitles">Email:</h5>
+            <span class="subtitles">{{profile.email}}</span>
+            <br /><br />
+
+            <h5 class="subtitles">Company's Industry:</h5>
+            <span class="subtitles">{{company_description.industry}}</span>
+            <br /><br />
+
+            <h5 class="subtitles">Description:</h5>
+            <span class="subtitles">{{company_description.company_description}}</span>
+        </div>
+        </strong>
+    </div>
+</div>
+{% endblock content %}

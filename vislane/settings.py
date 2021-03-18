@@ -50,6 +50,9 @@ INSTALLED_APPS = [
 
     'base.apps.BaseConfig',
     'user.apps.UserConfig',
+    'books.apps.BooksConfig',
+
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -146,6 +149,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# SMTP Server
+# For developmentn we use built in django SMTP, but we need to cbange it for production
+# 'filebased' EMAIL_BACKEND is to make a file everytime email sended, only for development, you can change it to 'smtp' to make django sent it into your server console
+# The path of the files specified within EMAIL_FILE_PATH
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+# Default for django.contrib.auth.get_user_model()
+AUTH_USER_MODEL = 'user.UserExtended'
+
+# Email backend
+AUTHENTICATION_BACKENDS = ['user.backends.EmailBackends']
+
 STATIC_URL = '/static/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -159,6 +176,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'profile'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Django-heroku package for seamless deployment
 django_heroku.settings(locals())
