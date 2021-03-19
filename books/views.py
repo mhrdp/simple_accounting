@@ -3,9 +3,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.core.paginator import (
+    Paginator, EmptyPage, PageNotAnInteger
+)
 
 from .forms import ProductForm, IncomeForm, ExpenseForm
-from .models import Product, ExpenseCategory, SubCategory
+from .models import Product, ExpenseCategory, SubCategory, Journal
 
 import json
 
@@ -117,3 +121,69 @@ def register_expense(request):
     }
     return render(request, 'books/register_expense.html', content)
 
+@login_required
+def list_of_expense(request):
+    # List of all the expenses
+    list_of_expense = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit'
+    ).order_by('date_added')
+
+    #Paginator, to split page into several pages
+    page = request.GET.get('page', 1)
+    paginator = Paginator(list_of_expense, 20) # split page per 20 items
+    try:
+        expense_page = paginator.page(page)
+    except PageNotAnInteger:
+        expense_page = paginator.page(1)
+    except EmptyPage:
+        expense_page = paginator.page(paginator.num_pages)
+
+    # Data for chart for the last 30 days
+    expense_chart_last_30_days = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    )[:30].annotate(
+        sum=Sum('total')
+    )
+
+    content = {
+        'list_of_expense': list_of_expense,
+        'expense_page': expense_page,
+        'expense_chart_last_30_days': expense_chart_last_30_days,
+    }
+    return render(request, 'books/list_of_expense.html', content)
+
+@login_required
+def edit_expense(request, pk):
+    # Call ajax for dependent dropdown
+    categories = request.GET.get('category')
+    sub_categories = SubCategory.objects.filter(
+        category=categories
+    ).order_by('-sub_category')
+
+    # Views for edit
+    user_obj = get_object_or_404(Journal, pk=pk)
+    if not request.user == user_obj.username:
+        return redirect('list_of_expense')
+    else:
+        obj = get_object_or_404(Journal, pk=pk)
+        expense_form = ExpenseForm(request.POST or None, instance=obj)
+        if expense_form.is_valid():
+            save_expense_form = expense_form.save(commit=False)
+
+            save_expense_form.total = save_expense_form.quantity * save_expense_form.price
+            save_expense_form.save()
+
+            messages.success(request, 'Updated!')
+            return redirect('list_of_expense')
+
+    content = {
+        'sub_categories': sub_categories,
+        'expense_form': expense_form,
+    }
+    return render(request, 'books/edit_expense.html', content)

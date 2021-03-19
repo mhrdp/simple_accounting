@@ -24,6 +24,14 @@ class LoginView(auth_views.LoginView):
 
 
 # Function Based
+def index(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        return redirect('profile')
+    content = {}
+    return render(request, 'base/index.html', content)
+    
 @login_required
 def company_profile(request):
     UserModel = get_user_model()

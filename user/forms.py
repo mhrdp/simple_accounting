@@ -68,18 +68,24 @@ class CompanyDetailForm(forms.ModelForm):
     company_name = forms.CharField(
         widget=forms.TextInput(
             attrs={'class':'form-control'}
-        )
+        ),
+        required=True
     )
     company_description = forms.CharField(
         widget=forms.Textarea(
-            attrs={'class':'form-control'}
-        )
+            attrs={
+                'class':'form-control',
+                'placeholder':'Describe shortly about your company',
+                }
+        ),
+        required=False,
     )
     industry = forms.ModelChoiceField(
         queryset=Industry.objects.all().order_by('-pk'),
         widget=forms.Select(
             attrs={'class':'form-control'}
-        )
+        ),
+        required=True,
     )
     class Meta:
         model = CompanyDetail
