@@ -1,43 +1,38 @@
 {% extends 'base/base_all.html' %}
 
 {% block title %}
-Edit {{item_name}}
+Edit {{product_name}}
 {% endblock title %}
 
 {% block content %}
-<form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}" novalidate>
+<form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}" novalidate>
     {% csrf_token %}
     <div class="col">
-        <h4 class="subtitles">Edit Expense Data</h4>
+        <h4 class="subtitles">Edit Income Data</h4>
     </div>
 
     <div class="col-sm-3 subtitles">
         <p class="red-dgr"><strong>*required field</strong></p>
         
         <label for="date_added" class="subtitles">Date Added</label>
-        {{expense_form.date_added}}
+        {{income_form.date_added}}
     </div>
 
     <div class="col-md-5 subtitles">
-        <label for="item_name">Item Name: <span class="red-dgr">*</span></label>
-        {{expense_form.item_name}}
-
-        <label for="category">Category: <span class="red-dgr">*</span></label>
-        {{expense_form.category}}
-        
-        <div id="subCategoryHidden">
-            <label for="sub_category">Sub Category: <span class="red-dgr">*</span></label>
-            {{expense_form.sub_category}}
-        </div>
+        <label for="product_name">Item Name: <span class="red-dgr">*</span></label>
+        {{income_form.product_name}}
 
         <label for="quantity">Quantity: <span class="red-dgr">*</span></label>
-        {{expense_form.quantity}}
+        {{income_form.quantity}}
 
         <label for="price">Price: <span class="red-dgr">*</span></label>
-        {{expense_form.price}}
+        {{income_form.price}}
+
+        <label for="additional_price">Additional Price: (optional)</label>
+        {{income_form.additional_price}}
 
         <label for="notes">Notes: (optional)</label>
-        {{expense_form.notes}}
+        {{income_form.notes}}
     </div>
     
     <div class="col-sm-4">
@@ -47,7 +42,7 @@ Edit {{item_name}}
 
     <div class="col">
         <button type="submit" class="btn btn-color-primary mt-2">Submit</button>
-        <a href="{% url 'list_of_expense' %}" class="ml-2">Cancel</a>
+        <a href="{% url 'list_of_income' %}" class="ml-2">Cancel</a>
     </div>
 </form>
 {% endblock content %}
@@ -56,30 +51,32 @@ Edit {{item_name}}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     $(document).ready(function(){
-        // Ajax for dependent dropdown of category field and sub category field
-        $("#id_category").change(function(){
-            var url = $("#expenseForm").attr("data-expense-url");
-            var categoryId = $(this).val();
+        $("#id_product_name").change(function(){
+            var url = $("#incomeForm").attr("data-income-url");
+            var prcId = $(this).val()
             $.ajax({
                 url: url,
                 data: {
-                    "category": categoryId,
+                    "product_name": prcId,
                 },
                 success: function(data){
-                    $("#id_sub_category").html(data);
+                    // You need parseFloat so the form field could detect it as float type, or parseInt for integer type
+                    // This is applied only if your form field required a number input, refer to expense page for string type
+                    var prc = parseFloat(data);
+                    $("#id_price").val(prc)
                 }
-            });
-        });
+            })
+        })
     });
 </script>
 <script>
-    // Auto sum in real time
     $(function(){
-        $("#id_quantity, #id_price").keyup(function(){
+        $("#id_quantity, #id_price, #id_additional_price").keyup(function(){
             var qty = parseFloat($("#id_quantity").val()) || 0;
             var prc = parseFloat($("#id_price").val()) || 0;
+            var add_prc = parseFloat($("#id_additional_price").val()) || 0;
 
-            $("#totalPrice").text(qty*prc);
+            $("#totalPrice").text((qty*prc)+add_prc);
         });
     });
 </script>
