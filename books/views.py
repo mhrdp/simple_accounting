@@ -3,9 +3,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.core.paginator import (
+    Paginator, EmptyPage, PageNotAnInteger
+)
 
 from .forms import ProductForm, IncomeForm, ExpenseForm
-from .models import Product, ExpenseCategory, SubCategory
+from .models import Product, ExpenseCategory, SubCategory, Journal
 
 import json
 
@@ -37,6 +41,16 @@ def income_form_autofill_ajax(request):
     return render(request, 'books/income_form_autofill.html', content)
 # end of ajax autofill income form
 
+# Empty content just for rendering the page
+def input_options(request):
+    content = {}
+    return render(request, 'books/input_options.html', content)
+
+def books_options(request):
+    content = {}
+    return render(request, 'books/books_options.html', content)
+# End of empty content
+
 @login_required
 def register_product(request):
     product_form_notification = ''
@@ -62,7 +76,6 @@ def register_product(request):
 
 @login_required
 def register_income(request):
-    empty_notification = ''
     if request.method == 'POST':
         income_form = IncomeForm(request.user, request.POST or None)
 
@@ -87,7 +100,6 @@ def register_income(request):
 
     content = {
         'income_form': income_form,
-        'empty_notification': empty_notification,
     }
     return render(request, 'books/register_income.html', content)
 
@@ -117,3 +129,157 @@ def register_expense(request):
     }
     return render(request, 'books/register_expense.html', content)
 
+@login_required
+def list_of_income(request):
+    # List all of the income
+    list_of_income = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit'
+    ).order_by('-pk')
+
+    # Paginator, to split page into several pages
+    page = request.GET.get('page', 1)
+    paginator = Paginator(list_of_income, 10) # split page per 10 items
+    try:
+        income_page = paginator.page(page)
+    except PageNotAnInteger:
+        income_page = paginator.page(1)
+    except EmptyPage:
+        income_page = paginator.page(paginator.num_pages)
+    
+    # Display only the six pages maximum from the current total pages of pagination
+    index = income_page.number-1 # -1 because index start from 0
+    max_index = len(paginator.page_range)
+    start_index = index-3 if index>=3 else 0
+    end_index = index+3 if index<=max_index-3 else max_index
+
+    # Make a list to be looped with for loop
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    # Data for chart
+    income_data_last_30_days = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit'
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    )[:30].annotate(
+        sum=Sum('total')
+    )
+    content = {
+        'paginate': income_page,
+        'page_range': page_range,
+        'income_chart_last_30_days': income_data_last_30_days,
+    }
+    return render(request, 'books/list_of_income.html', content)
+
+@login_required
+def list_of_expense(request):
+    # List all of the expenses
+    list_of_expense = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit'
+    ).order_by('-pk')
+
+    #Paginator, to split page into several pages
+    page = request.GET.get('page', 1)
+    paginator = Paginator(list_of_expense, 10) # split page per 10 items
+    try:
+        expense_page = paginator.page(page)
+    except PageNotAnInteger:
+        expense_page = paginator.page(1)
+    except EmptyPage:
+        expense_page = paginator.page(paginator.num_pages)
+
+    # Display only the six pages maximum from the current total pages of pagination
+    index = expense_page.number-1 # -1 because index start from 0
+    max_index = len(paginator.page_range)
+    start_index = index-3 if index>=3 else 0
+    end_index = index+3 if index<=max_index-3 else max_index
+
+    # Make a list to be looped with for loop
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    # Data for chart for the last 30 days
+    expense_chart_last_30_days = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    )[:30].annotate(
+        sum=Sum('total')
+    )
+
+    content = {
+        'page_range': page_range,
+        'paginator': expense_page,
+        'expense_chart_last_30_days': expense_chart_last_30_days,
+    }
+    return render(request, 'books/list_of_expense.html', content)
+
+@login_required
+def edit_income(request, pk):
+    # Call ajax for autofill price field
+    product_name = request.GET.get('product_name')
+    price = Product.objects.filter(
+        id=product_name
+    )
+
+    # Views for edit
+    user_obj = get_object_or_404(Journal, pk=pk)
+    if not request.user == user_obj.username:
+        messages.error(request, 'You\'re not authorized to see this page')
+        return redirect('list_of_income')
+    else:
+        obj = get_object_or_404(Journal, pk=pk)
+        income_form = IncomeForm(request.user, request.POST or None, instance=obj)
+        if income_form.is_valid():
+            income_form_save = income_form.save(commit=False)
+
+            income_form_save.total = (income_form_save.price*income_form_save.quantity)+income_form_save.additional_price
+
+            income_form_save.save()
+            messages.success(request, 'Your data has been updated!')
+            return redirect('list_of_income')
+
+    content = {
+        'income_form': income_form,
+        'product_name': obj.product_name,
+        'product_price': price,
+    }
+    return render(request, 'books/edit_income.html', content)
+
+@login_required
+def edit_expense(request, pk):
+    # Call ajax for dependent dropdown
+    categories = request.GET.get('category')
+    sub_categories = SubCategory.objects.filter(
+        category=categories
+    ).order_by('-sub_category')
+
+    # Views for edit
+    user_obj = get_object_or_404(Journal, pk=pk)
+    if not request.user == user_obj.username:
+        messages.error(request, 'You\'re not authorized to see this page')
+        return redirect('list_of_expense')
+    else:
+        obj = get_object_or_404(Journal, pk=pk)
+        expense_form = ExpenseForm(request.POST or None, instance=obj)
+        if expense_form.is_valid():
+            save_expense_form = expense_form.save(commit=False)
+
+            save_expense_form.total = save_expense_form.quantity * save_expense_form.price
+            save_expense_form.save()
+
+            messages.success(request, 'Your data has been updated!')
+            return redirect('list_of_expense')
+
+    content = {
+        'sub_categories': sub_categories,
+        'expense_form': expense_form,
+        'item_name': obj.item_name,
+    }
+    return render(request, 'books/edit_expense.html', content)

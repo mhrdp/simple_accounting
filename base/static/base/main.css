@@ -7,6 +7,7 @@ body {
     margin: 0 auto;
 }
 
+/* Button */
 .btn.btn-color-primary {
     background-color: #028fa3;
     border-color: #00a8cc;
@@ -21,9 +22,14 @@ body {
     color: aliceblue;
 }
 
+.btn-mod:hover {
+    background-color: rgb(179, 179, 179);
+}
+
 .btn.content-current:hover {
     color: wheat;
 }
+/* End of button */
 
 .dropdown-divider {
     border-top: 1px solid #192428;

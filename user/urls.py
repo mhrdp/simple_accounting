@@ -8,6 +8,8 @@ from .forms import ResetPasswordForm
 from . import views as user_views
 
 urlpatterns = [
+    path('', user_views.index, name='index'),
+    
     path('login/', LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('company/profile/', user_views.company_profile, name='profile'),
     path('company/profile/edit/', user_views.company_profile_edit, name='edit'),

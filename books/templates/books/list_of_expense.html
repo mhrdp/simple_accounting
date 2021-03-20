@@ -1,0 +1,102 @@
+{% extends 'base/base_all.html' %}
+{% load humanize %}
+
+{% block title %}
+{{request.user.companydetail.company_name}}'s List of Expense
+{% endblock title %}
+
+{% block content %}
+<div class="col-12 col-md-12 mb-5">
+    <canvas id="expenseList" style="width:100%; height:auto;"></canvas>
+</div>
+
+<div class="col-12">
+    <h3 class="mb-3">List of Expenses</h3>
+    <table class="table table-bordered table-hover table-dark table-striped subtitles">
+        <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Date</th>
+            <th scope="col">Items</th>
+            <th scope="col">Category</th>
+            <th scope="col">Sub-category</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Notes</th>
+            <th></th>
+        </tr>
+        {% for expense in paginator %}
+            <tr>
+                <td scope="row">{{forloop.counter}}</td>
+                <td>{{expense.date_added}}</td>
+                <td>{{expense.item_name}}</td>
+                <td>{{expense.category}}</td>
+                <td>{{expense.sub_category}}</td>
+                <td>{{expense.quantity}}</td>
+                <td>Rp. {{expense.price|intcomma}}</td>
+                <td>Rp. {{expense.total|intcomma}}</td>
+                <td>{{expense.notes}}</td>
+                <td><a href="{% url 'edit_expense' expense.pk %}">Edit</a>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock content %}
+
+{% block paginator %}
+{% if paginator.has_other_pages %}
+    <ul>
+        {% if paginator.has_previous %}
+            <a href="?page={{paginator.previous_page_number}}">&laquo;</a></li>
+        {% else %}
+            <li disabled><span>&laquo;</span></li>
+        {% endif %}
+
+        {% for i in page_range %}
+            {% if paginator.number == i %}
+                <li>{{ i }}</li>
+            {% else %}
+                <li><a href="?page={{i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginator.has_next %}
+            <li><a href="?page={{paginator.next_page_number}}">&raquo;</a></li>
+        {% else %}
+            <li disabled><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+{% endif %}
+{% endblock paginator %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script>
+    var ctx = document.getElementById("expenseList").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+            {%for i in expense_chart_last_30_days%}"{{i.date_added}}",{%endfor%}
+            ],
+            datasets: [{
+                label: "Expense",
+                data: [
+                {%for i in expense_chart_last_30_days%}{{i.sum}},{%endfor%}
+                ],
+                backgroundColor: "tomato",
+            }]
+        },
+        options: {
+            legend: {
+                display: true,
+                labels : {
+                    fontColor: "#bcccdc"
+                }
+            }
+        }
+    })
+</script>
+{% endblock js %}

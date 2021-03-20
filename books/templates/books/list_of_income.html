@@ -1,0 +1,119 @@
+{% extends 'base/base_all.html' %}
+{% load humanize %}
+
+{% block title %}
+{{request.user.companydetail.company_name}}'s List of Income
+{% endblock title %}
+
+{% block css %}
+<link href="/../../static/books/books.css/" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+<div class="col-12 col-md-12 mb-5">
+    <canvas id="incomeList" style="width:100%; height:auto"></canvas>
+</div>
+
+<div class="col-12 col-lg-12">
+    <h3 class="mb-3">List of Expenses</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-dark table-striped subtitles">
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Date</th>
+                <th scope="col">Items</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Price</th>
+                <th scope="col">Additional</th>
+                <th scope="col">Total</th>
+                <th scope="col">Notes</th>
+                <th></th>
+            </tr>
+            {% for income in paginate %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{income.date_added}}</td>
+                    <td>{{income.product_name}}</td>
+                    <td>{{income.quantity}}</td>
+                    <td>Rp. {{income.price|intcomma}}</td>
+                    <td>Rp. {{income.additional_price|intcomma}}</td>
+                    <td>Rp. {{income.total|intcomma}}</td>
+                    <td>{{income.notes}}</td>
+                    <td><a href="{% url 'edit_income' income.pk %}">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block paginator %}
+<div class="col-12">
+{% if paginate.has_other_pages %}
+    <ul class="pagination justify-content-end">
+        {% if paginate.has_previous %}
+            <li class="page-item">
+                <a href="?page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+        {% endif %}
+
+        <!-- Split the displayed pages by the closest one page before and after-->
+        {% for i in page_range %}
+            {% if paginate.number == i %}
+                <li class="page-item active">
+                    <span class="page-link">{{ i }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a href="?page={{i}}" class="page-link">{{i}}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginate.has_next %}
+            <li class="page-item">
+                <a href="?page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+        {% endif %}
+    </ul>
+{% endif %}
+</div>
+{% endblock paginator %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script>
+    var ctx = document.getElementById("incomeList").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+            {%for i in income_chart_last_30_days%}"{{i.date_added}}",{%endfor%}
+            ],
+            datasets: [{
+                label: "Income",
+                data: [
+                {%for i in income_chart_last_30_days%}{{i.sum}},{%endfor%}
+                ],
+                backgroundColor: "#028fa3",
+            }]
+        },
+        options: {
+            legend: {
+                display: true,
+                labels : {
+                    fontColor: "#bcccdc"
+                }
+            }
+        }
+    })
+</script>
+{% endblock js %}

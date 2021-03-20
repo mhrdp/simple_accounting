@@ -9,6 +9,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <link rel="stylesheet" href="/../../static/base/main.css">
     <link href="/../../static/base/collapsable-sidebar.css" rel="stylesheet">
 
@@ -34,7 +35,7 @@
 
       
       <div class="ml-auto admin-inline-flex">
-        {% if request.user.username == 'admin' %}
+        {% if request.user.is_superuser %}
           <div class="mr-2 mt-1">
             <a href="/admin/" target="_blank">
               <button type="submit" class="btn btn-sm btn-secondary">Admin Page</button>
@@ -73,15 +74,21 @@
         <div class="list-group list-group-flush">
           <div class="sidebar-container">
             <a href="#">
-              <button class="btn dashboard-current">
+              <button class="btn dashboard-current w-100">
                 <i class="fas fa-chart-line fa-2x sidebar-contrast-dark"></i>
                 <p style="font-size:11px">Dashboard</p>
               </button>
             </a>
-            <a href="{% url 'register_expense' %}">
-              <button class="btn income-outcome-current mt-1">
+            <a href="{% url 'input_options' %}">
+              <button class="btn input-current mt-1 w-100">
                 <i class="fas fa-exchange-alt fa-2x sidebar-contrast-dark"></i>
                 <p style="font-size:11px">Income-Outcome</p>
+              </button>
+            </a>
+            <a href="{% url 'books_options' %}">
+              <button class="btn books-current mt-1 w-100">
+                <i class="fas fa-balance-scale fa-2x sidebar-contrast-dark"></i>
+                <p style="font-size:11px">Books</p>
               </button>
             </a>
           </div>
@@ -95,6 +102,7 @@
             <div class="col-11">
               <div class="text-break">
                 {% block content %}{% endblock content%}
+                {% block paginator %}{% endblock paginator %}
               </div>
             </div> 
           </div>

@@ -48,6 +48,7 @@ class IncomeForm(forms.ModelForm):
     
     # This to filter the product name based on user
     # You need to rewrite a function inside ModelForm to be able to fetch requested user in the ModelForm, couse apparently you can't do it normally like in views.py
+    # The requirement for this was to call request.user when calling the form in views.py, in this case IncomeForm(request.user, ...)
     def __init__(self, user, *args, **kwargs):
         super(IncomeForm, self).__init__(*args, **kwargs)
         self.fields['product_name'] = forms.ModelChoiceField(
