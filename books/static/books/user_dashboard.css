@@ -1,0 +1,38 @@
+.dashboard-current {
+    background-color: cadetblue;
+}
+
+.text-left {
+    text-align: left !important;
+    margin-top: 1% !important;
+    margin-left: 1% !important;
+}
+
+.p-size {
+    font-size: 32px !important;
+    font-weight: bold;
+}
+
+.dashboard-container-sm {
+    background-color: grey;
+    border-radius: 25px;
+    opacity: .75 !important;
+}
+
+.text-gr {
+    color: rgb(99, 247, 99);
+    stroke:whitesmoke;
+    stroke-width: 1px;;
+
+    -webkit-text-stroke-color: whitesmoke;
+    -webkit-text-stroke-width: 1px;
+}
+
+.text-rd {
+    color: rgb(252, 62, 62);
+    stroke:whitesmoke;
+    stroke-width: 1px;
+    
+    -webkit-text-stroke-color: whitesmoke;
+    -webkit-text-stroke-width: 1px;
+}

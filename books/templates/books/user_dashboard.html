@@ -1,0 +1,101 @@
+{% extends 'base/base_all.html' %}
+{% load humanize %}
+
+{% block title %}
+{{request.user.username}}'s Dashboard
+{% endblock title %}
+
+{% block css %}
+<link href="/../../static/books/user_dashboard.css" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+<div class="h-100 text-center">
+    <h4 class="subtitles mb-3">Current Month: {{month}}</h4>
+    <div class="row justify-content-center">
+        <div class="col-sm-5 mb-2 dashboard-container-sm">
+            <p class="subtitles text-left"><b>Income</b></p>
+            {% if income_in_running_month.sum > 0 %}
+                <p class="p-size text-gr">Rp. {{income_in_running_month.sum|intcomma}}</p>
+            {% else %}
+                <p class="p-size text-gr">Rp. 0</p>
+            {% endif %}
+        </div>
+        <div class="col-sm-5 mb-2 ml-1 dashboard-container-sm">
+            <p class="subtitles text-left"><b>Expense</b></p>
+            {% if expense_in_running_month.sum > 0 %}
+                <p class="p-size text-rd">Rp. {{expense_in_running_month.sum|intcomma}}</p>
+            {% else %}
+                <p class="p-size text-rd">Rp. 0</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <p class="subtitles">Performance chart 1</p>
+        </div>
+        <div class="col-sm-3">
+            <p class="subtitles">Performance chart 2</p>
+        </div>
+        <div class="col-sm-3">
+            <p class="subtitles">Performance chart 3</p>
+        </div>
+        <div class="col-sm-3">
+            <p class="subtitles">Performance chart 4</p>
+        </div>
+    </div>
+
+    <hr style="background-color:white;" />
+    <h4 class="subtitles">Latest Transaction</h4>
+    <div class="row mt-4">
+        <div class="col-sm-6">
+            <table class="table table-bordered table-hover table-dark table-stripped subtitles">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    {% for income in income_list_trim %}
+                        <tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td>{{income.date_added}}</td>
+                            <td>{{income.product_name}}</td>
+                            <td>Rp. {{income.total|intcomma}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'list_of_income' %}" class="align-right">See more >></a>
+        </div>
+
+        <div class="col-sm-6">
+            <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expense_list_trim %}
+                        <tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td>{{expense.date_added}}</td>
+                            <td>{{expense.item_name}}</td>
+                            <td>Rp. {{expense.total|intcomma}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'list_of_expense' %}" class="align-right">See more >></a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

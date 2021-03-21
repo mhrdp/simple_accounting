@@ -5,6 +5,10 @@
 {{request.user.companydetail.company_name}}'s List of Expense
 {% endblock title %}
 
+{% block css %}
+<link href="/../../static/books/books.css" rel="stylesheet">
+{% endblock css %}
+
 {% block content %}
 <div class="col-12 col-md-12 mb-5">
     <canvas id="expenseList" style="width:100%; height:auto;"></canvas>
@@ -12,34 +16,36 @@
 
 <div class="col-12">
     <h3 class="mb-3">List of Expenses</h3>
-    <table class="table table-bordered table-hover table-dark table-striped subtitles">
-        <tr>
-            <th scope="col">No.</th>
-            <th scope="col">Date</th>
-            <th scope="col">Items</th>
-            <th scope="col">Category</th>
-            <th scope="col">Sub-category</th>
-            <th scope="col">Qty</th>
-            <th scope="col">Price</th>
-            <th scope="col">Total</th>
-            <th scope="col">Notes</th>
-            <th></th>
-        </tr>
-        {% for expense in paginator %}
+    <div class="table-responsive-xl">
+        <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
             <tr>
-                <td scope="row">{{forloop.counter}}</td>
-                <td>{{expense.date_added}}</td>
-                <td>{{expense.item_name}}</td>
-                <td>{{expense.category}}</td>
-                <td>{{expense.sub_category}}</td>
-                <td>{{expense.quantity}}</td>
-                <td>Rp. {{expense.price|intcomma}}</td>
-                <td>Rp. {{expense.total|intcomma}}</td>
-                <td>{{expense.notes}}</td>
-                <td><a href="{% url 'edit_expense' expense.pk %}">Edit</a>
+                <th scope="col">No.</th>
+                <th scope="col">Date</th>
+                <th scope="col">Items</th>
+                <th scope="col" class="small-hid">Category</th>
+                <th scope="col" class="small-hid">Sub-category</th>
+                <th scope="col" class="small-hid">Qty</th>
+                <th scope="col" class="small-hid">Price</th>
+                <th scope="col">Total</th>
+                <th scope="col" class="small-hid">Notes</th>
+                <th></th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for expense in paginator %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{expense.date_added}}</td>
+                    <td>{{expense.item_name}}</td>
+                    <td class="small-hid">{{expense.category}}</td>
+                    <td class="small-hid">{{expense.sub_category}}</td>
+                    <td class="small-hid">{{expense.quantity}}</td>
+                    <td class="small-hid">Rp. {{expense.price|intcomma}}</td>
+                    <td>Rp. {{expense.total|intcomma}}</td>
+                    <td class="small-hid">{{expense.notes}}</td>
+                    <td><a href="{% url 'edit_expense' expense.pk %}">Edit</a>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 
 {% endblock content %}

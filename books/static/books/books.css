@@ -1,3 +1,7 @@
+.books-current {
+    background-color: cadetblue;
+}
+
 .pagination > li > a
 {
     background-color: white;
@@ -25,4 +29,20 @@
 {
     background-color: #5A4181 !Important;
     border: solid 1px #5A4181;
+}
+
+@media(max-width: 1020px){
+    .table-font-resize {
+        font-size: 11px !important;
+    }
+}
+
+@media(max-width: 768px){
+    .table-font-resize {
+        font-size: 11px !important;
+    }
+
+    .small-hid {
+        display:none;
+    }
 }
