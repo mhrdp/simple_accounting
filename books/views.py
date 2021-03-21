@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.db.models.functions import TruncMonth
+
 from django.core.paginator import (
     Paginator, EmptyPage, PageNotAnInteger
 )
@@ -135,7 +138,7 @@ def list_of_income(request):
     list_of_income = Journal.objects.filter(
         username=request.user.pk,
         book_category='Debit'
-    ).order_by('-pk')
+    ).order_by('-date_added')
 
     # Paginator, to split page into several pages
     page = request.GET.get('page', 1)
@@ -180,7 +183,7 @@ def list_of_expense(request):
     list_of_expense = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit'
-    ).order_by('-pk')
+    ).order_by('-date_added')
 
     #Paginator, to split page into several pages
     page = request.GET.get('page', 1)
@@ -283,3 +286,87 @@ def edit_expense(request, pk):
         'item_name': obj.item_name,
     }
     return render(request, 'books/edit_expense.html', content)
+
+@login_required
+def user_dashboard(request):
+    # List of income and expense, latest 5 items
+    expense_list_trim = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit'
+    ).order_by('-date_added')[:5]
+
+    income_list_trim = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit'
+    ).order_by('-date_added')[:5]
+
+    # Aggregate expense and income by latest 12 month
+    expense_by_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit'
+    ).annotate(
+        month=TruncMonth('date_added')
+    ).values(
+        'month'
+    ).order_by(
+        'month'
+    )[:12].annotate(
+        sum=Sum('total')
+    )
+
+    income_by_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+    ).annotate(
+        month=TruncMonth('date_added')
+    ).values(
+        'month'
+    ).order_by(
+        'month'
+    )[:12].annotate(
+        sum=Sum('total')
+    )
+
+    # Income and Expense for running month
+    get_current_month = timezone.now().month
+
+    # Convert month's number to the name of the month
+    # timezone.now() by default return number
+    months = {}
+    list_of_months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    for i, j in zip(range(1, 13), list_of_months):
+        months[i] = j
+    # End
+
+    expense_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__month=get_current_month
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    income_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    content = {
+        'month': months[get_current_month],
+
+        'expense_list_trim': expense_list_trim,
+        'income_list_trim': income_list_trim,
+
+        'expense_by_month': expense_by_month,
+        'income_by_month': income_by_month,
+
+        'expense_in_running_month': expense_in_running_month,
+        'income_in_running_month': income_in_running_month,
+    }
+    return render(request, 'books/user_dashboard.html', content)

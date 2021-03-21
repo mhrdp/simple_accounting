@@ -18,4 +18,6 @@ urlpatterns = [
 
     path('books/', books_views.books_options, name='books_options'),
     path('input/', books_views.input_options, name='input_options'),
+
+    path('dashboard/', books_views.user_dashboard, name="user_dashboard"),
 ]
