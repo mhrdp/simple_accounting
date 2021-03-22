@@ -1,0 +1,23 @@
+/* For messages */
+.msg-success-container {
+    background-color: aquamarine;
+    border-radius: 25px;
+    opacity: .7;
+}
+
+.msg-success {
+    color: green;
+    font-weight: bold;
+}
+
+.msg-error-container {
+    background-color: tomato;
+    border-radius: 25px;
+    opacity: .7;
+}
+
+.msg-error {
+    color: red;
+    font-weight: bold;;
+}
+/* End messages CSS */

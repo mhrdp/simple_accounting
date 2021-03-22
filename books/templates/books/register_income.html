@@ -5,6 +5,23 @@
 Add Income
 {% endblock title %}
 
+{% block css %}
+<link href="/../../static/books/general.css" rel="stylesheet">
+<link href="/../../static/books/input.css" rel="stylesheet">
+{% endblock css%}
+
+{% block register_income %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock register_income %}
+
 {% block content %}
 <div class="mb-3">
     <a>
@@ -17,13 +34,6 @@ Add Income
 
 <form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}">
     {% csrf_token %}
-    <div class="col">
-        {% for msg in messages %}
-           <p class="red-dgr"><strong>{{msg}}</strong></p>
-        {% endfor %}
-        <h4 class="subtitles">Input your income here</h4>
-    </div>
-
     <div class="col-sm-3 subtitles">
         <p class="red-dgr"><strong>*required field</strong></p>
         

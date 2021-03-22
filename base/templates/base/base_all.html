@@ -107,7 +107,12 @@
           <div class="row">
             <div class="col-11">
               <div>
-                {% block content %}{% endblock content%}
+                <!-- messages block for each form to avoid duplicates -->
+                {% block register_product %}{%endblock register_product%}
+                {% block register_income %}{% endblock register_income %}
+                <!-- end of messages block -->
+
+                {% block content %}{% endblock content %}
                 {% block paginator %}{% endblock paginator %}
               </div>
             </div> 

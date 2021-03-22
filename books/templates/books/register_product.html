@@ -1,6 +1,34 @@
-{{product_form_notification}}
+{% extends 'base/base_all.html' %}
+
+{% block title %}
+Register Product
+{% endblock title %}
+
+{% block css %}
+<link href="/../../static/books/general.css" rel="stylesheet">
+{% endblock css %}
+
+{% block register_product %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-12 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock register_product %}
+
+{% block content %}
 <form method="POST">
     {% csrf_token %}
-    {{product_form}}
-    <button type="submit">Submit</button>
+    <label for="product_name" class="subtitles">Product Name: *</label>
+    {{product_form.product_name}}
+
+    <label for="price" class="subtitles">Price: *</label>
+    {{product_form.price}}
+
+    <button type="submit" class="btn btn-color-primary">Submit</button>
 </form>
+{% endblock content %}

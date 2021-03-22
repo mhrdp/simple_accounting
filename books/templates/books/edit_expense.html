@@ -4,6 +4,10 @@
 Edit {{item_name}}
 {% endblock title %}
 
+{% block css %}
+<link href="/../../static/books/input.css" rel="stylesheet">
+{% endblock css%}
+
 {% block content %}
 <form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}" novalidate>
     {% csrf_token %}
