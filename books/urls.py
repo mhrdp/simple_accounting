@@ -13,8 +13,13 @@ urlpatterns = [
     path('books/income/list/', books_views.list_of_income, name='list_of_income'),
     path(r'books/income/edit/<int:pk>/', books_views.edit_income, name='edit_income'),
 
-    path('books/dropdown-ajax/', books_views.expense_dropdown_ajax, name='dropdown_ajax'),
-    path('books/income-autofill-ajax/', books_views.income_form_autofill_ajax, name='income_form_autofill'),
+    path('books/journal', books_views.journal, name='journal'),
+
+    path('ajax/expense-dropdown/', books_views.expense_dropdown_ajax, name='dropdown_ajax'),
+    path('ajax/income-autofill/', books_views.income_form_autofill_ajax, name='income_form_autofill'),
+
+    path('ajax/filtered-income/', books_views.income_filter_by_date, name='income_filter_by_date'),
+    path('ajax/filtered-expense/', books_views.expense_filter_by_date, name='expense_filter_by_date'),
 
     path('books/', books_views.books_options, name='books_options'),
     path('input/', books_views.input_options, name='input_options'),

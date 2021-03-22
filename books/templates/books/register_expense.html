@@ -4,6 +4,10 @@
 Add Expenses
 {% endblock title %}
 
+{% block css %}
+<link href="/../../static/books/input.css" rel="stylesheet">
+{% endblock css%}
+
 {% block content %}
 <div class="mb-3">
     <a href="{% url 'register_income' %}">

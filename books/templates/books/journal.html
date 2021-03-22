@@ -1,0 +1,90 @@
+{% extends 'base/base_all.html' %}
+{% load humanize %}
+
+{% block title %}
+Journal
+{% endblock title %}
+
+{% block content %}
+<div class="col">
+    <table class="table table-bordered table-hover table-dark table-stripped subtitles">
+        <thead>
+            <tr>
+                <th scope="col" rowspan="2">No.</th>
+                <th scope="col" rowspan="2">Date</th>
+                <th scope="col" rowspan="1" colspan="2">Items</th>
+                <th scope="col" rowspan="2">Quantity</th>
+                <th scope="col" rowspan="2">Price</th>
+                <th scope="col" rowspan="1" colspan="2">Type</th>
+            </tr>
+            <tr>
+                <th scope="col">Income</th>
+                <th scope="col">Expense</th>
+                <th scope="col">Debit</th>
+                <th scope="col">Kredit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for journal in paginate %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{journal.date_added}}</td>
+                    {% if journal.product_name == None %}
+                        <td></td>
+                    {% else %}
+                        <td>{{journal.product_name}}</td>
+                    {% endif %}
+                    <td>{{journal.item_name}}</td>
+                    <td>{{journal.quantity}}</td>
+                    <td>Rp. {{journal.price|intcomma}}</td>
+                    {% if journal.book_category == 'Debit' %}
+                        <td>Rp. {{journal.total|intcomma}}</td>
+                    {% endif %}
+                    <td></td>
+                    {% if journal.book_category == 'Kredit' %}
+                        <td>Rp. {{journal.total|intcomma}}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+
+{% block paginator %}
+<div class="col-12">
+{% if paginate.has_other_pages %}
+    <ul class="pagination justify-content-end">
+        {% if paginate.has_previous %}
+            <li class="page-item">
+                <a href="?page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+        {% endif %}
+
+        <!-- Split the displayed pages by the closest one page before and after-->
+        {% for i in page_range %}
+            {% if paginate.number == i %}
+                <li class="page-item active">
+                    <span class="page-link">{{ i }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a href="?page={{i}}" class="page-link">{{i}}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginate.has_next %}
+            <li class="page-item">
+                <a href="?page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+        {% endif %}
+    </ul>
+{% endif %}
+</div>
+{% endblock paginator %}

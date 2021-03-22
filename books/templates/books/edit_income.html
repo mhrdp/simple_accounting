@@ -4,6 +4,10 @@
 Edit {{product_name}}
 {% endblock title %}
 
+{% block css %}
+<link href="/../../static/books/input.css" rel="stylesheet">
+{% endblock css%}
+
 {% block content %}
 <form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}" novalidate>
     {% csrf_token %}

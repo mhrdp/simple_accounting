@@ -18,6 +18,36 @@ import json
 
 # Create your views here.
 
+# Ajax for expense and income filter
+def expense_filter_by_date(request):
+    date_start = request.GET.get('date_start')
+    date_end = request.GET.get('date_end')
+    filtered_expense = Journal.objects.filter(
+        username=request.user.pk,
+        book_type='Kredit',
+        date_added__range=(date_start, date_end)
+    ).order_by('-date_added')
+
+    content = {
+        'filtered_expense': filtered_expense
+    }
+    return render(request, 'books/filtered_expense.html', content)
+
+def income_filter_by_date(request):
+    date_start = request.GET.get('date_start')
+    date_end = request.GET.get('date_end')
+    filtered_income = Journal.objects.filter(
+        username=request.user.pk,
+        book_type='Debit',
+        date_added__range=(date_start, date_end)
+    ).order_by('-date_time')
+
+    content = {
+        'filtered_income': filtered_income,
+    }
+    return render(request, 'filtered_income.html', content)
+# End of expense and income filter ajax
+
 # Ajax for categories and sub categories dependent dropdown
 def expense_dropdown_ajax(request):
     categories = request.GET.get('category')
@@ -56,7 +86,6 @@ def books_options(request):
 
 @login_required
 def register_product(request):
-    product_form_notification = ''
     if request.method == 'POST':
         product_form = ProductForm(request.POST or None)
         if product_form.is_valid():
@@ -64,16 +93,15 @@ def register_product(request):
             product_form_save.username = request.user
 
             product_form_save.save()
-            product_form_notification = 'Your product has been inputted!'
-
+            
+            messages.success(request, 'Your product has been registered!')
             return redirect('register_product')
         else:
-            product_form_notification = 'Your data is not valid!'
+            messages.error(request, 'There\'s something wrong! Please try again.')
     else:
         product_form = ProductForm()
     content = {
         'product_form': product_form,
-        'product_form_notification': product_form_notification
     }
     return render(request, 'books/register_product.html', content)
 
@@ -370,3 +398,46 @@ def user_dashboard(request):
         'income_in_running_month': income_in_running_month,
     }
     return render(request, 'books/user_dashboard.html', content)
+
+def journal(request):
+    journal_all = Journal.objects.filter(
+        username=request.user.pk
+    ).order_by('date_added')
+
+    expense_total = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit'
+    ).aggregate(
+        sum=Sum('total')
+    )
+    income_total = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(journal_all, 10)
+    try:
+        journal = paginator.page(page)
+    except PageNotAnInteger:
+        journal = paginator.page(1)
+    except EmptyPage:
+        journal = paginator.page(paginator.num_pages)
+    
+    index = journal.number-1 # -1 because index start from 0
+    max_index = len(paginator.page_range)
+    start_index = index-3 if index>=3 else 0
+    end_index = index+3 if index<=max_index-3 else max_index
+
+    # Make a list to be looped with for loop
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    content = {
+        'paginate': journal,
+        'page_range': page_range,
+        'expense_total': expense_total,
+        'income_total': income_total,
+    }
+    return render(request, 'books/journal.html', content)
