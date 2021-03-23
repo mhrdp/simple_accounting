@@ -5,6 +5,10 @@
 Journal
 {% endblock title %}
 
+{% block css %}
+<link href="/../../static/books/books.css" rel="stylesheet">
+{% endblock css %}
+
 {% block content %}
 <div class="col">
     <table class="table table-bordered table-hover table-dark table-stripped subtitles">
@@ -16,6 +20,7 @@ Journal
                 <th scope="col" rowspan="2">Quantity</th>
                 <th scope="col" rowspan="2">Price</th>
                 <th scope="col" rowspan="1" colspan="2">Type</th>
+                <th scope="col" rowspan="2"></th>
             </tr>
             <tr>
                 <th scope="col">Income</th>
@@ -43,6 +48,19 @@ Journal
                     <td></td>
                     {% if journal.book_category == 'Kredit' %}
                         <td>Rp. {{journal.total|intcomma}}</td>
+                    {% endif %}
+                    {% if journal.book_category == 'Debit' %}
+                        <td>
+                            <a href="{% url 'edit_income' journal.pk %}">
+                                Edit
+                            </a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href="{% url 'edit_expense' journal.pk %}">
+                                Edit
+                            </a>
+                        </td>
                     {% endif %}
                 </tr>
             {% endfor %}

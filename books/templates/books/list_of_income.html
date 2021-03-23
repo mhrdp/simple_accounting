@@ -16,6 +16,17 @@
 
 <div class="col-12 col-lg-12">
     <h3 class="mb-3">List of Expenses</h3>
+    
+    <form method="GET" id="incomeFilterForm">
+        <label for="start-date" class="subtitles">Start Date</label>
+        <input type="date" id="startDate" name="start-date">
+
+        <label for="end-date" class="subtitles">End Date</label>
+        <input type="date" id="endDate" name="end-date">
+
+        <button type="submit">Submit</button>
+    </form>
+
     <div class="table-responsive-xl">
         <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
             <thead>
