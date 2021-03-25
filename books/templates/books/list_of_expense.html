@@ -11,7 +11,9 @@
 
 {% block content %}
 <div class="col-12 col-md-12 mb-5">
-    <canvas id="expenseList" style="width:100%; height:auto;"></canvas>
+    <div class="books-canvas-container">
+        <canvas id="expenseList"></canvas>
+    </div>
 </div>
 
 <div class="col-12">
@@ -97,6 +99,9 @@
             }]
         },
         options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: false,
+
             legend: {
                 display: true,
                 labels : {

@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <link rel="stylesheet" href="/../../static/base/main.css">
-    <link href="/../../static/base/collapsable-sidebar.css" rel="stylesheet">
 
     {% block css %}{% endblock css %}
 
@@ -19,57 +18,130 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar-lighter-dark sticky-top">
-      <button class="btn" id="menu-toggle">
-        <i class="fas fa-ellipsis-h"></i>
-      </button>
-      <div>
-        <a href="#" class="navbar-brand nav-link"><b>Vislane Business</b></a>
-        <!--
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>-->
+    <div class="navbar-wrapper">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-trust">
+          <div>
+            <div class="container">
+              <a href="#" class="navbar-brand nav-link"><b>Vislane Business</b></a>
+            </div>
+            {% block navbar %}{% endblock navbar%}
+          </div>
 
-        {% block navbar %}{% endblock navbar%}
+          <div class="ml-auto admin-inline-flex">
+            {% if request.user.is_superuser %}
+              <div class="mr-2 mt-1">
+                <a href="/admin/" target="_blank">
+                  <button type="submit" class="btn btn-sm btn-warning btn-smooth">Admin Page</button>
+                </a>
+              </div>
+            {% endif %}
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-id-badge"></i>
+              </button>
+              <div class="dropdown-menu dropdown-trust dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <p class="subtitles dropdown-header"><b>PROFILE</b></p>
+                <a class="dropdown-item subtitles" href="{% url 'profile' %}">
+                  Detail
+                </a>
+                <a class="dropdown-item subtitles" href="{% url 'edit' %}">
+                  Edit Profile
+                </a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item subtitles" href="{% url 'logout' %}">
+                  <span style="color:tomato"><b>Logout</b></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
+    </div>
 
-      
-      <div class="ml-auto admin-inline-flex">
-        {% if request.user.is_superuser %}
-          <div class="mr-2 mt-1">
-            <a href="/admin/" target="_blank">
-              <button type="submit" class="btn btn-sm btn-secondary">Admin Page</button>
-            </a>
-          </div>
-        {% endif %}
-
-        <div class="dropdown">
-          <button class="btn btn-mod dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-id-badge"></i>
-          </button>
-          <div class="dropdown-menu dropdown-dark dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-            <p class="subtitles dropdown-header"><b>PROFILE</b></p>
-            <a class="dropdown-item subtitles" href="{% url 'profile' %}">
-              Detail
-            </a>
-            <a class="dropdown-item subtitles" href="{% url 'edit' %}">
-              Edit Profile
-            </a>
-          <div class="dropdown-divider"></div>
-            <a class="dropdown-item subtitles" href="{% url 'logout' %}">
-              <span style="color:tomato"><b>Logout</b></span>
-            </a>
-          </div>
+    <div class="navbar-bottom">
+    <nav class="navbar fixed-bottom navbar-trust box-shadow">
+      <div class="row margin-auto">
+        <div class="col text-center">
+          <a href="{% url 'user_dashboard' %}" class="link">
+            <i class="fas fa-chart-line fa-2x"></i>
+            <span style="font-size:12px; display:block">Dashboard</span>
+          </a>
+        </div>
+        <div class="col text-center">
+          <a href="{% url 'input_options' %}" class="link">
+            <i class="fas fa-exchange-alt fa-2x"></i>
+            <span style="font-size:12px; display:block">Input</span>
+          </a>
+        </div>
+        <div class="col text-center">
+          <a href="{% url 'books_options' %}" class="link">
+            <i class="fas fa-book-open fa-2x"></i>
+            <span style="font-size:12px; display:block">Input</span>
+          </a>
         </div>
       </div>
     </nav>
+    </div>
 
     {% block modal %}{% endblock modal %}
+
+    <div class="container-fluid">
+      <div class="sidebar-hidden-sm">
+        <div class="menu">
+          <div class="row">
+            <div class="col">
+              <h5>{{request.user.companydetail.company_name}}</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <i class="fas fa-circle dashboard-hidden"></i>
+            </div>
+            <div class="col-10">
+              <div class="nav flex-column">
+                <a href="{% url 'user_dashboard' %}" class="link">
+                  <i class="fas fa-chart-line"></i>
+                  <p class="text-inline">Dashboard</p>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <i class="fas fa-circle input-hidden"></i>
+            </div>
+            <div class="col-10">
+              <div class="nav flex-column">
+                <a href="{% url 'input_options' %}" class="link">
+                  <i class="fas fa-exchange-alt"></i>
+                  <p class="text-inline">Input</p>
+                </a>
+              </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1">
+              <i class="fas fa-circle books-hidden"></i>
+            </div>
+            <div class="col-10">
+              <div class="nav flex-column">
+                <a href="{% url 'books_options' %}" class="link">
+                  <i class="fas fa-book-open"></i>
+                  <p class="text-inline">Books</p>
+                </a>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
 
 
     <!-- id="wrapper" is to wrap everything so no one left behind when the sidebar collapse -->
     <div class="d-flex" id="wrapper">
       <!-- Collapsable sidebar -->
+      <!--
       <div class="bg-sidebar" id="sidebar-wrapper">
         <div class="list-group list-group-flush">
           <div class="sidebar-container">
@@ -99,25 +171,21 @@
             </a>
           </div>
         </div>
-      </div>
+      </div>-->
       <!-- End of collapsable sidebar -->
+      
 
-      <div id="page-content-wrapper">
-        <div class="container-fluid mt-3">
-          <div class="row">
-            <div class="col-11">
-              <div>
-                <!-- messages block for each form to avoid duplicates -->
-                {% block register_product %}{%endblock register_product%}
-                {% block register_income %}{% endblock register_income %}
-                {% block filter_income %}{% endblock filter_income %}
-                <!-- end of messages block -->
+      <div class="container mt-3">
+        <div id="page-content-wrapper">
+        
+          <!-- messages block for each form to avoid duplicates -->
+          {% block register_product %}{%endblock register_product%}
+          {% block register_income %}{% endblock register_income %}
+          {% block filter_income %}{% endblock filter_income %}
+          <!-- end of messages block -->
 
-                {% block content %}{% endblock content %}
-                {% block paginator %}{% endblock paginator %}
-              </div>
-            </div> 
-          </div>
+          {% block content %}{% endblock content %}
+          {% block paginator %}{% endblock paginator %}
         </div>
       </div>
     </div>
