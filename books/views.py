@@ -20,32 +20,108 @@ import json
 
 # Ajax for expense and income filter
 def expense_filter_by_date(request):
-    date_start = request.GET.get('date_start')
-    date_end = request.GET.get('date_end')
-    filtered_expense = Journal.objects.filter(
-        username=request.user.pk,
-        book_type='Kredit',
-        date_added__range=(date_start, date_end)
-    ).order_by('-date_added')
+    expense_paginate = None
+    page_range = None
+    sum_of_filtered_expense = None
+
+    if request.method == 'GET':
+        date_start = request.GET.get('date_start')
+        date_end = request.GET.get('date_end')
+        if date_start and date_end:
+            filtered_expense = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                date_added__range=(date_start, date_end)
+            ).order_by('-date_added')
+            sum_of_filtered_expense = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                date_added__range=(date_start, date_end)
+            ).aggregate(
+                sum=Sum('total')
+            )
+
+            # Pagination
+            page = request.GET.get('page', 1)
+            paginator = Paginator(filtered_expense, 10)
+
+            try:
+                expense_paginate = paginator.page(page)
+            except PageNotAnInteger:
+                expense_paginate = paginator.page(1)
+            except EmptyPage:
+                expense_paginate = paginator.page(paginator.num_pages)
+
+            index = expense_paginate.number-1
+            max_index = len(paginator.page_range)
+            start_index = index-3 if index>=3 else 0
+            end_index = index+3 if index<=max_index-3 else max_index
+
+            page_range = list(paginator.page_range)[start_index:end_index]
+        elif date_start == '' and date_end == '':
+            messages.error(request, 'You need to fill both fields!')
+        else:
+            messages.info(request, 'Remember to fill in both fields!')
 
     content = {
-        'filtered_expense': filtered_expense
+        'paginate': expense_paginate,
+        'page_range': page_range,
+        'sum_of_filtered_expense': sum_of_filtered_expense,
     }
     return render(request, 'books/filtered_expense.html', content)
 
 def income_filter_by_date(request):
-    date_start = request.GET.get('date_start')
-    date_end = request.GET.get('date_end')
-    filtered_income = Journal.objects.filter(
-        username=request.user.pk,
-        book_type='Debit',
-        date_added__range=(date_start, date_end)
-    ).order_by('-date_time')
+    income_paginate = None
+    page_range = None
+    sum_of_filtered_income = None
 
+    if request.method == 'GET':
+        date_start = request.GET.get('date_start')
+        date_end = request.GET.get('date_end')
+        if date_start and date_end:
+            filtered_income = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(date_start, date_end)
+            ).order_by('-date_added')
+            sum_of_filtered_income = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(date_start, date_end)
+            ).aggregate(
+                sum=Sum('total')
+            )
+
+            # Pagination
+            page = request.GET.get('page', 1)
+            paginator = Paginator(filtered_income, 10)
+
+            try:
+                income_paginate = paginator.page(page)
+            except PageNotAnInteger:
+                income_paginate = paginator.page(1)
+            except EmptyPage:
+                income_paginate = paginator.page(paginator.num_pages)
+            
+            # Display only the six pages maximum from the current total pages of pagination
+            index = income_paginate.number-1 # -1 because index start from 0
+            max_index = len(paginator.page_range)
+            start_index = index-3 if index>=3 else 0
+            end_index = index+3 if index<=max_index-3 else max_index
+
+            # Make a list to be looped with for loop
+            page_range = list(paginator.page_range)[start_index:end_index]
+        elif date_start == '' or date_end == '':
+            messages.error(request, 'You need to fill both fields!')
+        else:
+            messages.info(request, 'Remember to fill in both fields!')
+        
     content = {
-        'filtered_income': filtered_income,
+        'paginate': income_paginate,
+        'page_range': page_range,
+        'sum_of_filtered_income': sum_of_filtered_income,
     }
-    return render(request, 'filtered_income.html', content)
+    return render(request, 'books/filtered_income.html', content)
 # End of expense and income filter ajax
 
 # Ajax for categories and sub categories dependent dropdown

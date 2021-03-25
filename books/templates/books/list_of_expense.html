@@ -11,11 +11,14 @@
 
 {% block content %}
 <div class="col-12 col-md-12 mb-5">
-    <canvas id="expenseList" style="width:100%; height:auto;"></canvas>
+    <div class="books-canvas-container">
+        <canvas id="expenseList"></canvas>
+    </div>
 </div>
 
 <div class="col-12">
     <h3 class="mb-3">List of Expenses</h3>
+    <a href="{% url 'expense_filter_by_date' %}">Filter the data</a>
     <div class="table-responsive-xl">
         <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
             <tr>
@@ -96,6 +99,9 @@
             }]
         },
         options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: false,
+
             legend: {
                 display: true,
                 labels : {

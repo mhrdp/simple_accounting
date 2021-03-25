@@ -10,71 +10,53 @@
 {% endblock css %}
 
 {% block content %}
-<div class="h-100 text-center">
-    <h4 class="subtitles mb-3">Current Month: {{month}}</h4>
-    <div class="row justify-content-center">
-        <div class="col-sm-5 mb-2 dashboard-container-sm">
-            <p class="subtitles text-left"><b>Income</b></p>
-            {% if income_in_running_month.sum > 0 %}
-                <p class="p-size text-gr">Rp. {{income_in_running_month.sum|intcomma}}</p>
-            {% else %}
-                <p class="p-size text-gr">Rp. 0</p>
-            {% endif %}
-        </div>
-        <div class="col-sm-5 mb-2 ml-1 dashboard-container-sm">
-            <p class="subtitles text-left"><b>Expense</b></p>
-            {% if expense_in_running_month.sum > 0 %}
-                <p class="p-size text-rd">Rp. {{expense_in_running_month.sum|intcomma}}</p>
-            {% else %}
-                <p class="p-size text-rd">Rp. 0</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-3">
-            <p class="subtitles">Performance chart 1</p>
-        </div>
-        <div class="col-sm-3">
-            <p class="subtitles">Performance chart 2</p>
-        </div>
-        <div class="col-sm-3">
-            <p class="subtitles">Performance chart 3</p>
-        </div>
-        <div class="col-sm-3">
-            <p class="subtitles">Performance chart 4</p>
-        </div>
-    </div>
-
-    <hr style="background-color:white;" />
-    <h4 class="subtitles">Latest Transaction</h4>
-    <div class="row mt-4">
-        <div class="col-sm-6">
-            <table class="table table-bordered table-hover table-dark table-stripped subtitles">
-                <thead>
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Items</th>
-                        <th scope="col">Total</th>
-                    </tr>
-                    </thead>
-                <tbody>
-                    {% for income in income_list_trim %}
-                        <tr>
-                            <td scope="row">{{forloop.counter}}</td>
-                            <td>{{income.date_added}}</td>
-                            <td>{{income.product_name}}</td>
-                            <td>Rp. {{income.total|intcomma}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <a href="{% url 'list_of_income' %}" class="align-right">See more >></a>
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-container-sm">
+                    <h6 class="text-gr">
+                        <span><i class="fas fa-cash-register mr-1"></i></span>
+                        Rp. {{income_in_running_month.sum|intcomma}}
+                    </h6>
+                    <div class="mini-chart-container">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-container-sm">
+                    <h6 class="text-rd">
+                        <span><i class="fas fa-credit-card mr-1"></i></span>
+                        Rp. {{expense_in_running_month.sum|intcomma}}
+                    </h6>
+                    <div class="mini-chart-container">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-container-sm">
+                    <h6>Rp. 500,000.-</h6>
+                    <div class="mini-chart-container">
+                        <canvas id="profitChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-container-sm">
+                    <h6>Some placeholder</h6>
+                    <div class="mini-chart-container">
+                        <canvas id="someChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-sm-6">
-            <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+        <div class="row mt-3">
+            <div class="col-12 col-lg-6">
+                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                <h5>Last 5 Transaction for Income</h5>
                 <thead>
                     <tr>
                         <th scope="col">No.</th>
@@ -84,18 +66,110 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for expense in expense_list_trim %}
-                        <tr>
-                            <td scope="row">{{forloop.counter}}</td>
-                            <td>{{expense.date_added}}</td>
-                            <td>{{expense.item_name}}</td>
-                            <td>Rp. {{expense.total|intcomma}}</td>
-                        </tr>
-                    {% endfor %}
+                {% for income in income_list_trim %}
+                    <tr>
+                        <td scope="row">{{forloop.counter}}</td>
+                        <td>{{income.date_added}}</td>
+                        <td>{{income.product_name}}</td>
+                        <td>Rp. {{income.total|intcomma}}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'list_of_expense' %}" class="align-right">See more >></a>
+            </div>
+            <div class="col-12 col-lg-6">
+                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                <h5>Last 5 Transaction for Expense</h5>
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Date</th>
+                <th scope="col">Items</th>
+                <th scope="col">Total</th>
+            </tr>
+            {% for expense in expense_list_trim %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{expense.date_added}}</td>
+                    <td>{{expense.item_name}}</td>
+                    <td>Rp. {{expense.total|intcomma}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+            </div>
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script>
+    var ctx = document.getElementById("expenseChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+            {%for i in expense_by_month%}"{{i.date_added}}",{%endfor%}
+            ],
+            datasets: [{
+                label: "Expense",
+                data: [
+                {%for i in expense_by_month%}{{i.sum}},{%endfor%}
+                ],
+                backgroundColor: "rgba(255, 99, 71, 0.658)",
+                borderColor: "#ff3f80"
+            }]
+        },
+        options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: false, 
+
+            legend: {
+                display: false,
+                labels : {
+                    fontColor: "#bcccdc"
+                }
+            },
+            scales: {
+                yAxes: [{
+                    display: false,
+                }]
+            }
+        }
+    })
+
+     var ctx = document.getElementById("incomeChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+            {%for i in income_by_month%}"{{i.date_added}}",{%endfor%}
+            ],
+            datasets: [{
+                label: "Income",
+                data: [
+                {%for i in income_by_month%}{{i.sum}},{%endfor%}
+                ],
+                backgroundColor: "#8cfe36",
+            }]
+        },
+        options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: false,
+
+            legend: {
+                display: false,
+                labels : {
+                    fontColor: "#bcccdc"
+                }
+            },
+            scales: {
+                yAxes: [{
+                    display: false,
+                }]
+            }
+        }
+    })
+</script>
+{% endblock js %}

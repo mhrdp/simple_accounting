@@ -1,5 +1,5 @@
-.books-current {
-    background-color: cadetblue;
+.books-hidden {
+    display: inline !important;
 }
 
 .pagination > li > a
@@ -31,9 +31,20 @@
     border: solid 1px #5A4181;
 }
 
-@media(max-width: 1020px){
+.books-canvas-container {
+    position: relative;
+    margin: auto;
+    width: auto;
+    height: auto;
+}
+
+@media(max-width: 1080px){
     .table-font-resize {
         font-size: 11px !important;
+    }
+
+    .books-canvas-container {
+        height: auto;
     }
 }
 
@@ -44,5 +55,9 @@
 
     .small-hid {
         display:none;
+    }
+
+    .books-canvas-container {
+        height: auto;
     }
 }

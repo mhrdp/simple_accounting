@@ -10,46 +10,60 @@
 {% endblock css %}
 
 {% block content %}
-<div class="col-12 col-md-12 mb-5">
-    <canvas id="incomeList" style="width:100%; height:auto"></canvas>
-</div>
+<div class="row">
+    <div class="col-12 col-md-12 mb-5">
+        <div class="books-canvas-container">
+            <canvas id="incomeList"></canvas>
+        </div>
+    </div>
 
-<div class="col-12 col-lg-12">
-    <h3 class="mb-3">List of Expenses</h3>
-    <div class="table-responsive-xl">
-        <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-            <thead>
-            <tr>
-                <th scope="col">No.</th>
-                <th scope="col">Date</th>
-                <th scope="col">Items</th>
-                <th scope="col" class="small-hid">Qty</th>
-                <th scope="col" class="small-hid">Price</th>
-                <th scope="col" class="small-hid">Additional</th>
-                <th scope="col">Total</th>
-                <th scope="col" class="small-hid">Notes</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for income in paginate %}
+    <div class="col-12 col-lg-12">
+        <h3 class="mb-3">List of Income</h3>
+        <a href="{% url 'income_filter_by_date' %}">Filter the data</a>
+        <form method="GET" id="incomeFilterForm">
+            <label for="start-date" class="subtitles">Start Date</label>
+            <input type="date" id="startDate" name="start-date">
+
+            <label for="end-date" class="subtitles">End Date</label>
+            <input type="date" id="endDate" name="end-date">
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="table-responsive-xl">
+            <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                <thead>
                 <tr>
-                    <td scope="row">{{forloop.counter}}</td>
-                    <td>{{income.date_added}}</td>
-                    <td>{{income.product_name}}</td>
-                    <td class="small-hid">{{income.quantity}}</td>
-                    <td class="small-hid">Rp. {{income.price|intcomma}}</td>
-                    <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
-                    <td>Rp. {{income.total|intcomma}}</td>
-                    <td class="small-hid">{{income.notes}}</td>
-                    <td><a href="{% url 'edit_income' income.pk %}">Edit</a></td>
+                    <th scope="col">No.</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Items</th>
+                    <th scope="col" class="small-hid">Qty</th>
+                    <th scope="col" class="small-hid">Price</th>
+                    <th scope="col" class="small-hid">Additional</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" class="small-hid">Notes</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for income in paginate %}
+                    <tr>
+                        <td scope="row">{{forloop.counter}}</td>
+                        <td>{{income.date_added}}</td>
+                        <td>{{income.product_name}}</td>
+                        <td class="small-hid">{{income.quantity}}</td>
+                        <td class="small-hid">Rp. {{income.price|intcomma}}</td>
+                        <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
+                        <td>Rp. {{income.total|intcomma}}</td>
+                        <td class="small-hid">{{income.notes}}</td>
+                        <td><a href="{% url 'edit_income' income.pk %}">Edit</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-
 
 {% endblock content %}
 
@@ -108,10 +122,14 @@
                 data: [
                 {%for i in income_chart_last_30_days%}{{i.sum}},{%endfor%}
                 ],
-                backgroundColor: "#028fa3",
+                backgroundColor: "#0290a379",
+                borderColor: "#028fa3"
             }]
         },
         options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: false,
+
             legend: {
                 display: true,
                 labels : {

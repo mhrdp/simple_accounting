@@ -18,8 +18,8 @@ urlpatterns = [
     path('ajax/expense-dropdown/', books_views.expense_dropdown_ajax, name='dropdown_ajax'),
     path('ajax/income-autofill/', books_views.income_form_autofill_ajax, name='income_form_autofill'),
 
-    path('ajax/filtered-income/', books_views.income_filter_by_date, name='income_filter_by_date'),
-    path('ajax/filtered-expense/', books_views.expense_filter_by_date, name='expense_filter_by_date'),
+    path('filter/filtered-income/', books_views.income_filter_by_date, name='income_filter_by_date'),
+    path('filter/filtered-expense/', books_views.expense_filter_by_date, name='expense_filter_by_date'),
 
     path('books/', books_views.books_options, name='books_options'),
     path('input/', books_views.input_options, name='input_options'),

@@ -20,4 +20,15 @@
     color: red;
     font-weight: bold;;
 }
+
+.msg-info-container {
+    background-color: orange;
+    border-radius: 25px;
+    opacity: .7;
+}
+
+.msg-info {
+    color:orangered;
+    font-weight: bold;
+}
 /* End messages CSS */
