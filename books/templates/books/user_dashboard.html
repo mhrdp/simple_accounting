@@ -110,12 +110,12 @@
         type: "line",
         data: {
             labels: [
-            {%for i in expense_by_month%}"{{i.date_added}}",{%endfor%}
+            {%for i in expense_in_running_month_per_day%}"{{i.date_added}}",{%endfor%}
             ],
             datasets: [{
                 label: "Expense",
                 data: [
-                {%for i in expense_by_month%}{{i.sum}},{%endfor%}
+                {%for i in expense_in_running_month_per_day%}{{i.sum}},{%endfor%}
                 ],
                 backgroundColor: "rgba(255, 99, 71, 0.658)",
                 borderColor: "#ff3f80"
@@ -134,6 +134,9 @@
             scales: {
                 yAxes: [{
                     display: false,
+                }],
+                xAxes: [{
+                    display: false,
                 }]
             }
         }
@@ -144,14 +147,15 @@
         type: "line",
         data: {
             labels: [
-            {%for i in income_by_month%}"{{i.date_added}}",{%endfor%}
+            {%for i in income_in_running_month_per_day%}"{{i.date_added}}",{%endfor%}
             ],
             datasets: [{
                 label: "Income",
                 data: [
-                {%for i in income_by_month%}{{i.sum}},{%endfor%}
+                {%for i in income_in_running_month_per_day%}{{i.sum}},{%endfor%}
                 ],
-                backgroundColor: "#8cfe36",
+                backgroundColor: "#8dfe36a1",
+                borderColor: "#8cfe36"
             }]
         },
         options: {
@@ -166,6 +170,9 @@
             },
             scales: {
                 yAxes: [{
+                    display: false,
+                }],
+                xAxes: [{
                     display: false,
                 }]
             }
