@@ -87,7 +87,7 @@
 
     {% block modal %}{% endblock modal %}
 
-    <div class="container-fluid">
+    <nav class="container-fluid">
       <div class="sidebar-hidden-sm">
         <div class="menu">
           <div class="row">
@@ -114,12 +114,47 @@
             </div>
             <div class="col-10">
               <div class="nav flex-column">
-                <a href="{% url 'input_options' %}" class="link">
+                <a href="#inputDropdown" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle link">
                   <i class="fas fa-exchange-alt"></i>
                   <p class="text-inline">Input</p>
                 </a>
               </div>
             </div>
+        </div>
+        <div class="collapse" id="inputDropdown">
+          <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-9">
+              <div class="nav flex-column">
+                <a href="{% url 'register_income' %}" class="link income-current">
+                Input Income
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-9">
+              <div class="nav flex-column">
+                <a href="{% url 'register_expense' %}" class="link expense-current">
+                Input Expense
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-9">
+              <div class="nav flex-column">
+                <a href="{% url 'register_product' %}" class="link product-current">
+                Input Product
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="row">
             <div class="col-1">
@@ -127,54 +162,54 @@
             </div>
             <div class="col-10">
               <div class="nav flex-column">
-                <a href="{% url 'books_options' %}" class="link">
+                <a href="#booksDropdown" class="dropdown-toggle link" data-toggle="collapse" aria-expanded="false">
                   <i class="fas fa-book-open"></i>
                   <p class="text-inline">Books</p>
                 </a>
               </div>
             </div>
         </div>
+        <div class="collapse" id="booksDropdown">
+          <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-9">
+              <div class="nav flex-column">
+                <a href="{% url 'list_of_income' %}" class="link income-list-current">
+                Income List
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-9">
+              <div class="nav flex-column">
+                <a href="{% url 'list_of_expense' %}" class="link expense-list-current">
+                Expense List
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-9">
+              <div class="nav flex-column">
+                <a href="{% url 'journal' %}" class="link journal-current">
+                Journal
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </nav>
 
 
     <!-- id="wrapper" is to wrap everything so no one left behind when the sidebar collapse -->
     <div class="d-flex" id="wrapper">
-      <!-- Collapsable sidebar -->
-      <!--
-      <div class="bg-sidebar" id="sidebar-wrapper">
-        <div class="list-group list-group-flush">
-          <div class="sidebar-container">
-            <a href="{% url 'user_dashboard' %}">
-              <div class="dashboard-current">
-                <button class="btn dashboard-current w-100">
-                  <i class="fas fa-chart-line fa-2x sidebar-contrast-dark"></i>
-                  <p style="font-size:11px">Dashboard</p>
-                </button>
-              </div>
-            </a>
-            <a href="{% url 'input_options' %}">
-              <div class="input-current">
-                <button class="btn mt-1 w-100">
-                  <i class="fas fa-exchange-alt fa-2x sidebar-contrast-dark"></i>
-                  <p style="font-size:11px">Income-Outcome</p>
-                </button>
-              </div>
-            </a>
-            <a href="{% url 'books_options' %}">
-              <div class="books-current">
-                <button class="btn mt-1 w-100">
-                  <i class="fas fa-balance-scale fa-2x sidebar-contrast-dark"></i>
-                  <p style="font-size:11px">Books</p>
-                </button>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>-->
-      <!-- End of collapsable sidebar -->
-      
-
       <div class="container mt-3">
         <div id="page-content-wrapper">
         
@@ -196,13 +231,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <script>
-      // This is jQuery for collapsable sidebar
-      $("#menu-toggle").click(function(e){
-          e.preventDefault();
-          $("#wrapper").toggleClass("toggled");
-      })
-    </script>
+  
 
     {% block js %}{% endblock js %}
   </body>

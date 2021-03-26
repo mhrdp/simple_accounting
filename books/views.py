@@ -452,12 +452,34 @@ def user_dashboard(request):
     ).aggregate(
         sum=Sum('total')
     )
+    expense_in_running_month_per_day = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__month=get_current_month,
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    ).annotate(
+        sum=Sum('total')
+    )
 
     income_in_running_month = Journal.objects.filter(
         username=request.user.pk,
         book_category='Debit',
         date_added__month=get_current_month,
     ).aggregate(
+        sum=Sum('total')
+    )
+    income_in_running_month_per_day = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+        date_added__month=get_current_month,
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    ).annotate(
         sum=Sum('total')
     )
 
@@ -471,7 +493,10 @@ def user_dashboard(request):
         'income_by_month': income_by_month,
 
         'expense_in_running_month': expense_in_running_month,
+        'expense_in_running_month_per_day': expense_in_running_month_per_day,
+
         'income_in_running_month': income_in_running_month,
+        'income_in_running_month_per_day': income_in_running_month_per_day,
     }
     return render(request, 'books/user_dashboard.html', content)
 
