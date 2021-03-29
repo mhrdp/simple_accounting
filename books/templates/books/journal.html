@@ -10,62 +10,87 @@ Journal
 {% endblock css %}
 
 {% block content %}
-<div class="col">
-    <table class="table table-bordered table-hover table-dark table-stripped subtitles">
-        <thead>
-            <tr>
-                <th scope="col" rowspan="2">No.</th>
-                <th scope="col" rowspan="2">Date</th>
-                <th scope="col" rowspan="1" colspan="2">Items</th>
-                <th scope="col" rowspan="2">Quantity</th>
-                <th scope="col" rowspan="2">Price</th>
-                <th scope="col" rowspan="1" colspan="2">Type</th>
-                <th scope="col" rowspan="2"></th>
-            </tr>
-            <tr>
-                <th scope="col">Income</th>
-                <th scope="col">Expense</th>
-                <th scope="col">Debit</th>
-                <th scope="col">Kredit</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for journal in paginate %}
+<div class="row">
+    
+
+    <div class="mb-3">
+        <a href="{% url 'list_of_income' %}">
+            <button class="btn btn-transparent-scd">Incomes List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'list_of_expense' %}">
+            <button class="btn btn-transparent-scd">Expenses List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a>
+            <button class="btn content-current disabled">Journal</button>
+        </a>
+    </div>
+
+    <div class="col-12">
+        <table class="table table-bordered table-hover table-dark table-stripped subtitles table-font-resize">
+            <thead>
                 <tr>
-                    <td scope="row">{{forloop.counter}}</td>
-                    <td>{{journal.date_added}}</td>
-                    {% if journal.product_name == None %}
-                        <td></td>
-                    {% else %}
-                        <td>{{journal.product_name}}</td>
-                    {% endif %}
-                    <td>{{journal.item_name}}</td>
-                    <td>{{journal.quantity}}</td>
-                    <td>Rp. {{journal.price|intcomma}}</td>
-                    {% if journal.book_category == 'Debit' %}
-                        <td>Rp. {{journal.total|intcomma}}</td>
-                    {% endif %}
-                    <td></td>
-                    {% if journal.book_category == 'Kredit' %}
-                        <td>Rp. {{journal.total|intcomma}}</td>
-                    {% endif %}
-                    {% if journal.book_category == 'Debit' %}
-                        <td>
-                            <a href="{% url 'edit_income' journal.pk %}">
-                                Edit
-                            </a>
-                        </td>
-                    {% else %}
-                        <td>
-                            <a href="{% url 'edit_expense' journal.pk %}">
-                                Edit
-                            </a>
-                        </td>
-                    {% endif %}
+                    <th scope="col" rowspan="2">No.</th>
+                    <th scope="col" rowspan="2">Date</th>
+                    <th scope="col" rowspan="1" colspan="2">Items</th>
+                    <th scope="col" rowspan="2" class="small-hid">Quantity</th>
+                    <th scope="col" rowspan="2" class="small-hid">Price</th>
+                    <th scope="col" rowspan="1" colspan="2">Type</th>
+                    <th scope="col" rowspan="2"></th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                <tr>
+                    <th scope="col">Income</th>
+                    <th scope="col">Expense</th>
+                    <th scope="col">Debit</th>
+                    <th scope="col">Kredit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for journal in paginate %}
+                    <tr>
+                        <td scope="row">{{forloop.counter}}</td>
+                        <td>{{journal.date_added}}</td>
+                        {% if journal.product_name == None %}
+                            <td></td>
+                        {% else %}
+                            <td>{{journal.product_name}}</td>
+                        {% endif %}
+                        <td>{{journal.item_name}}</td>
+                        <td class="small-hid">{{journal.quantity}}</td>
+                        <td class="small-hid">Rp. {{journal.price|intcomma}}</td>
+                        {% if journal.book_category == 'Debit' %}
+                            <td>Rp. {{journal.total|intcomma}}</td>
+                        {% endif %}
+                        <td></td>
+                        {% if journal.book_category == 'Kredit' %}
+                            <td>Rp. {{journal.total|intcomma}}</td>
+                        {% endif %}
+                        {% if journal.book_category == 'Debit' %}
+                            <td>
+                                <a href="{% url 'edit_income' journal.pk %}">
+                                    Edit
+                                </a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a href="{% url 'edit_expense' journal.pk %}">
+                                    Edit
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% for i in kredit_chart_last_30_days %}
+<p class="subtitles">{{i}}</p>
+{% endfor %}
+
+{{a.date_added}}
 {% endblock content %}
 
 {% block paginator %}
@@ -106,3 +131,57 @@ Journal
 {% endif %}
 </div>
 {% endblock paginator %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script>
+    var ctx = document.getElementById("journalList").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: [
+            {%for i in journal_date_for_chart%}"{{i.date_added}}",{%endfor%}
+            ],
+            datasets: [{
+                label: "Income",
+                data: [
+                {%for i in debit_chart_last_30_days%}
+                    {%if i.date_added == None%}
+                        0,
+                    {%else%}
+                        {{i.sum}},
+                    {%endif%}
+                {%endfor%}
+                ],
+                backgroundColor: "#8cfe36",
+            }, {
+                label: "Expense",
+                data: [
+                    {%for j in kredit_chart_last_30_days%}
+                        {%for x in journal_date_for_chart%}
+                            {%if j.date_added == x.date_added%}
+                                {{j.sum}},
+                            {%elif not j.date_added == x.date_added%}
+                                0,
+                            {%endif%}
+                        {%endfor%}
+                    {%endfor%}
+                ],
+                backgroundColor: "#ff3f80",
+            }]
+        },
+        options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: false,
+
+            legend: {
+                display: true,
+                labels : {
+                    fontColor: "#bcccdc"
+                }
+            }
+        }
+    })
+</script>
+{% endblock js %}

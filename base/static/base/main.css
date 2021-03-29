@@ -13,6 +13,12 @@ body {
     margin-right: 0 !important;
 }
 
+.vertical-ruler {
+    border-left: 1px solid #fff;
+    display: inline;
+    margin-right: 5px;
+}
+
 /* Button */
 .btn {
     color: #fff !important;
@@ -52,6 +58,14 @@ body {
     color: #121212 !important;
 }
 
+.btn-transparent-scd {
+    color: #fff;
+}
+
+.btn-transparent-scd:hover {
+    color: rgba(255, 255, 255, 0.5);
+}
+
 .btn-warning {
     border-color: #f6d33c !important;
     border-width: 2px;
@@ -78,10 +92,45 @@ body {
     background-color: rgb(179, 179, 179);
 }
 
-.btn.content-current:hover {
-    color: wheat;
+.content-current {
+    border-bottom: 3px solid #3e50b4 !important;
 }
 /* End of button */
+
+/* For messages */
+.msg-success-container {
+    background-color: aquamarine;
+    border-radius: 25px;
+    opacity: .7;
+}
+
+.msg-success {
+    color: green;
+    font-weight: bold;
+}
+
+.msg-error-container {
+    background-color: tomato;
+    border-radius: 25px;
+    opacity: .7;
+}
+
+.msg-error {
+    color: red;
+    font-weight: bold;;
+}
+
+.msg-info-container {
+    background-color: orange;
+    border-radius: 25px;
+    opacity: .7;
+}
+
+.msg-info {
+    color:orangered;
+    font-weight: bold;
+}
+/* End messages CSS */
 
 
 /* Text */
@@ -254,7 +303,7 @@ div footer.quote-footer {
     }
 
     #wrapper {
-        margin-left: 0 !important;
+        margin-left: 5px !important;
     }
 
     .sidebar-hidden-sm {

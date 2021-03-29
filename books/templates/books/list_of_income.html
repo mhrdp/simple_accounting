@@ -10,11 +10,26 @@
 {% endblock css %}
 
 {% block content %}
+
 <div class="row">
     <div class="col-12 col-md-12 mb-5">
         <div class="books-canvas-container">
             <canvas id="incomeList"></canvas>
         </div>
+    </div>
+
+    <div class="mb-3">
+        <a href="{% url 'list_of_income' %}">
+            <button class="btn content-current disabled">Incomes List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'list_of_expense' %}">
+            <button class="btn btn-transparent-scd">Expenses List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'journal' %}">
+            <button class="btn content-current disabled">Journal</button>
+        </a>
     </div>
 
     <div class="col-12 col-lg-12">
