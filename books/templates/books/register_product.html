@@ -21,6 +21,20 @@ Register Product
 {% endblock register_product %}
 
 {% block content %}
+<div class="mb-3">
+    <a href="{% url 'register_income' %}">
+        <button class="btn btn-transparent-scd">Income Input</button>
+    </a>
+    <div class="vertical-ruler"></div>
+    <a href="{% url 'register_expense' %}">
+        <button class="btn btn-transparent-scd">Expense Input</button>
+    </a>
+    <div class="vertical-ruler"></div>
+    <a href="{% url 'register_product' %}">
+        <button class="btn content-current disabled">Register Products</button>
+    </a>
+</div>
+
 <form method="POST">
     {% csrf_token %}
     <label for="product_name" class="subtitles">Product Name: *</label>

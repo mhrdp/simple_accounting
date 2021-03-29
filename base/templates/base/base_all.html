@@ -61,28 +61,28 @@
     </div>
 
     <div class="navbar-bottom">
-    <nav class="navbar fixed-bottom navbar-trust box-shadow">
-      <div class="row margin-auto">
-        <div class="col text-center">
-          <a href="{% url 'user_dashboard' %}" class="link">
-            <i class="fas fa-chart-line fa-2x"></i>
-            <span style="font-size:12px; display:block">Dashboard</span>
-          </a>
+      <nav class="navbar fixed-bottom navbar-trust box-shadow">
+        <div class="row margin-auto">
+          <div class="col text-center">
+            <a href="{% url 'user_dashboard' %}" class="link">
+              <i class="fas fa-chart-line fa-2x"></i>
+              <span style="font-size:12px; display:block">Dashboard</span>
+            </a>
+          </div>
+          <div class="col text-center">
+            <a href="{% url 'register_income' %}" class="link">
+              <i class="fas fa-exchange-alt fa-2x"></i>
+              <span style="font-size:12px; display:block">Input</span>
+            </a>
+          </div>
+          <div class="col text-center">
+            <a href="{% url 'journal' %}" class="link">
+              <i class="fas fa-book-open fa-2x"></i>
+              <span style="font-size:12px; display:block">Input</span>
+            </a>
+          </div>
         </div>
-        <div class="col text-center">
-          <a href="{% url 'input_options' %}" class="link">
-            <i class="fas fa-exchange-alt fa-2x"></i>
-            <span style="font-size:12px; display:block">Input</span>
-          </a>
-        </div>
-        <div class="col text-center">
-          <a href="{% url 'books_options' %}" class="link">
-            <i class="fas fa-book-open fa-2x"></i>
-            <span style="font-size:12px; display:block">Input</span>
-          </a>
-        </div>
-      </div>
-    </nav>
+      </nav>
     </div>
 
     {% block modal %}{% endblock modal %}
@@ -216,6 +216,7 @@
           <!-- messages block for each form to avoid duplicates -->
           {% block register_product %}{%endblock register_product%}
           {% block register_income %}{% endblock register_income %}
+          {% block register_expense %}{% endblock register_expense %}
           {% block filter_income %}{% endblock filter_income %}
           <!-- end of messages block -->
 

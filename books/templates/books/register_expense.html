@@ -8,20 +8,37 @@ Add Expenses
 <link href="/../../static/books/input.css" rel="stylesheet">
 {% endblock css%}
 
+{% block register_expense %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock register_expense%}
+
 {% block content %}
 <div class="mb-3">
     <a href="{% url 'register_income' %}">
-        <button class="btn btn-color-primary">Income Input</button>
+        <button class="btn btn-transparent-scd">Income Input</button>
     </a>
+    <div class="vertical-ruler"></div>
     <a>
         <button class="btn content-current disabled">Expense Input</button>
+    </a>
+    <div class="vertical-ruler"></div>
+    <a href="{% url 'register_product' %}">
+        <button class="btn btn-transparent-scd">Register Products</button>
     </a>
 </div>
 
 <form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}" novalidate>
     {% csrf_token %}
     <div class="col">
-        <h4 class="subtitles">Input your expense here</h4>
+        <h4>Input your expense here</h4>
     </div>
 
     <div class="col-sm-3 subtitles">

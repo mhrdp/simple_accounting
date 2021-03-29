@@ -11,10 +11,25 @@
 
 {% block content %}
 <div class="col-12 col-md-12 mb-5">
+    <h4>Performance for the last 30 days:</h4>
     <div class="books-canvas-container">
         <canvas id="expenseList"></canvas>
     </div>
 </div>
+
+<div class="mb-3">
+        <a href="{% url 'list_of_income' %}">
+            <button class="btn btn-transparent-scd">Incomes List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a>
+            <button class="btn content-current disabled">Expenses List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'journal' %}">
+            <button class="btn btn-transparent-scd">Journal</button>
+        </a>
+    </div>
 
 <div class="col-12">
     <h3 class="mb-3">List of Expenses</h3>

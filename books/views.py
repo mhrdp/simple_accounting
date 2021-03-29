@@ -503,7 +503,7 @@ def user_dashboard(request):
 def journal(request):
     journal_all = Journal.objects.filter(
         username=request.user.pk
-    ).order_by('date_added')
+    ).order_by('-date_added')
 
     expense_total = Journal.objects.filter(
         username=request.user.pk,
@@ -515,6 +515,38 @@ def journal(request):
         username=request.user.pk,
         book_category='Debit',
     ).aggregate(
+        sum=Sum('total')
+    )
+
+    kredit_chart_for_last_30_days = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit'
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    )[:30].annotate(
+        sum=Sum('total')
+    )
+    debit_chart_for_last_30_days = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit'
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    )[:30].annotate(
+        sum=Sum('total')
+    )
+
+    # In case one of income or expense not present in some dates, you might need to do this so it won't return NULL inside the charts
+    journal_date_for_chart = Journal.objects.filter(
+        username=request.user.pk,
+    ).values(
+        'date_added'
+    ).order_by(
+        'date_added'
+    )[:30].annotate(
         sum=Sum('total')
     )
 
@@ -538,7 +570,14 @@ def journal(request):
     content = {
         'paginate': journal,
         'page_range': page_range,
+
         'expense_total': expense_total,
         'income_total': income_total,
+
+        'kredit_chart_last_30_days': kredit_chart_for_last_30_days,
+        'debit_chart_last_30_days': debit_chart_for_last_30_days,
+        'journal_date_for_chart': journal_date_for_chart,
+
+        'a': journal_date_for_chart[0]
     }
     return render(request, 'books/journal.html', content)
