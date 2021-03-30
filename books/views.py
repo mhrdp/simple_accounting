@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.http import HttpResponse
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -15,10 +16,10 @@ from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory, Journal
 
 import json
+import csv
 
 # Create your views here.
-
-# Ajax for expense and income filter
+@login_required
 def expense_filter_by_date(request):
     expense_paginate = None
     page_range = None
@@ -70,6 +71,7 @@ def expense_filter_by_date(request):
     }
     return render(request, 'books/filtered_expense.html', content)
 
+@login_required
 def income_filter_by_date(request):
     income_paginate = None
     page_range = None
@@ -122,7 +124,6 @@ def income_filter_by_date(request):
         'sum_of_filtered_income': sum_of_filtered_income,
     }
     return render(request, 'books/filtered_income.html', content)
-# End of expense and income filter ajax
 
 # Ajax for categories and sub categories dependent dropdown
 def expense_dropdown_ajax(request):
@@ -150,15 +151,22 @@ def income_form_autofill_ajax(request):
     return render(request, 'books/income_form_autofill.html', content)
 # end of ajax autofill income form
 
-# Empty content just for rendering the page
-def input_options(request):
-    content = {}
-    return render(request, 'books/input_options.html', content)
+# Export table to CSV / Excel
+def export_journal_to_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="journal.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Date Added', 'Item Name', 'Book Category', 'Category', 'Sub Category', 'Price', 'Quantity', 'Total', 'Notes'])
 
-def books_options(request):
-    content = {}
-    return render(request, 'books/books_options.html', content)
-# End of empty content
+    journal = Journal.objects.filter(
+        username=request.user.pk,
+    ).values_list(
+        'date_added', 'item_name', 'book_category', 'category__category', 'sub_category__sub_category', 'price', 'quantity', 'total', 'notes'
+    )
+    for expense in journal:
+        writer.writerow(expense)
+    return response
+# End of export
 
 @login_required
 def register_product(request):
@@ -224,9 +232,10 @@ def register_expense(request):
             expense_form_save.total = expense_form_save.price*expense_form_save.quantity
 
             expense_form_save.save()
+            messages.success(request, 'Your data has been inputted!')
             return redirect('register_expense')
         else:
-            expense_form_notification = 'There\'s something wrong in your input!'
+            messages.error(request, 'There\'s something wrong in your data!')
     else:
         expense_form = ExpenseForm()
     
@@ -543,7 +552,7 @@ def journal(request):
     journal_date_for_chart = Journal.objects.filter(
         username=request.user.pk,
     ).values(
-        'date_added'
+        'date_added', 'book_category'
     ).order_by(
         'date_added'
     )[:30].annotate(
@@ -577,7 +586,152 @@ def journal(request):
         'kredit_chart_last_30_days': kredit_chart_for_last_30_days,
         'debit_chart_last_30_days': debit_chart_for_last_30_days,
         'journal_date_for_chart': journal_date_for_chart,
-
-        'a': journal_date_for_chart[0]
     }
     return render(request, 'books/journal.html', content)
+
+def ledger(request):
+    get_current_month = timezone.now().month
+
+    # Convert month's number to the name of the month
+    # timezone.now() by default return number
+    months = {}
+    list_of_months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    for i, j in zip(range(1, 13), list_of_months):
+        months[i] = j
+    # End
+
+    # Income in running month
+    monthly_income = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Inventory Value in running month
+    monthly_raw_material = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Produksi',
+        sub_category='Bahan Mentah',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_wip = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Produksi',
+        sub_category='Barang Setengah Jadi',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_finished_goods = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Produksi',
+        sub_category='Barang Jadi',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_production_misc = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Produksi',
+        sub_category='Biaya Produksi Lainnya',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Operating Cost
+    monthly_marketing = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Operasional',
+        sub_category='Biaya Pemasaran',
+        date_added__month=get_current_month
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_logistic = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Operasional',
+        sub_category='Transportasi / Logistik',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_operation_misc = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Operasional',
+        sub_category='Biaya Operasional Lainnya',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Administration Cost
+    monthly_office_needs = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Administrasi',
+        sub_category='Kebutuhan Kantor',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_salary = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Administrasi',
+        sub_category='Gaji Karyawan',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_rent = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Administrasi',
+        sub_category='Biaya Sewa',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_administration_misc = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category='Biaya Administrasi',
+        sub_category='Biaya Administrasi Lainnya',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    content = {
+        'monthly_income': monthly_income,
+
+        'monthly_raw_material': monthly_raw_material,
+        'monthly_wip': monthly_wip,
+        'monthly_finished_goods': monthly_finished_goods,
+        'monthly_production_misc': monthly_production_misc,
+
+        'monthly_marketing': monthly_marketing,
+        'monthly_logistic': monthly_logistic,
+        'monthly_operation_misc': monthly_operation_misc,
+
+        'monthly_office_needs': monthly_office_needs,
+        'monthly_salary': monthly_salary,
+        'monthly_rent': monthly_rent,
+        'monthly_administration_misc': monthly_administration_misc,
+    }
+    return render(request, 'books/ledger.html', content)
