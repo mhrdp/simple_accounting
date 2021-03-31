@@ -15,6 +15,8 @@ from django.core.paginator import (
 from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory, Journal
 
+from decimal import Decimal
+
 import json
 import csv
 
@@ -616,8 +618,8 @@ def ledger(request):
     monthly_raw_material = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Produksi',
-        sub_category='Bahan Mentah',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Bahan Mentah',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -625,8 +627,8 @@ def ledger(request):
     monthly_wip = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Produksi',
-        sub_category='Barang Setengah Jadi',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Barang Setengah Jadi',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -634,8 +636,8 @@ def ledger(request):
     monthly_finished_goods = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Produksi',
-        sub_category='Barang Jadi',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Barang Jadi',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -643,8 +645,8 @@ def ledger(request):
     monthly_production_misc = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Produksi',
-        sub_category='Biaya Produksi Lainnya',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Biaya Produksi Lainnya',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -654,8 +656,8 @@ def ledger(request):
     monthly_marketing = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Operasional',
-        sub_category='Biaya Pemasaran',
+        category__category='Biaya Operasional',
+        sub_category__sub_category='Biaya Pemasaran',
         date_added__month=get_current_month
     ).aggregate(
         sum=Sum('total')
@@ -663,8 +665,8 @@ def ledger(request):
     monthly_logistic = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Operasional',
-        sub_category='Transportasi / Logistik',
+        category__category='Biaya Operasional',
+        sub_category__sub_category='Transportasi / Logistik',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -672,8 +674,8 @@ def ledger(request):
     monthly_operation_misc = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Operasional',
-        sub_category='Biaya Operasional Lainnya',
+        category__category='Biaya Operasional',
+        sub_category__sub_category='Biaya Operasional Lainnya',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -683,8 +685,8 @@ def ledger(request):
     monthly_office_needs = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Administrasi',
-        sub_category='Kebutuhan Kantor',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Kebutuhan Kantor',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -692,8 +694,8 @@ def ledger(request):
     monthly_salary = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Administrasi',
-        sub_category='Gaji Karyawan',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Gaji Karyawan',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -701,8 +703,8 @@ def ledger(request):
     monthly_rent = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Administrasi',
-        sub_category='Biaya Sewa',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Biaya Sewa',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
@@ -710,12 +712,94 @@ def ledger(request):
     monthly_administration_misc = Journal.objects.filter(
         username=request.user.pk,
         book_category='Kredit',
-        category='Biaya Administrasi',
-        sub_category='Biaya Administrasi Lainnya',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Biaya Administrasi Lainnya',
         date_added__month=get_current_month,
     ).aggregate(
         sum=Sum('total')
     )
+
+    # This to replace None type in dict into zero (0)
+    def dict_clean(items):
+        result = {}
+        for key, value in items:
+            if value == None:
+                value = 0
+            result[key] = value
+        return result
+    
+    # To make sure object type Decimal serializable by JSON by changing it to float and format it to reselble Decimal
+    class DecimalEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, Decimal):
+                float_obj = float(obj)
+                return float_obj
+            return json.JSONEncoder.default(self, format_float)
+
+    # Re-format income
+    income_dict = json.dumps(monthly_income, cls=DecimalEncoder)
+    monthly_income_0 = json.loads(income_dict, object_pairs_hook=dict_clean)
+
+    # Re-format production cost
+    raw_material_dict = json.dumps(monthly_raw_material, cls=DecimalEncoder)
+    monthly_raw_material_0 = json.loads(raw_material_dict, object_pairs_hook=dict_clean)
+
+    wip_dict = json.dumps(monthly_wip, cls=DecimalEncoder)
+    monthly_wip_0 = json.loads(wip_dict, object_pairs_hook=dict_clean)
+
+    finished_goods_dict = json.dumps(monthly_finished_goods, cls=DecimalEncoder)
+    monthly_finished_goods_0 = json.loads(finished_goods_dict, object_pairs_hook=dict_clean)
+
+    misc_production_dict = json.dumps(monthly_production_misc, cls=DecimalEncoder)
+    monthly_production_misc_0 = json.loads(misc_production_dict, object_pairs_hook=dict_clean)
+
+    # Re-format operational cost
+    marketing_dict = json.dumps(monthly_marketing, cls=DecimalEncoder)
+    monthly_marketing_0 = json.loads(marketing_dict, object_pairs_hook=dict_clean)
+
+    logistic_dict = json.dumps(monthly_logistic, cls=DecimalEncoder)
+    monthly_logistic_0 = json.loads(logistic_dict, object_pairs_hook=dict_clean)
+
+    misc_operational_dict = json.dumps(monthly_operation_misc, cls=DecimalEncoder)
+    monthly_operation_misc_0 = json.loads(misc_operational_dict, object_pairs_hook=dict_clean)
+
+    # Re-format administration cost
+    office_needs_dict = json.dumps(monthly_office_needs, cls=DecimalEncoder)
+    monthly_office_needs_0 = json.loads(office_needs_dict, object_pairs_hook=dict_clean)
+
+    salary_dict = json.dumps(monthly_salary, cls=DecimalEncoder)
+    monthly_salary_0 = json.loads(salary_dict, object_pairs_hook=dict_clean)
+
+    rent_dict = json.dumps(monthly_rent, cls=DecimalEncoder)
+    monthly_rent_0 = json.loads(rent_dict, object_pairs_hook=dict_clean)
+
+    misc_administration_dict = json.dumps(monthly_administration_misc, cls=DecimalEncoder)
+    monthly_misc_administration = json.loads(misc_administration_dict, object_pairs_hook=dict_clean)
+
+    # To sum it you need to convert it to float first so you can do mathematical operations with the result
+    # The end result of formatting the float was a string, so don't use formatted result if you want to do mathematical operations
+    monthly_production_sum = monthly_raw_material_0['sum'] + monthly_wip_0['sum'] + monthly_finished_goods_0['sum'] + monthly_production_misc_0['sum'] # a float
+    format_float_production_sum = '{:.2f}'.format(monthly_production_sum) # a string
+
+    # Format monthly_income data type to float
+    monthly_income_sum = float(monthly_income_0['sum']) # a float
+
+    # Gross Profit = monthly_income - monthly_production_sum
+    # type float
+    monthly_gross_profit = monthly_income_sum - monthly_production_sum
+
+    # Total of operational cost
+    monthly_operational_sum = monthly_marketing_0['sum'] + monthly_logistic_0['sum'] + monthly_operation_misc_0['sum']
+
+    # Total Administrative cost
+    monthly_administration_sum = monthly_office_needs_0['sum'] + monthly_salary_0['sum'] + monthly_rent_0['sum'] + monthly_misc_administration['sum']
+
+    # Operational cost + administrative cost
+    monthly_business_load_sum = monthly_operational_sum + monthly_administration_sum
+
+    # NETT profit
+    monthly_nett_profit = monthly_gross_profit - monthly_business_load_sum
+
 
     content = {
         'monthly_income': monthly_income,
@@ -724,14 +808,26 @@ def ledger(request):
         'monthly_wip': monthly_wip,
         'monthly_finished_goods': monthly_finished_goods,
         'monthly_production_misc': monthly_production_misc,
+        'monthly_production_sum': format_float_production_sum,
+
+        'monthly_gross_profit': monthly_gross_profit,
 
         'monthly_marketing': monthly_marketing,
         'monthly_logistic': monthly_logistic,
         'monthly_operation_misc': monthly_operation_misc,
+        'monthly_operational_sum': monthly_operational_sum,
 
         'monthly_office_needs': monthly_office_needs,
         'monthly_salary': monthly_salary,
         'monthly_rent': monthly_rent,
         'monthly_administration_misc': monthly_administration_misc,
+        'monthly_administration_sum': monthly_administration_sum,
+
+        'monthly_business_load_sum': monthly_business_load_sum,
+
+        'monthly_nett_profit': monthly_nett_profit,
+
+        'a': monthly_raw_material_0,
+        'b': monthly_wip_0,
     }
     return render(request, 'books/ledger.html', content)
