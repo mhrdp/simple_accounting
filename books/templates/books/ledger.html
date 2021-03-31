@@ -9,6 +9,9 @@
 
 {% block content %}
 <div class="table-font-resize">
+    <h3 class="text-right">{{current_month}}'s Laba / Rugi</h3>
+    <br />
+
     <h4>Pendapatan Bulanan</h4>
     <hr class="hr-styling" />
     <div class="row">
@@ -21,7 +24,7 @@
                     Rp. {{monthly_income.sum|intcomma}}
                 </p>
             {% else %}
-                <p class="subtitles">0</p>
+                <p class="subtitles">Rp. 0</p>
             {% endif %}
         </div>
         <div class="col-lg-3 col-md-4 col-3">
@@ -41,7 +44,7 @@
                     Rp. {{monthly_income.sum|intcomma}}
                 </h6>
             {% else %}
-                <h6 class="subtitles">0</h6>
+                <h6 class="subtitles">Rp. 0</h6>
             {% endif %}
         </div>
     </div>

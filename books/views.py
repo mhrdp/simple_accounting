@@ -153,7 +153,7 @@ def income_form_autofill_ajax(request):
     return render(request, 'books/income_form_autofill.html', content)
 # end of ajax autofill income form
 
-# Export table to CSV / Excel
+# Export table to CSV / Excel / PDF
 def export_journal_to_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="journal.csv"'
@@ -494,6 +494,39 @@ def user_dashboard(request):
         sum=Sum('total')
     )
 
+        # This to replace None type in dict into zero (0)
+    def dict_clean(items):
+        result = {}
+        for key, value in items:
+            if value == None:
+                value = 0
+            result[key] = value
+        return result
+    
+    # To make sure object type Decimal serializable by JSON by changing it to float and format it to reselble Decimal
+    class DecimalEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, Decimal):
+                float_obj = float(obj)
+                return float_obj
+            return json.JSONEncoder.default(self, float_obj)
+    
+    # Re-format expense_in_running_month dict to JSON
+    expense_dict = json.dumps(expense_in_running_month, cls=DecimalEncoder)
+    expense_0 = json.loads(expense_dict, object_pairs_hook=dict_clean)
+
+    # Re-format income_in_running_month dict to JSON
+    income_dict = json.dumps(income_in_running_month, cls=DecimalEncoder)
+    income_0 = json.loads(income_dict, object_pairs_hook=dict_clean)
+
+    nett_profit = float(income_0['sum']) - float(expense_0['sum'])
+
+    # You can achieve same result with this way below, but will stick with above ways as it already proofable by me  in any sort of situations
+    # nett_profit_2 = float(income_by_month[0]['sum']) - float(expense_by_month[0]['sum'])
+
+    profit_percentage = (nett_profit / float(income_0['sum'])) * 100
+    format_profit_percentage = '{:.2f}'.format(profit_percentage)
+
     content = {
         'month': months[get_current_month],
 
@@ -508,9 +541,15 @@ def user_dashboard(request):
 
         'income_in_running_month': income_in_running_month,
         'income_in_running_month_per_day': income_in_running_month_per_day,
+
+        
+        # 'nett_profit_2': nett_profit_2,
+        'nett_profit': nett_profit,
+        'profit_percentage': format_profit_percentage,
     }
     return render(request, 'books/user_dashboard.html', content)
 
+@login_required
 def journal(request):
     journal_all = Journal.objects.filter(
         username=request.user.pk
@@ -591,6 +630,7 @@ def journal(request):
     }
     return render(request, 'books/journal.html', content)
 
+@login_required
 def ledger(request):
     get_current_month = timezone.now().month
 
@@ -734,7 +774,7 @@ def ledger(request):
             if isinstance(obj, Decimal):
                 float_obj = float(obj)
                 return float_obj
-            return json.JSONEncoder.default(self, format_float)
+            return json.JSONEncoder.default(self, float_obj)
 
     # Re-format income
     income_dict = json.dumps(monthly_income, cls=DecimalEncoder)
@@ -802,6 +842,8 @@ def ledger(request):
 
 
     content = {
+        'current_month': months[get_current_month],
+
         'monthly_income': monthly_income,
 
         'monthly_raw_material': monthly_raw_material,
