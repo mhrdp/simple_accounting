@@ -18,7 +18,11 @@
                 <div class="dashboard-container-sm">
                     <h6 class="text-gr">
                         <span><i class="fas fa-cash-register mr-1"></i></span>
-                        Rp. {{income_in_running_month.sum|intcomma}}
+                        {% if income_in_running_month.sum > 0%}
+                            Rp. {{income_in_running_month.sum|intcomma}}
+                        {% else %}
+                            Rp. 0.00
+                        {% endif %}
                     </h6>
                     <div class="mini-chart-container">
                         <canvas id="incomeChart"></canvas>
@@ -29,7 +33,11 @@
                 <div class="dashboard-container-sm">
                     <h6 class="text-rd">
                         <span><i class="fas fa-credit-card mr-1"></i></span>
-                        Rp. {{expense_in_running_month.sum|intcomma}}
+                        {% if expense_in_running_month.sum > 0 %}
+                            Rp. {{expense_in_running_month.sum|intcomma}}
+                        {% else %}
+                            Rp. 0.00
+                        {% endif %}
                     </h6>
                     <div class="mini-chart-container">
                         <canvas id="expenseChart"></canvas>

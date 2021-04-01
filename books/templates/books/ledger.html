@@ -11,6 +11,8 @@
 <div class="table-font-resize">
     <h3 class="text-right">{{current_month}}'s Laba / Rugi</h3>
     <br />
+    <a href="{% url 'profit_loss_to_pdf' %}">PDF Export Test</a><br />
+    <a href="#">For Browser's Print PDF Compatible HTML Page (TBA)</a>
 
     <h4>Pendapatan Bulanan</h4>
     <hr class="hr-styling" />
@@ -49,7 +51,7 @@
         </div>
     </div>
 
-    <h4>Harga Pokok Penjualan</h4>
+    <h4>Biaya Produksi</h4>
     <hr class="hr-styling" />
     <div class="row">
         <div class="col-lg-5 col-md-4 col-5">
@@ -145,7 +147,7 @@
             {% if monthly_gross_profit > 0 %}
                 <h6 class="text-gr">Rp. {{monthly_gross_profit|intcomma}}0</h6>
             {% else %}
-                <h6 class="text-rd">Rp. {{monthly_gross_profit|intcomma}}0</h6>
+                <h6 class="text-rd">Rp. 0</h6>
             {% endif %}
         </div>
     </div>
@@ -331,7 +333,7 @@
             {% if monthly_nett_profit > 0 %}
                 <h6 class="text-gr">Rp. {{monthly_nett_profit|intcomma}}0</h6>
             {% else %}
-                <h6 class="text-rd">Rp. {{monthly_nett_profit|intcomma}}0</h6>
+                <h6 class="text-rd">Rp. 0</h6>
             {% endif %}
         </div>
     </div>

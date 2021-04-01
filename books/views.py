@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth
+from django.views.generic import View
 
 from django.core.paginator import (
     Paginator, EmptyPage, PageNotAnInteger
@@ -14,6 +15,7 @@ from django.core.paginator import (
 
 from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory, Journal
+from .utils import render_to_pdf
 
 from decimal import Decimal
 
@@ -168,6 +170,36 @@ def export_journal_to_csv(request):
     for expense in journal:
         writer.writerow(expense)
     return response
+
+def export_profit_loss_to_pdf(request):
+    get_current_month = timezone.now().month
+
+    # Convert month's number to the name of the month
+    # timezone.now() by default return number
+    months = {}
+    list_of_months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    for i, j in zip(range(1, 13), list_of_months):
+        months[i] = j
+
+    data = {
+        'content': 'Hello World!',
+        'current_month': months[get_current_month],
+    }
+    pdf = render_to_pdf('pdf/profit_loss_pdf.html', data)
+
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = f'profit_loss-{months[get_current_month]}.pdf'
+        content = 'inline; filename="%s"' %(filename)
+        download = request.GET.get('download')
+        if download:
+            content = 'attachment; filename="%s"' %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse('Not Found')
 # End of export
 
 @login_required
@@ -494,7 +526,7 @@ def user_dashboard(request):
         sum=Sum('total')
     )
 
-        # This to replace None type in dict into zero (0)
+    # This to replace None type in dict into zero (0)
     def dict_clean(items):
         result = {}
         for key, value in items:
@@ -523,9 +555,13 @@ def user_dashboard(request):
 
     # You can achieve same result with this way below, but will stick with above ways as it already proofable by me  in any sort of situations
     # nett_profit_2 = float(income_by_month[0]['sum']) - float(expense_by_month[0]['sum'])
-
-    profit_percentage = (nett_profit / float(income_0['sum'])) * 100
-    format_profit_percentage = '{:.2f}'.format(profit_percentage)
+    profit_percentage = None
+    if float(income_0['sum']) > 0:
+        profit_percentage = (nett_profit / float(income_0['sum'])) * 100
+        format_profit_percentage = '{:.2f}'.format(profit_percentage)
+    else:
+        profit_percentage = 0
+        format_profit_percentage = '{:.2f}'.format(profit_percentage)
 
     content = {
         'month': months[get_current_month],
@@ -631,7 +667,7 @@ def journal(request):
     return render(request, 'books/journal.html', content)
 
 @login_required
-def ledger(request):
+def profit_loss(request):
     get_current_month = timezone.now().month
 
     # Convert month's number to the name of the month
@@ -814,7 +850,7 @@ def ledger(request):
     monthly_rent_0 = json.loads(rent_dict, object_pairs_hook=dict_clean)
 
     misc_administration_dict = json.dumps(monthly_administration_misc, cls=DecimalEncoder)
-    monthly_misc_administration = json.loads(misc_administration_dict, object_pairs_hook=dict_clean)
+    monthly_administration_misc_0 = json.loads(misc_administration_dict, object_pairs_hook=dict_clean)
 
     # To sum it you need to convert it to float first so you can do mathematical operations with the result
     # The end result of formatting the float was a string, so don't use formatted result if you want to do mathematical operations
@@ -832,13 +868,29 @@ def ledger(request):
     monthly_operational_sum = monthly_marketing_0['sum'] + monthly_logistic_0['sum'] + monthly_operation_misc_0['sum']
 
     # Total Administrative cost
-    monthly_administration_sum = monthly_office_needs_0['sum'] + monthly_salary_0['sum'] + monthly_rent_0['sum'] + monthly_misc_administration['sum']
+    monthly_administration_sum = monthly_office_needs_0['sum'] + monthly_salary_0['sum'] + monthly_rent_0['sum'] + monthly_administration_misc_0['sum']
 
     # Operational cost + administrative cost
     monthly_business_load_sum = monthly_operational_sum + monthly_administration_sum
 
     # NETT profit
     monthly_nett_profit = monthly_gross_profit - monthly_business_load_sum
+
+    if request.method == 'GET':
+        date_start = request.GET.get('date_start')
+        date_end = request.GET.get('date_end')
+        if date_start and date_end:
+            monthly_income = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(date_start, date_end)
+            ).aggregate(
+                sum=Sum('total')
+            )
+        elif date_start == '' or date_end == '':
+            messages.error(request, 'You need to fill both fields!')
+    else:
+        messages.info(request, 'Remember to fill in both fields.')
 
 
     content = {
