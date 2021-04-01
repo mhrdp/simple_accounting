@@ -296,12 +296,12 @@
         <div class="col-lg-3 col-md-4 col-3">
         </div>
         <div class="col-lg-3 col-md-4 col-3">
-            {% if monthly_administration_sum.sum > 0 %}
+            {% if monthly_administration_sum > 0 %}
                 <h6>
-                    Rp. {{monthly_administration_sum.sum|intcomma}}
+                    Rp. {{monthly_administration_sum|intcomma}}
                 </h6>
             {% else %}
-                <h6 class="subtitles">Rp. 0</h6>
+                <h6>Rp. 0</h6>
             {% endif %}
         </div>
     </div>
@@ -313,9 +313,9 @@
         <div class="col-lg-3 col-md-4 col-3">
         </div>
         <div class="col-lg-3 col-md-4 col-3">
-            {% if monthly_business_load_sum.sum > 0 %}
-                <h6>
-                    Rp. {{monthly_business_load_sum.sum|intcomma}}
+            {% if monthly_business_load_sum > 0 %}
+                <h6 class="text-rd">
+                    Rp. {{monthly_business_load_sum|intcomma}}
                 </h6>
             {% else %}
                 <h6 class="subtitles">Rp. 0</h6>
