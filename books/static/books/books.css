@@ -38,9 +38,21 @@
     height: auto;
 }
 
+.hr-styling {
+    background-color: #3e50b4;
+    width: 150px;
+    margin-left: 0;
+    margin-top: 0;
+    height: 4px;
+}
+
 @media(max-width: 1080px){
     .table-font-resize {
         font-size: 11px !important;
+    }
+
+    .table-font-resize h5, h6 {
+        font-size: 12px;
     }
 
     .books-canvas-container {
@@ -51,6 +63,10 @@
 @media(max-width: 768px){
     .table-font-resize {
         font-size: 11px !important;
+    }
+
+    .table-font-resize h5, h6 {
+        font-size: 12px;
     }
 
     .small-hid {

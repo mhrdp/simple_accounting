@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.http import HttpResponse
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth
+from django.views.generic import View
 
 from django.core.paginator import (
     Paginator, EmptyPage, PageNotAnInteger
@@ -13,12 +15,15 @@ from django.core.paginator import (
 
 from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory, Journal
+from .utils import render_to_pdf
+
+from decimal import Decimal
 
 import json
+import csv
 
 # Create your views here.
-
-# Ajax for expense and income filter
+@login_required
 def expense_filter_by_date(request):
     expense_paginate = None
     page_range = None
@@ -70,6 +75,7 @@ def expense_filter_by_date(request):
     }
     return render(request, 'books/filtered_expense.html', content)
 
+@login_required
 def income_filter_by_date(request):
     income_paginate = None
     page_range = None
@@ -122,7 +128,6 @@ def income_filter_by_date(request):
         'sum_of_filtered_income': sum_of_filtered_income,
     }
     return render(request, 'books/filtered_income.html', content)
-# End of expense and income filter ajax
 
 # Ajax for categories and sub categories dependent dropdown
 def expense_dropdown_ajax(request):
@@ -150,15 +155,52 @@ def income_form_autofill_ajax(request):
     return render(request, 'books/income_form_autofill.html', content)
 # end of ajax autofill income form
 
-# Empty content just for rendering the page
-def input_options(request):
-    content = {}
-    return render(request, 'books/input_options.html', content)
+# Export table to CSV / Excel / PDF
+def export_journal_to_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="journal.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Date Added', 'Item Name', 'Book Category', 'Category', 'Sub Category', 'Price', 'Quantity', 'Total', 'Notes'])
 
-def books_options(request):
-    content = {}
-    return render(request, 'books/books_options.html', content)
-# End of empty content
+    journal = Journal.objects.filter(
+        username=request.user.pk,
+    ).values_list(
+        'date_added', 'item_name', 'book_category', 'category__category', 'sub_category__sub_category', 'price', 'quantity', 'total', 'notes'
+    )
+    for expense in journal:
+        writer.writerow(expense)
+    return response
+
+def export_profit_loss_to_pdf(request):
+    get_current_month = timezone.now().month
+
+    # Convert month's number to the name of the month
+    # timezone.now() by default return number
+    months = {}
+    list_of_months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    for i, j in zip(range(1, 13), list_of_months):
+        months[i] = j
+
+    data = {
+        'content': 'Hello World!',
+        'current_month': months[get_current_month],
+    }
+    pdf = render_to_pdf('pdf/profit_loss_pdf.html', data)
+
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = f'profit_loss-{months[get_current_month]}.pdf'
+        content = 'inline; filename="%s"' %(filename)
+        download = request.GET.get('download')
+        if download:
+            content = 'attachment; filename="%s"' %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse('Not Found')
+# End of export
 
 @login_required
 def register_product(request):
@@ -224,9 +266,10 @@ def register_expense(request):
             expense_form_save.total = expense_form_save.price*expense_form_save.quantity
 
             expense_form_save.save()
+            messages.success(request, 'Your data has been inputted!')
             return redirect('register_expense')
         else:
-            expense_form_notification = 'There\'s something wrong in your input!'
+            messages.error(request, 'There\'s something wrong in your data!')
     else:
         expense_form = ExpenseForm()
     
@@ -483,6 +526,43 @@ def user_dashboard(request):
         sum=Sum('total')
     )
 
+    # This to replace None type in dict into zero (0)
+    def dict_clean(items):
+        result = {}
+        for key, value in items:
+            if value == None:
+                value = 0
+            result[key] = value
+        return result
+    
+    # To make sure object type Decimal serializable by JSON by changing it to float and format it to reselble Decimal
+    class DecimalEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, Decimal):
+                float_obj = float(obj)
+                return float_obj
+            return json.JSONEncoder.default(self, float_obj)
+    
+    # Re-format expense_in_running_month dict to JSON
+    expense_dict = json.dumps(expense_in_running_month, cls=DecimalEncoder)
+    expense_0 = json.loads(expense_dict, object_pairs_hook=dict_clean)
+
+    # Re-format income_in_running_month dict to JSON
+    income_dict = json.dumps(income_in_running_month, cls=DecimalEncoder)
+    income_0 = json.loads(income_dict, object_pairs_hook=dict_clean)
+
+    nett_profit = float(income_0['sum']) - float(expense_0['sum'])
+
+    # You can achieve same result with this way below, but will stick with above ways as it already proofable by me  in any sort of situations
+    # nett_profit_2 = float(income_by_month[0]['sum']) - float(expense_by_month[0]['sum'])
+    profit_percentage = None
+    if float(income_0['sum']) > 0:
+        profit_percentage = (nett_profit / float(income_0['sum'])) * 100
+        format_profit_percentage = '{:.2f}'.format(profit_percentage)
+    else:
+        profit_percentage = 0
+        format_profit_percentage = '{:.2f}'.format(profit_percentage)
+
     content = {
         'month': months[get_current_month],
 
@@ -497,9 +577,15 @@ def user_dashboard(request):
 
         'income_in_running_month': income_in_running_month,
         'income_in_running_month_per_day': income_in_running_month_per_day,
+
+        
+        # 'nett_profit_2': nett_profit_2,
+        'nett_profit': nett_profit,
+        'profit_percentage': format_profit_percentage,
     }
     return render(request, 'books/user_dashboard.html', content)
 
+@login_required
 def journal(request):
     journal_all = Journal.objects.filter(
         username=request.user.pk
@@ -543,7 +629,7 @@ def journal(request):
     journal_date_for_chart = Journal.objects.filter(
         username=request.user.pk,
     ).values(
-        'date_added'
+        'date_added', 'book_category'
     ).order_by(
         'date_added'
     )[:30].annotate(
@@ -577,7 +663,265 @@ def journal(request):
         'kredit_chart_last_30_days': kredit_chart_for_last_30_days,
         'debit_chart_last_30_days': debit_chart_for_last_30_days,
         'journal_date_for_chart': journal_date_for_chart,
-
-        'a': journal_date_for_chart[0]
     }
     return render(request, 'books/journal.html', content)
+
+@login_required
+def profit_loss(request):
+    get_current_month = timezone.now().month
+
+    # Convert month's number to the name of the month
+    # timezone.now() by default return number
+    months = {}
+    list_of_months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    for i, j in zip(range(1, 13), list_of_months):
+        months[i] = j
+    # End
+
+    # Income in running month
+    monthly_income = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Inventory Value in running month
+    monthly_raw_material = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Bahan Mentah',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_wip = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Barang Setengah Jadi',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_finished_goods = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Barang Jadi',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_production_misc = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Produksi',
+        sub_category__sub_category='Biaya Produksi Lainnya',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Operating Cost
+    monthly_marketing = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Operasional',
+        sub_category__sub_category='Biaya Pemasaran',
+        date_added__month=get_current_month
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_logistic = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Operasional',
+        sub_category__sub_category='Transportasi / Logistik',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_operation_misc = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Operasional',
+        sub_category__sub_category='Biaya Operasional Lainnya',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Administration Cost
+    monthly_office_needs = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Kebutuhan Kantor',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_salary = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Gaji Karyawan',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_rent = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Biaya Sewa',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+    monthly_administration_misc = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        category__category='Biaya Administrasi',
+        sub_category__sub_category='Biaya Administrasi Lainnya',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # This to replace None type in dict into zero (0)
+    def dict_clean(items):
+        result = {}
+        for key, value in items:
+            if value == None:
+                value = 0
+            result[key] = value
+        return result
+    
+    # To make sure object type Decimal serializable by JSON by changing it to float and format it to reselble Decimal
+    class DecimalEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, Decimal):
+                float_obj = float(obj)
+                return float_obj
+            return json.JSONEncoder.default(self, float_obj)
+
+    # Re-format income
+    income_dict = json.dumps(monthly_income, cls=DecimalEncoder)
+    monthly_income_0 = json.loads(income_dict, object_pairs_hook=dict_clean)
+
+    # Re-format production cost
+    raw_material_dict = json.dumps(monthly_raw_material, cls=DecimalEncoder)
+    monthly_raw_material_0 = json.loads(raw_material_dict, object_pairs_hook=dict_clean)
+
+    wip_dict = json.dumps(monthly_wip, cls=DecimalEncoder)
+    monthly_wip_0 = json.loads(wip_dict, object_pairs_hook=dict_clean)
+
+    finished_goods_dict = json.dumps(monthly_finished_goods, cls=DecimalEncoder)
+    monthly_finished_goods_0 = json.loads(finished_goods_dict, object_pairs_hook=dict_clean)
+
+    misc_production_dict = json.dumps(monthly_production_misc, cls=DecimalEncoder)
+    monthly_production_misc_0 = json.loads(misc_production_dict, object_pairs_hook=dict_clean)
+
+    # Re-format operational cost
+    marketing_dict = json.dumps(monthly_marketing, cls=DecimalEncoder)
+    monthly_marketing_0 = json.loads(marketing_dict, object_pairs_hook=dict_clean)
+
+    logistic_dict = json.dumps(monthly_logistic, cls=DecimalEncoder)
+    monthly_logistic_0 = json.loads(logistic_dict, object_pairs_hook=dict_clean)
+
+    misc_operational_dict = json.dumps(monthly_operation_misc, cls=DecimalEncoder)
+    monthly_operation_misc_0 = json.loads(misc_operational_dict, object_pairs_hook=dict_clean)
+
+    # Re-format administration cost
+    office_needs_dict = json.dumps(monthly_office_needs, cls=DecimalEncoder)
+    monthly_office_needs_0 = json.loads(office_needs_dict, object_pairs_hook=dict_clean)
+
+    salary_dict = json.dumps(monthly_salary, cls=DecimalEncoder)
+    monthly_salary_0 = json.loads(salary_dict, object_pairs_hook=dict_clean)
+
+    rent_dict = json.dumps(monthly_rent, cls=DecimalEncoder)
+    monthly_rent_0 = json.loads(rent_dict, object_pairs_hook=dict_clean)
+
+    misc_administration_dict = json.dumps(monthly_administration_misc, cls=DecimalEncoder)
+    monthly_administration_misc_0 = json.loads(misc_administration_dict, object_pairs_hook=dict_clean)
+
+    # To sum it you need to convert it to float first so you can do mathematical operations with the result
+    # The end result of formatting the float was a string, so don't use formatted result if you want to do mathematical operations
+    monthly_production_sum = monthly_raw_material_0['sum'] + monthly_wip_0['sum'] + monthly_finished_goods_0['sum'] + monthly_production_misc_0['sum'] # a float
+    format_float_production_sum = '{:.2f}'.format(monthly_production_sum) # a string
+
+    # Format monthly_income data type to float
+    monthly_income_sum = float(monthly_income_0['sum']) # a float
+
+    # Gross Profit = monthly_income - monthly_production_sum
+    # type float
+    monthly_gross_profit = monthly_income_sum - monthly_production_sum
+
+    # Total of operational cost
+    monthly_operational_sum = monthly_marketing_0['sum'] + monthly_logistic_0['sum'] + monthly_operation_misc_0['sum']
+
+    # Total Administrative cost
+    monthly_administration_sum = monthly_office_needs_0['sum'] + monthly_salary_0['sum'] + monthly_rent_0['sum'] + monthly_administration_misc_0['sum']
+
+    # Operational cost + administrative cost
+    monthly_business_load_sum = monthly_operational_sum + monthly_administration_sum
+
+    # NETT profit
+    monthly_nett_profit = monthly_gross_profit - monthly_business_load_sum
+
+    if request.method == 'GET':
+        date_start = request.GET.get('date_start')
+        date_end = request.GET.get('date_end')
+        if date_start and date_end:
+            monthly_income = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(date_start, date_end)
+            ).aggregate(
+                sum=Sum('total')
+            )
+        elif date_start == '' or date_end == '':
+            messages.error(request, 'You need to fill both fields!')
+    else:
+        messages.info(request, 'Remember to fill in both fields.')
+
+
+    content = {
+        'current_month': months[get_current_month],
+
+        'monthly_income': monthly_income,
+
+        'monthly_raw_material': monthly_raw_material,
+        'monthly_wip': monthly_wip,
+        'monthly_finished_goods': monthly_finished_goods,
+        'monthly_production_misc': monthly_production_misc,
+        'monthly_production_sum': format_float_production_sum,
+
+        'monthly_gross_profit': monthly_gross_profit,
+
+        'monthly_marketing': monthly_marketing,
+        'monthly_logistic': monthly_logistic,
+        'monthly_operation_misc': monthly_operation_misc,
+        'monthly_operational_sum': monthly_operational_sum,
+
+        'monthly_office_needs': monthly_office_needs,
+        'monthly_salary': monthly_salary,
+        'monthly_rent': monthly_rent,
+        'monthly_administration_misc': monthly_administration_misc,
+        'monthly_administration_sum': monthly_administration_sum,
+
+        'monthly_business_load_sum': monthly_business_load_sum,
+
+        'monthly_nett_profit': monthly_nett_profit,
+
+        'a': monthly_raw_material_0,
+        'b': monthly_wip_0,
+    }
+    return render(request, 'books/ledger.html', content)
