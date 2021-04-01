@@ -332,6 +332,8 @@
         <div class="col-lg-3 col-md-4 col-3">
             {% if monthly_nett_profit > 0 %}
                 <h6 class="text-gr">Rp. {{monthly_nett_profit|intcomma}}0</h6>
+            {% elif monthly_nett_profit < 0 %}
+                <h6 class="text-rd">Rp. {{monthly_nett_profit|intcomma}}0</h6>
             {% else %}
                 <h6 class="text-rd">Rp. 0</h6>
             {% endif %}
