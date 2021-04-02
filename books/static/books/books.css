@@ -1,5 +1,10 @@
-.books-hidden {
-    display: inline !important;
+.books-current {
+    padding-left: 10px;
+    border-left: 4px solid #3e50b4;
+}
+
+div.books-current > .link {
+    margin-left: 5px;
 }
 
 .pagination > li > a

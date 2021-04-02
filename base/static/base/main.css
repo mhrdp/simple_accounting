@@ -170,11 +170,16 @@ h1, h2, h3, h4, h5, h6 {
 .link {
     color: #fff;
     font-weight: 400;
+    transition: margin-left .25s;
+    -moz-transition: margin-left .25s;
+    -webkit-transition: margin-left .25s;
+    -o-transition: margin-left .25s;
 }
 
 .link:hover {
     color: rgba(255, 255, 255, 0.5);
     text-decoration: None;
+    margin-left: 5px;
 }
 /* End of text */
 
@@ -246,11 +251,7 @@ div ul li button.btn-mod:hover {
     margin: 0;
     padding: 0;
     display: block;
-    min-width: 20% !important;
-}
-
-.sidebar-hidden-sm {
-    transition: margin .25s ease-out;
+    min-width: 15% !important;
 }
 
 a.income-current, a.expense-current, a.product-current  {
@@ -295,6 +296,9 @@ div footer.quote-footer {
 }
 
 @media(max-width: 1080px){
+    .menu {
+        width: 18% !important;
+    }
 }
 
 @media(max-width: 768px){
