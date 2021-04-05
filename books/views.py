@@ -775,6 +775,7 @@ def user_dashboard(request):
 
     # You can achieve same result with this way below, but will stick with above ways as it already proofable by me  in any sort of situations
     # nett_profit_2 = float(income_by_month[0]['sum']) - float(expense_by_month[0]['sum'])
+    # {:.2f}.format(...) mean to format the float-type object to show 2 decimals instead of one, but it became string as a result because it was a string formatting.
     profit_percentage = None
     if float(income_0['sum']) > 0:
         profit_percentage = (nett_profit / float(income_0['sum'])) * 100
@@ -849,7 +850,7 @@ def journal(request):
     journal_date_for_chart = Journal.objects.filter(
         username=request.user.pk,
     ).values(
-        'date_added', 'book_category'
+        'date_added'
     ).order_by(
         'date_added'
     )[:30].annotate(
