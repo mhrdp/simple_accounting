@@ -46,9 +46,15 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-container-sm">
-                    <h6>Rp. {{nett_profit|intcomma}}0</h6>
+                    {% if nett_profit > 0 %}
+                        <h6 class="text-gr">Rp. {{nett_profit|intcomma}}0</h6>
+                    {% elif nett_profit < 0 %}
+                        <h6 class="text-rd">Rp. {{nett_profit|intcomma}}0</h6>
+                    {% else %}
+                        <h6>Rp. 0.00</h6>
+                    {% endif %}
                     <div class="mini-chart-container">
-                        <h3>{{profit_percentage}}%</h3>
+                        <h3>{{profit_percentage}}<span style="font-size:18px"> %</span></h3>
                     </div>
                 </div>
             </div>
@@ -64,7 +70,7 @@
 
         <div class="row mt-3">
             <div class="col-12 col-lg-6">
-                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                <table class="table table-sm table-bordered table-hover table-dark table-striped subtitles table-font-resize">
                 <h5>Last 5 Transaction for Income</h5>
                 <thead>
                     <tr>
@@ -87,7 +93,7 @@
             </table>
             </div>
             <div class="col-12 col-lg-6">
-                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                <table class="table table-sm table-bordered table-hover table-dark table-striped subtitles table-font-resize">
                 <h5>Last 5 Transaction for Expense</h5>
             <tr>
                 <th scope="col">No.</th>
@@ -111,7 +117,7 @@
 {% endblock content %}
 
 {% block js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
 
 <script>
     var ctx = document.getElementById("expenseChart").getContext("2d");
@@ -127,26 +133,28 @@
                 {%for i in expense_in_running_month_per_day%}{{i.sum}},{%endfor%}
                 ],
                 backgroundColor: "rgba(255, 99, 71, 0.450)",
-                borderColor: "#ff3f80"
+                borderColor: "#ff3f80",
+                fill: true,
+                tension: .3,
             }]
         },
         options: {
             // To make canvas height-width customizeable
             maintainAspectRatio: false, 
 
-            legend: {
-                display: false,
-                labels : {
-                    fontColor: "#bcccdc"
-                }
+            plugins: {
+                legend: {
+                    display: false,
+                },
             },
             scales: {
-                yAxes: [{
+                y: {
                     display: false,
-                }],
-                xAxes: [{
+                    beginAtZero: true,
+                },
+                x: {
                     display: false,
-                }]
+                },
             }
         }
     })
@@ -164,26 +172,28 @@
                 {%for i in income_in_running_month_per_day%}{{i.sum}},{%endfor%}
                 ],
                 backgroundColor: "#8dfe36a1",
-                borderColor: "#8cfe36"
+                borderColor: "#8cfe36",
+                fill: true,
+                tension: .3,
             }]
         },
         options: {
             // To make canvas height-width customizeable
             maintainAspectRatio: false,
 
-            legend: {
-                display: false,
-                labels : {
-                    fontColor: "#bcccdc"
-                }
+            plugins: {
+                legend: {
+                    display: false,
+                },
             },
             scales: {
-                yAxes: [{
+                y: {
                     display: false,
-                }],
-                xAxes: [{
+                    beginAtZero: true,
+                },
+                x: {
                     display: false,
-                }]
+                },
             }
         }
     })

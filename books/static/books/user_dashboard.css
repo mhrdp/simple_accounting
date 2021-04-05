@@ -1,5 +1,10 @@
-.dashboard-hidden {
-    display: inline !important;
+.dashboard-current {
+    padding-left: 10px;
+    border-left: 4px solid #3e50b4;
+}
+
+div.dashboard-current > .link {
+    margin-left: 5px;
 }
 
 .dashboard-container-sm {

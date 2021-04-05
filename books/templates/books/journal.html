@@ -11,14 +11,12 @@ Journal
 
 {% block content %}
 <div class="row">
-<!--
     <div class="col-12 col-md-12 mb-5">
         <h4>Performance for the last 30 days:</h4>
         <div class="books-canvas-container">
             <canvas id="journalList"></canvas>
         </div>
     </div>
--->
 
     <div class="mb-3">
         <a href="{% url 'list_of_income' %}">
@@ -32,10 +30,15 @@ Journal
         <a>
             <button class="btn content-current disabled">Journal</button>
         </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'profit_loss' %}">
+            <button class="btn btn-transparent-scd">Profit Loss</button>
+        </a>
     </div>
-
     <div class="col-12">
         <a href="{% url 'journal_to_csv' %}">Export to CSV</a>
+    </div>
+    <div class="table-responsive col-12">
         <table class="table table-bordered table-hover table-dark table-stripped subtitles table-font-resize">
             <thead>
                 <tr>
@@ -94,10 +97,6 @@ Journal
     </div>
 </div>
 
-{% for i in journal_date_for_chart %}
-<p class="subtitles">{{i}}</p>
-{% endfor %}
-
 {% endblock content %}
 
 {% block paginator %}
@@ -140,45 +139,72 @@ Journal
 {% endblock paginator %}
 
 {% block js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
 
 <script>
-    var ctx = document.getElementById("journalList").getContext("2d");
-    var chart = new Chart(ctx, {
-        type: "bar",
+    var ctx = document.getElementById('journalList').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
         data: {
             labels: [
-            {%for i in journal_date_for_chart%}"{{i.date_added}}",{%endfor%}
+            {% for date in journal_date_for_chart %}
+                '{{date.date_added}}',
+            {% endfor %}
             ],
             datasets: [{
-                label: "Income",
+                label: 'Debit',
                 data: [
-                    {%for i in debit_chart_last_30_days%}
-                        {x: "{{i.date_added}}", y: {{i.sum}}},
-                    {%endfor%}
+                {% for i in debit_chart_last_30_days %}
+                    {x: '{{i.date_added}}', y: {{i.sum}}},
+                {% endfor %}
                 ],
-                backgroundColor: "#8cfe36",
-            }, {
-                label: "Expense",
+                //backgroundColor: '#8dfe36a1',
+                borderColor: '#8cfe36',
+                //fill: true,
+                tension: .3,
+            },{
+                label: 'Kredit',
                 data: [
-                    {%for i in kredit_chart_last_30_days%}
-                        {x: "{{i.date_added}}", y: {{i.sum}}},
-                    {%endfor%}
+                {% for i in kredit_chart_last_30_days %}
+                    {x: '{{i.date_added}}', y: {{i.sum}}},
+                {% endfor %}
                 ],
-                backgroundColor: "#ff3f80",
+                //backgroundColor: 'rgba(255, 99, 71, 0.450)',
+                borderColor: '#ff3f80',
+                //fill: true,
+                tension: .3,
             }]
         },
         options: {
-            // To make canvas height-width customizeable
             maintainAspectRatio: false,
-
-            legend: {
-                display: true,
-                labels : {
-                    fontColor: "#bcccdc"
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 12,
+                        },
+                    },
+                },
+            },
+            scales: {
+                y: {
+                    //stacked: true,
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 10,
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 10,
+                        }
+                    }
                 }
-            }
-        }
-    })
+            },
+        },
+    });
 </script>
 {% endblock js %}

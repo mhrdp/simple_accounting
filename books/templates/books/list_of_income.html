@@ -28,7 +28,11 @@
         </a>
         <div class="vertical-ruler"></div>
         <a href="{% url 'journal' %}">
-            <button class="btn content-current disabled">Journal</button>
+            <button class="btn btn-transparent-scd">Journal</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'profit_loss' %}">
+            <button class="btn btn-transparent-scd">Profit Loss</button>
         </a>
     </div>
 
@@ -122,7 +126,7 @@
 {% endblock paginator %}
 
 {% block js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
 
 <script>
     var ctx = document.getElementById("incomeList").getContext("2d");
@@ -138,7 +142,9 @@
                 {%for i in income_chart_last_30_days%}{{i.sum}},{%endfor%}
                 ],
                 backgroundColor: "#0290a379",
-                borderColor: "#028fa3"
+                borderColor: "#028fa3",
+                fill: true,
+                tension: .3,
             }]
         },
         options: {
@@ -150,6 +156,23 @@
                 labels : {
                     fontColor: "#bcccdc"
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 10,
+                        }
+                    },
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 10,
+                        }
+                    }
+                },
             }
         }
     })
