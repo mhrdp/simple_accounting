@@ -29,7 +29,7 @@
                 padding-right: 20px;
                 padding-top: 2px;
                 padding-bottom: 2px;
-                width: 150px;
+                width: 200px;
             }
 
             .text-rd {
@@ -43,8 +43,8 @@
     </head>
 
     <body>
-        <h2>Company Name</h3>
-        <p class="zero-top">Laporan Laba/Rugi</p>
+        <h2>{{company_name}}</h2>
+        <p class="zero-top">Laporan Laba/Rugi bulan: {{get_previous_month}}</p>
         <hr />
 
         <table class="table">
@@ -70,11 +70,11 @@
                 <td></td>
                 <td class="upperline">
                     {% if monthly_income.sum > 0 %}
-                        <b class="text-gr">
+                        <h5 class="text-gr">
                             Rp. {{monthly_income.sum|intcomma}}
-                        </b>
+                        </h5>
                     {% else %}
-                        <b>Rp. 0.00</b>
+                        <h5>Rp. 0.00</h5>
                     {% endif %}
                 </td>
             </tr>
@@ -144,26 +144,26 @@
                 <td></td>
                 <td class="upperline">
                     {% if monthly_production_sum > 0 %}
-                        <b>Rp. {{monthly_production_sum|intcomma}}0</b>
+                        <h5>Rp. {{monthly_production_sum|intcomma}}0</h5>
                     {% else %}
-                        <b>Rp. 0.00</b>
+                        <h5>Rp. 0.00</h5>
                     {% endif %}
                 </td>
             </tr>
             <tr>
-                <td>Laba Kotor</td>
+                <td><h4>Laba Kotor</h4></td>
                 <td></td>
                 <td class="upperline">
                     {% if monthly_gross_profit > 0 %}
-                        <b class="text-gr">
+                        <h4 class="text-gr">
                             Rp. {{monthly_gross_profit|intcomma}}0
-                        </b>
+                        </h4>
                     {% elif monthly_gross_profit < 0 %}
-                        <b class="text-rd">
+                        <h4 class="text-rd">
                             Rp. {{monthly_gross_profit|intcomma}}0
-                        </b>
+                        </h4>
                     {% else %}
-                        <b>Rp. 0.00</b>
+                        <h4>Rp. 0.00</h4>
                     {% endif %}
                     </td>
             </tr>
@@ -221,9 +221,9 @@
                 <td></td>
                 <td class="upperline">
                     {% if monthly_operational_sum > 0%}
-                        <b>Rp. {{monthly_operational_sum|intcomma}}</b>
+                        <h5>Rp. {{monthly_operational_sum|intcomma}}</h5>
                     {% else %}
-                        <b>Rp. 0.00</b>
+                        <h5>Rp. 0.00</h5>
                     {% endif %}
                     </td>
             </tr>
@@ -293,42 +293,42 @@
                 <td></td>
                 <td class="upperline">
                     {% if monthly_administration_sum > 0 %}
-                        <b>Rp. {{monthly_administration_sum|intcomma}}0</b>
+                        <h5>Rp. {{monthly_administration_sum|intcomma}}0</h5>
                     {% else %}
-                        <b>Rp. 0.00</b>
+                        <h5>Rp. 0.00</h5>
                     {% endif %}
                 </td>
             </tr>
             <tr>
-                <td>Total Beban Usaha</td>
+                <td><h4>Total Beban Usaha</h4></td>
                 <td></td>
                 <td class="upperline">
                     {% if monthly_business_load_sum > 0 %}
-                        <b class="text-rd">
+                        <h4 class="text-rd">
                             Rp. {{monthly_business_load_sum|intcomma}}0
-                        </b>
+                        </h4>
                     {% else %}
-                        <b>
+                        <h4>
                             Rp. 0.00
-                        </b>
+                        </h4>
                     {% endif %}
                 </td>
             <tr>
-                <td>NETT Profit</td>
+                <td><h3>NETT Profit</h3></td>
                 <td></td>
                 <td class="upperline">
                     {% if monthly_nett_profit > 0 %}
-                        <b class="text-gr">
+                        <h3 class="text-gr">
                             Rp. {{monthly_nett_profit|intcomma}}0
-                        </b>
+                        </h3>
                     {% elif monthly_nett_profit < 0 %}
-                        <b class="text-rd">
+                        <h3 class="text-rd">
                             Rp. {{monthly_nett_profit|intcomma}}0
-                        </b>
+                        </h3>
                     {% else %}
-                        <b>
+                        <h3>
                             Rp. 0.00
-                        </b>
+                        </h3>
                     {% endif %}
                 </td>
             </tr>

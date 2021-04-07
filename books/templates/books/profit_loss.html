@@ -29,10 +29,11 @@
 
     <div class="col-12">
         <div class="table-font-resize">
-            <h3 class="text-right">{{current_month}}'s Laba / Rugi</h3>
+            <h3 class="text-right">{{previous_month}}'s Laba / Rugi</h3>
             <br />
             <a href="{% url 'profit_loss_to_pdf' %}">PDF Export Test</a><br />
-            <a href="#">For Browser's Print PDF Compatible HTML Page (TBA)</a>
+            <a href="#">For Browser's Print PDF Compatible HTML Page (TBA)</a><br />
+            <a href="{% url 'profit_loss_filter' %}">Advance Filter</a>
 
             <h4>Pendapatan Bulanan</h4>
             <hr class="hr-styling" />
