@@ -124,254 +124,6 @@ def income_filter_by_date(request):
     }
     return render(request, 'books/filtered_income.html', content)
 
-def profit_loss_filter(request):
-    company_name = get_object_or_404(CompanyDetail, username=request.user.pk)
-
-    get_current_month = timezone.now().month
-    
-    # Convert month's number to the name of the month
-    # timezone.now() by default return number
-    months = {}
-    list_of_months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ]
-    for i, j in zip(range(1, 13), list_of_months):
-        months[i] = j
-    # End
-    get_previous_month = months[get_current_month-1]
-
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
-
-    if end_date < start_date:
-        messages.error(request, 'You can\'t have end date smaller')
-
-    # Income in running month
-    income = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-
-    # Inventory Value in running month
-    raw_material = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Bahan Mentah',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    wip = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Setengah Jadi',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    finished_goods = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Jadi',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    production_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Biaya Produksi Lainnya',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-
-    # Operating Cost
-    marketing = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Pemasaran',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    logistic = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Transportasi / Logistik',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    operation_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Operasional Lainnya',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-
-    # Administration Cost
-    office_needs = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Kebutuhan Kantor',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    salary = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Gaji Karyawan',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    rent = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Sewa',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-    administration_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Administrasi Lainnya',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-
-    # This to replace None type in dict into zero (0)
-    def dict_clean(items):
-        result = {}
-        for key, value in items:
-            if value == None:
-                value = 0
-            result[key] = value
-        return result
-
-    # To make sure object type Decimal serializable by JSON by changing it to float and format it to reselble Decimal
-    class DecimalEncoder(json.JSONEncoder):
-        def default(self, obj):
-            if isinstance(obj, Decimal):
-                float_obj = float(obj)
-                return float_obj
-            return json.JSONEncoder.default(self, float_obj)
-
-    # Re-format income
-    income_dict = json.dumps(income, cls=DecimalEncoder)
-    get_income = json.loads(income_dict, object_pairs_hook=dict_clean)
-
-    # Re-format production cost
-    raw_material_dict = json.dumps(raw_material, cls=DecimalEncoder)
-    get_raw_material = json.loads(raw_material_dict, object_pairs_hook=dict_clean)
-
-    wip_dict = json.dumps(wip, cls=DecimalEncoder)
-    get_wip = json.loads(wip_dict, object_pairs_hook=dict_clean)
-
-    finished_goods_dict = json.dumps(finished_goods, cls=DecimalEncoder)
-    get_finished_goods = json.loads(finished_goods_dict, object_pairs_hook=dict_clean)
-
-    misc_production_dict = json.dumps(production_misc, cls=DecimalEncoder)
-    get_production_misc = json.loads(misc_production_dict, object_pairs_hook=dict_clean)
-
-    # Re-format operational cost
-    marketing_dict = json.dumps(marketing, cls=DecimalEncoder)
-    get_marketing = json.loads(marketing_dict, object_pairs_hook=dict_clean)
-
-    logistic_dict = json.dumps(logistic, cls=DecimalEncoder)
-    get_logistic = json.loads(logistic_dict, object_pairs_hook=dict_clean)
-
-    misc_operational_dict = json.dumps(operation_misc, cls=DecimalEncoder)
-    get_operation_misc = json.loads(misc_operational_dict, object_pairs_hook=dict_clean)
-
-    # Re-format administration cost
-    office_needs_dict = json.dumps(office_needs, cls=DecimalEncoder)
-    get_office_needs = json.loads(office_needs_dict, object_pairs_hook=dict_clean)
-
-    salary_dict = json.dumps(salary, cls=DecimalEncoder)
-    get_salary = json.loads(salary_dict, object_pairs_hook=dict_clean)
-
-    rent_dict = json.dumps(rent, cls=DecimalEncoder)
-    get_rent = json.loads(rent_dict, object_pairs_hook=dict_clean)
-
-    misc_administration_dict = json.dumps(administration_misc, cls=DecimalEncoder)
-    get_administration_misc = json.loads(misc_administration_dict, object_pairs_hook=dict_clean)
-
-    # To sum it you need to convert it to float first so you can do mathematical operations with the result
-    # The end result of formatting the float was a string, so don't use formatted result if you want to do mathematical operations
-    production_sum = get_raw_material['sum'] + get_wip['sum'] + get_finished_goods['sum'] + get_production_misc['sum'] # a float
-    format_float_production_sum = '{:.2f}'.format(production_sum) # a string
-
-    # Format monthly_income data type to float
-    income_sum = float(get_income['sum']) # a float
-
-    # Gross Profit = monthly_income - monthly_production_sum
-    # type float
-    gross_profit = income_sum - production_sum
-
-    # Total of operational cost
-    operational_sum = get_marketing['sum'] + get_logistic['sum'] + get_operation_misc['sum']
-
-    # Total Administrative cost
-    administration_sum = get_office_needs['sum'] + get_salary['sum'] + get_rent['sum'] + get_administration_misc['sum']
-
-    # Operational cost + administrative cost
-    business_load_sum = operational_sum + administration_sum
-
-    # NETT profit
-    nett_profit = gross_profit - business_load_sum
-    
-    content = {
-        'company_name': company_name,
-        'current_month': months[get_current_month],
-        'previous_month': get_previous_month,
-
-        'income': income,
-
-        'raw_material': raw_material,
-        'wip': wip,
-        'finished_goods': finished_goods,
-        'production_misc': production_misc,
-
-        'marketing': marketing,
-        'logistic': logistic,
-        'operation_misc': operational_sum,
-
-        'office_needs': office_needs,
-        'salary': salary,
-        'rent': rent,
-        'administration_misc': administration_misc,
-
-        'gross_profit': gross_profit,
-        'production_sum': format_float_production_sum,
-        'operational_sum': operational_sum,
-        'administration_sum': administration_sum,
-        'business_load_sum': business_load_sum,
-        'nett_profit': nett_profit,
-    }
-    return render(request, 'books/profit_loss_filter.html', content)
-
 # Ajax for categories and sub categories dependent dropdown
 def expense_dropdown_ajax(request):
     categories = request.GET.get('category')
@@ -403,12 +155,12 @@ def export_journal_to_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="journal.csv"'
     writer = csv.writer(response)
-    writer.writerow(['Date Added', 'Item Name', 'Book Category', 'Category', 'Sub Category', 'Price', 'Quantity', 'Total', 'Notes'])
+    writer.writerow(['Date Added', 'Expense', 'Income', 'Book Category', 'Category', 'Sub Category', 'Price', 'Quantity', 'Total', 'Notes'])
 
     journal = Journal.objects.filter(
         username=request.user.pk,
     ).values_list(
-        'date_added', 'item_name', 'book_category', 'category__category', 'sub_category__sub_category', 'price', 'quantity', 'total', 'notes'
+        'date_added', 'item_name', 'product_name__product_name', 'book_category', 'category__category', 'sub_category__sub_category', 'price', 'quantity', 'total', 'notes'
     )
     for expense in journal:
         writer.writerow(expense)
@@ -432,119 +184,237 @@ def export_profit_loss_to_pdf(request):
 
     get_previous_month = months[get_current_month-1]
 
-    # Income in running month
-    monthly_income = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-    # Inventory Value in running month
-    monthly_raw_material = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Bahan Mentah',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_wip = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Setengah Jadi',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_finished_goods = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Jadi',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_production_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Biaya Produksi Lainnya',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
+    if start_date != None and end_date != None:
+        # Income in running month
+        monthly_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
 
-    # Operating Cost
-    monthly_marketing = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Pemasaran',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_logistic = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Transportasi / Logistik',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_operation_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Operasional Lainnya',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
+        # Inventory Value in running month
+        monthly_raw_material = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Bahan Mentah',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_wip = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Setengah Jadi',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_finished_goods = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Jadi',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_production_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Biaya Produksi Lainnya',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
 
-    # Administration Cost
-    monthly_office_needs = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Kebutuhan Kantor',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_salary = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Gaji Karyawan',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_rent = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Sewa',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_administration_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Administrasi Lainnya',
-        date_added__month=get_current_month-1,
-    ).aggregate(
-        sum=Sum('total')
-    )
+        # Operating Cost
+        monthly_marketing = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Pemasaran',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_logistic = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Transportasi / Logistik',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_operation_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Operasional Lainnya',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Administration Cost
+        monthly_office_needs = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Kebutuhan Kantor',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_salary = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Gaji Karyawan',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_rent = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Sewa',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_administration_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Administrasi Lainnya',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+    else:
+        # Income in running month
+        monthly_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Inventory Value in running month
+        monthly_raw_material = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Bahan Mentah',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_wip = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Setengah Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_finished_goods = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_production_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Biaya Produksi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Operating Cost
+        monthly_marketing = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Pemasaran',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_logistic = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Transportasi / Logistik',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_operation_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Operasional Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Administration Cost
+        monthly_office_needs = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Kebutuhan Kantor',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_salary = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Gaji Karyawan',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_rent = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Sewa',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_administration_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Administrasi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
 
     # This to replace None type in dict into zero (0)
     def dict_clean(items):
@@ -1151,119 +1021,239 @@ def profit_loss(request):
         months[i] = j
     # End
 
-    # Income in running month
-    monthly_income = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    if start_date != None and end_date != None and start_date != '' and start_date != '':
+        if end_date < start_date:
+            messages.error(request, 'End date can\'t be lower than start date')
+        else:
+            # Income in running month
+            monthly_income = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    # Inventory Value in running month
-    monthly_raw_material = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Bahan Mentah',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_wip = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Setengah Jadi',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_finished_goods = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Jadi',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_production_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Biaya Produksi Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+            # Inventory Value in running month
+            monthly_raw_material = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Bahan Mentah',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_wip = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Barang Setengah Jadi',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_finished_goods = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Barang Jadi',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_production_misc = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Biaya Produksi Lainnya',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    # Operating Cost
-    monthly_marketing = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Pemasaran',
-        date_added__month=get_current_month
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_logistic = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Transportasi / Logistik',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_operation_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Operasional Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+            # Operating Cost
+            monthly_marketing = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Operasional',
+                sub_category__sub_category='Biaya Pemasaran',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_logistic = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Operasional',
+                sub_category__sub_category='Transportasi / Logistik',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_operation_misc = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Operasional',
+                sub_category__sub_category='Biaya Operasional Lainnya',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    # Administration Cost
-    monthly_office_needs = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Kebutuhan Kantor',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_salary = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Gaji Karyawan',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_rent = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Sewa',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_administration_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Administrasi Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+            # Administration Cost
+            monthly_office_needs = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Kebutuhan Kantor',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_salary = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Gaji Karyawan',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_rent = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Biaya Sewa',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_administration_misc = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Biaya Administrasi Lainnya',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+    else:
+        # Income in running month
+        monthly_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Inventory Value in running month
+        monthly_raw_material = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Bahan Mentah',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_wip = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Setengah Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_finished_goods = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_production_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Biaya Produksi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Operating Cost
+        monthly_marketing = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Pemasaran',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_logistic = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Transportasi / Logistik',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_operation_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Operasional Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Administration Cost
+        monthly_office_needs = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Kebutuhan Kantor',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_salary = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Gaji Karyawan',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_rent = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Sewa',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_administration_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Administrasi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
 
     # This to replace None type in dict into zero (0)
     def dict_clean(items):
@@ -1349,6 +1339,8 @@ def profit_loss(request):
     content = {
         'current_month': months[get_current_month],
         'previous_month': months[get_current_month-1],
+        'start_date': start_date,
+        'end_date': end_date,
 
         'monthly_income': monthly_income,
 
@@ -1374,8 +1366,5 @@ def profit_loss(request):
         'monthly_business_load_sum': monthly_business_load_sum,
 
         'monthly_nett_profit': monthly_nett_profit,
-
-        'a': monthly_raw_material_0,
-        'b': monthly_wip_0,
     }
     return render(request, 'books/profit_loss.html', content)

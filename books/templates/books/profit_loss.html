@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="mb-3">
+    <div class="mb-3 col-12">
         <a href="{% url 'list_of_income' %}">
             <button class="btn btn-transparent-scd">Incomes List</button>
         </a>
@@ -26,14 +26,35 @@
             <button class="btn content-current disabled">Profit Loss</button>
         </a>
     </div>
+    <div>
+        <form method="GET">
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date">
 
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date">
+
+            <button class="btn"><i class="fas fa-filter"></i></button>
+        </form>
+    </div>
     <div class="col-12">
         <div class="table-font-resize">
-            <h3 class="text-right">{{previous_month}}'s Laba / Rugi</h3>
+            <h3 class="text-right">
+                {% if not start_date and not end_date %}
+                    {{previous_month}}'s Laba / Rugi
+                {% else %}
+                    Laba / Rugi Periode {{start_date}} s/d {{end_date}}
+                {% endif %}
+            </h3>
             <br />
-            <a href="{% url 'profit_loss_to_pdf' %}">PDF Export Test</a><br />
-            <a href="#">For Browser's Print PDF Compatible HTML Page (TBA)</a><br />
-            <a href="{% url 'profit_loss_filter' %}">Advance Filter</a>
+            {% if not start_date and not end_date %}
+                <a href="{% url 'profit_loss_to_pdf' %}">PDF Export Test</a>
+            {% else %}
+                <a href="{% url 'profit_loss_to_pdf' %}?start_date={{start_date}}&end_date={{end_date}}">PDF Export Test</a>
+            {% endif %}
+            
+            <br />
+            <a href="#">For Browser's Print PDF Compatible HTML Page (TBA)</a>
 
             <h4>Pendapatan Bulanan</h4>
             <hr class="hr-styling" />
