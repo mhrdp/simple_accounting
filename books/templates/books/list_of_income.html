@@ -9,15 +9,28 @@
 <link href="/../../static/books/books.css" rel="stylesheet">
 {% endblock css %}
 
-{% block content %}
+{% block messages %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock messages %}
 
+{% block content %}
 <div class="row">
     <div class="col-12 col-md-12 mb-5">
         <div class="books-canvas-container">
             <canvas id="incomeList"></canvas>
         </div>
     </div>
+</div>
 
+<div class="row">
     <div class="mb-3">
         <a href="{% url 'list_of_income' %}">
             <button class="btn content-current disabled">Incomes List</button>
@@ -34,21 +47,31 @@
         <a href="{% url 'profit_loss' %}">
             <button class="btn btn-transparent-scd">Profit Loss</button>
         </a>
+        </div>
     </div>
+</div>
 
-    <div class="col-12 col-lg-12">
+<form method="GET" class="mb-4">
+    <div class="row">
+        <div class="col-12">
+            <h5>Filter</h5>
+        </div>
+
+        <div class="col-lg-3 col-5">
+            <label for="start_date" class="subtitles">Start Date</label>
+            <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
+        </div>
+        <div class="col-lg-3 col-5">
+            <label for="end_date" class="subtitles">End Date</label>
+            <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
+        </div>
+        <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
+    </div>
+</form>
+
+<div class="row mr-1">
+    <div class="col-12">
         <h3 class="mb-3">List of Income</h3>
-        <a href="{% url 'income_filter_by_date' %}">Filter the data</a>
-        <form method="GET" id="incomeFilterForm">
-            <label for="start-date" class="subtitles">Start Date</label>
-            <input type="date" id="startDate" name="start-date">
-
-            <label for="end-date" class="subtitles">End Date</label>
-            <input type="date" id="endDate" name="end-date">
-
-            <button type="submit">Submit</button>
-        </form>
-
         <div class="table-responsive-xl">
             <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
                 <thead>
@@ -90,35 +113,68 @@
 <div class="col-12">
 {% if paginate.has_other_pages %}
     <ul class="pagination justify-content-end">
-        {% if paginate.has_previous %}
-            <li class="page-item">
-                <a href="?page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">&laquo;</span>
-            </li>
-        {% endif %}
-
-        <!-- Split the displayed pages by the closest one page before and after-->
-        {% for i in page_range %}
-            {% if paginate.number == i %}
-                <li class="page-item active">
-                    <span class="page-link">{{ i }}</span>
+        {% if start_date and end_date %}
+            {% if paginate.has_previous %}
+                <li class="page-item">
+                    <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
                 </li>
             {% else %}
-                <li class="page-item">
-                    <a href="?page={{i}}" class="page-link">{{i}}</a>
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
                 </li>
             {% endif %}
-        {% endfor %}
 
-        {% if paginate.has_next %}
-            <li class="page-item">
-                <a href="?page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
-            </li>
+            <!-- Split the displayed pages by the closest one page before and after-->
+            {% for i in page_range %}
+                {% if paginate.number == i %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginate.has_next %}
+                <li class="page-item">
+                    <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
         {% else %}
-            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% if paginate.has_previous %}
+                <li class="page-item">
+                    <a href="?page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
+
+            <!-- Split the displayed pages by the closest one page before and after-->
+            {% for i in page_range %}
+                {% if paginate.number == i %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a href="?page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginate.has_next %}
+                <li class="page-item">
+                    <a href="?page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
         {% endif %}
     </ul>
 {% endif %}

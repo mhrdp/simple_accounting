@@ -10,8 +10,12 @@
                 border-bottom: 4px solid #3e50b4;
             }
 
-            .upperline {
+            .upperline-bold {
                 border-top: 2px solid #000;
+            }
+
+            .upperline-light {
+                border-top: 1px solid #000;
             }
             
             .zero-top {
@@ -44,7 +48,11 @@
 
     <body>
         <h2>{{company_name}}</h2>
-        <p class="zero-top">Laporan Laba/Rugi bulan: {{get_previous_month}}</p>
+        {% if start_date and end_date %}
+            <p class="zero-top">Laporan Laba/Rugi periode: {{start_date}} s/d {{end_date}}</p>
+        {% else %}
+            <p class="zero-top">Laporan Laba/Rugi periode: {{get_previous_month}}</p>
+        {% endif %}
         <hr />
 
         <table class="table">
@@ -68,7 +76,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td class="upperline">
+                <td class="upperline-light">
                     {% if monthly_income.sum > 0 %}
                         <h5 class="text-gr">
                             Rp. {{monthly_income.sum|intcomma}}
@@ -142,7 +150,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td class="upperline">
+                <td class="upperline-light">
                     {% if monthly_production_sum > 0 %}
                         <h5>Rp. {{monthly_production_sum|intcomma}}0</h5>
                     {% else %}
@@ -153,7 +161,7 @@
             <tr>
                 <td><h4>Laba Kotor</h4></td>
                 <td></td>
-                <td class="upperline">
+                <td class="upperline-bold">
                     {% if monthly_gross_profit > 0 %}
                         <h4 class="text-gr">
                             Rp. {{monthly_gross_profit|intcomma}}0
@@ -219,7 +227,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td class="upperline">
+                <td class="upperline-light">
                     {% if monthly_operational_sum > 0%}
                         <h5>Rp. {{monthly_operational_sum|intcomma}}</h5>
                     {% else %}
@@ -291,7 +299,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td class="upperline">
+                <td class="upperline-light">
                     {% if monthly_administration_sum > 0 %}
                         <h5>Rp. {{monthly_administration_sum|intcomma}}0</h5>
                     {% else %}
@@ -302,7 +310,7 @@
             <tr>
                 <td><h4>Total Beban Usaha</h4></td>
                 <td></td>
-                <td class="upperline">
+                <td class="upperline-bold">
                     {% if monthly_business_load_sum > 0 %}
                         <h4 class="text-rd">
                             Rp. {{monthly_business_load_sum|intcomma}}0
@@ -318,17 +326,17 @@
                 <td></td>
                 <td class="upperline">
                     {% if monthly_nett_profit > 0 %}
-                        <h3 class="text-gr">
+                        <h2 class="text-gr">
                             Rp. {{monthly_nett_profit|intcomma}}0
-                        </h3>
+                        </h2>
                     {% elif monthly_nett_profit < 0 %}
-                        <h3 class="text-rd">
+                        <h2 class="text-rd">
                             Rp. {{monthly_nett_profit|intcomma}}0
-                        </h3>
+                        </h2>
                     {% else %}
-                        <h3>
+                        <h2>
                             Rp. 0.00
-                        </h3>
+                        </h2>
                     {% endif %}
                 </td>
             </tr>
