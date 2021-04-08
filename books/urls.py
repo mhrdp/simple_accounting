@@ -20,11 +20,11 @@ urlpatterns = [
     path('ajax/expense-dropdown/', books_views.expense_dropdown_ajax, name='dropdown_ajax'),
     path('ajax/income-autofill/', books_views.income_form_autofill_ajax, name='income_form_autofill'),
 
-    path('filter/filtered-income/', books_views.income_filter_by_date, name='income_filter_by_date'),
-    path('filter/filtered-expense/', books_views.expense_filter_by_date, name='expense_filter_by_date'),
+    path('books/income/list/filter', books_views.income_filter_by_date, name='income_filter_by_date'),
+    path('books/expense/list/filter/', books_views.expense_filter_by_date, name='expense_filter_by_date'),
 
     path('dashboard/', books_views.user_dashboard, name='user_dashboard'),
 
-    url(r'books/journal/export/csv/', books_views.export_journal_to_csv, name='journal_to_csv'),
+    url('books/journal/export/csv/', books_views.export_journal_to_csv, name='journal_to_csv'),
     url('books/ledger/pdf/', books_views.export_profit_loss_to_pdf, name='profit_loss_to_pdf'),
 ]

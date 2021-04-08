@@ -2,6 +2,7 @@ body {
     /*background: rgb(45, 56, 60);*/
     background: #121212;
     overflow-x: hidden;
+    font-family: 'Dosis', sans-serif;
 }
 
 .margin-auto {
@@ -165,6 +166,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .text-inline {
     display: inline;
+    font-size: 18px;
+    font-weight: 500;
 }
 
 .link {

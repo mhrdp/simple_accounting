@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.http import HttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -16,6 +16,7 @@ from django.core.paginator import (
 from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory, Journal
 from .utils import render_to_pdf
+from user.models import CompanyDetail
 
 from decimal import Decimal
 
@@ -29,44 +30,41 @@ def expense_filter_by_date(request):
     page_range = None
     sum_of_filtered_expense = None
 
-    if request.method == 'GET':
-        date_start = request.GET.get('date_start')
-        date_end = request.GET.get('date_end')
-        if date_start and date_end:
-            filtered_expense = Journal.objects.filter(
-                username=request.user.pk,
-                book_category='Kredit',
-                date_added__range=(date_start, date_end)
-            ).order_by('-date_added')
-            sum_of_filtered_expense = Journal.objects.filter(
-                username=request.user.pk,
-                book_category='Kredit',
-                date_added__range=(date_start, date_end)
-            ).aggregate(
-                sum=Sum('total')
-            )
+    date_start = request.GET.get('date_start')
+    date_end = request.GET.get('date_end')
+    if date_start and date_end:
+        filtered_expense = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            date_added__range=(date_start, date_end)
+        ).order_by('date_added')
+        sum_of_filtered_expense = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            date_added__range=(date_start, date_end)
+        ).aggregate(
+            sum=Sum('total')
+        )
 
-            # Pagination
-            page = request.GET.get('page', 1)
-            paginator = Paginator(filtered_expense, 10)
+        # Pagination
+        page = request.GET.get('page', 1)
+        paginator = Paginator(filtered_expense, 10)
 
-            try:
-                expense_paginate = paginator.page(page)
-            except PageNotAnInteger:
-                expense_paginate = paginator.page(1)
-            except EmptyPage:
-                expense_paginate = paginator.page(paginator.num_pages)
+        try:
+            expense_paginate = paginator.page(page)
+        except PageNotAnInteger:
+            expense_paginate = paginator.page(1)
+        except EmptyPage:
+            expense_paginate = paginator.page(paginator.num_pages)
 
-            index = expense_paginate.number-1
-            max_index = len(paginator.page_range)
-            start_index = index-3 if index>=3 else 0
-            end_index = index+3 if index<=max_index-3 else max_index
+        index = expense_paginate.number-1
+        max_index = len(paginator.page_range)
+        start_index = index-3 if index>=3 else 0
+        end_index = index+3 if index<=max_index-3 else max_index
 
-            page_range = list(paginator.page_range)[start_index:end_index]
-        elif date_start == '' and date_end == '':
-            messages.error(request, 'You need to fill both fields!')
-        else:
-            messages.info(request, 'Remember to fill in both fields!')
+        page_range = list(paginator.page_range)[start_index:end_index]
+    else:
+        pass
 
     content = {
         'paginate': expense_paginate,
@@ -81,46 +79,43 @@ def income_filter_by_date(request):
     page_range = None
     sum_of_filtered_income = None
 
-    if request.method == 'GET':
-        date_start = request.GET.get('date_start')
-        date_end = request.GET.get('date_end')
-        if date_start and date_end:
-            filtered_income = Journal.objects.filter(
-                username=request.user.pk,
-                book_category='Debit',
-                date_added__range=(date_start, date_end)
-            ).order_by('-date_added')
-            sum_of_filtered_income = Journal.objects.filter(
-                username=request.user.pk,
-                book_category='Debit',
-                date_added__range=(date_start, date_end)
-            ).aggregate(
-                sum=Sum('total')
-            )
+    date_start = request.GET.get('date_start')
+    date_end = request.GET.get('date_end')
+    if date_start and date_end:
+        filtered_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__range=(date_start, date_end)
+        ).order_by('date_added')
+        sum_of_filtered_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__range=(date_start, date_end)
+        ).aggregate(
+            sum=Sum('total')
+        )
 
-            # Pagination
-            page = request.GET.get('page', 1)
-            paginator = Paginator(filtered_income, 10)
+        # Pagination
+        page = request.GET.get('page', 1)
+        paginator = Paginator(filtered_income, 10)
 
-            try:
-                income_paginate = paginator.page(page)
-            except PageNotAnInteger:
-                income_paginate = paginator.page(1)
-            except EmptyPage:
-                income_paginate = paginator.page(paginator.num_pages)
-            
-            # Display only the six pages maximum from the current total pages of pagination
-            index = income_paginate.number-1 # -1 because index start from 0
-            max_index = len(paginator.page_range)
-            start_index = index-3 if index>=3 else 0
-            end_index = index+3 if index<=max_index-3 else max_index
+        try:
+            income_paginate = paginator.page(page)
+        except PageNotAnInteger:
+            income_paginate = paginator.page(1)
+        except EmptyPage:
+            income_paginate = paginator.page(paginator.num_pages)
+        
+        # Display only the six pages maximum from the current total pages of pagination
+        index = income_paginate.number-1 # -1 because index start from 0
+        max_index = len(paginator.page_range)
+        start_index = index-3 if index>=3 else 0
+        end_index = index+3 if index<=max_index-3 else max_index
 
-            # Make a list to be looped with for loop
-            page_range = list(paginator.page_range)[start_index:end_index]
-        elif date_start == '' or date_end == '':
-            messages.error(request, 'You need to fill both fields!')
-        else:
-            messages.info(request, 'Remember to fill in both fields!')
+        # Make a list to be looped with for loop
+        page_range = list(paginator.page_range)[start_index:end_index]
+    else:
+        pass
         
     content = {
         'paginate': income_paginate,
@@ -157,23 +152,37 @@ def income_form_autofill_ajax(request):
 
 # Export table to CSV / Excel / PDF
 def export_journal_to_csv(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="journal.csv"'
     writer = csv.writer(response)
-    writer.writerow(['Date Added', 'Item Name', 'Book Category', 'Category', 'Sub Category', 'Price', 'Quantity', 'Total', 'Notes'])
+    writer.writerow(['Date Added', 'Expense', 'Income', 'Book Category', 'Category', 'Sub Category', 'Price', 'Quantity', 'Total', 'Notes'])
 
-    journal = Journal.objects.filter(
-        username=request.user.pk,
-    ).values_list(
-        'date_added', 'item_name', 'book_category', 'category__category', 'sub_category__sub_category', 'price', 'quantity', 'total', 'notes'
-    )
+    if start_date != None and start_date != '' and end_date != None and end_date != '':
+        journal = Journal.objects.filter(
+            username=request.user.pk,
+            date_added__range=(start_date, end_date),
+        ).values_list(
+            'date_added', 'item_name', 'product_name__product_name', 'book_category', 'category__category', 'sub_category__sub_category', 'price', 'quantity', 'total', 'notes'
+        )
+    else:
+        journal = Journal.objects.filter(
+            username=request.user.pk,
+        ).values_list(
+            'date_added', 'item_name', 'product_name__product_name', 'book_category', 'category__category', 'sub_category__sub_category', 'price', 'quantity', 'total', 'notes'
+        )
     for expense in journal:
         writer.writerow(expense)
     return response
 
+@login_required
 def export_profit_loss_to_pdf(request):
-    get_current_month = timezone.now().month
+    company_name = get_object_or_404(CompanyDetail, username=request.user.pk)
 
+    get_current_month = timezone.now().month
+    
     # Convert month's number to the name of the month
     # timezone.now() by default return number
     months = {}
@@ -185,119 +194,239 @@ def export_profit_loss_to_pdf(request):
         months[i] = j
     # End
 
-    # Income in running month
-    monthly_income = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+    get_previous_month = months[get_current_month-1]
 
-    # Inventory Value in running month
-    monthly_raw_material = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Bahan Mentah',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_wip = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Setengah Jadi',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_finished_goods = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Jadi',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_production_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Biaya Produksi Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-    # Operating Cost
-    monthly_marketing = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Pemasaran',
-        date_added__month=get_current_month
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_logistic = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Transportasi / Logistik',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_operation_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Operasional Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+    if start_date != None and end_date != None and start_date != '' and end_date != '':
+        # Income in running month
+        monthly_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
 
-    # Administration Cost
-    monthly_office_needs = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Kebutuhan Kantor',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_salary = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Gaji Karyawan',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_rent = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Sewa',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_administration_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Administrasi Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+        # Inventory Value in running month
+        monthly_raw_material = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Bahan Mentah',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_wip = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Setengah Jadi',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_finished_goods = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Jadi',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_production_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Biaya Produksi Lainnya',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Operating Cost
+        monthly_marketing = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Pemasaran',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_logistic = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Transportasi / Logistik',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_operation_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Operasional Lainnya',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Administration Cost
+        monthly_office_needs = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Kebutuhan Kantor',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_salary = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Gaji Karyawan',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_rent = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Sewa',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_administration_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Administrasi Lainnya',
+            date_added__range=(start_date, end_date),
+        ).aggregate(
+            sum=Sum('total')
+        )
+    else:
+        # Income in running month
+        monthly_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Inventory Value in running month
+        monthly_raw_material = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Bahan Mentah',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_wip = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Setengah Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_finished_goods = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_production_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Biaya Produksi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Operating Cost
+        monthly_marketing = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Pemasaran',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_logistic = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Transportasi / Logistik',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_operation_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Operasional Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Administration Cost
+        monthly_office_needs = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Kebutuhan Kantor',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_salary = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Gaji Karyawan',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_rent = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Sewa',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_administration_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Administrasi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
 
     # This to replace None type in dict into zero (0)
     def dict_clean(items):
@@ -381,6 +510,10 @@ def export_profit_loss_to_pdf(request):
     monthly_nett_profit = monthly_gross_profit - monthly_business_load_sum
 
     data = {
+        'start_date': start_date,
+        'end_date': end_date,
+        'company_name': company_name,
+        'get_previous_month': get_previous_month,
         'current_month': months[get_current_month],
 
         'monthly_income': monthly_income,
@@ -412,12 +545,19 @@ def export_profit_loss_to_pdf(request):
 
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = f'profit_loss-{months[get_current_month]}.pdf'
+
+        if start_date != None and end_date != None:
+            filename = f'profit_loss-{start_date}-{end_date}.pdf'
+        else:
+            filename = f'profit_loss-{months[get_current_month-1]}.pdf'
+        
         content = 'inline; filename="%s"' %(filename)
         download = request.GET.get('download')
+
         if download:
             content = 'attachment; filename="%s"' %(filename)
         response['Content-Disposition'] = content
+
         return response
     return HttpResponse('Not Found')
 # End of export
@@ -456,6 +596,9 @@ def register_income(request):
                 income_form_save.username = request.user
                 income_form_save.industry = request.user.companydetail.industry
                 income_form_save.book_category = "Debit"
+
+                if income_form_save.additional_price is None:
+                    income_form_save.additional_price = 0
 
                 income_form_save.total = (income_form_save.price*income_form_save.quantity)+income_form_save.additional_price
 
@@ -501,12 +644,54 @@ def register_expense(request):
 
 @login_required
 def list_of_income(request):
-    # List all of the income
-    list_of_income = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit'
-    ).order_by('-date_added')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    
+    if start_date != None and end_date != None and start_date != '' and end_date != '':
+        if end_date < start_date:
+            messages.error(request, 'Hey, you can\'t have end date bigger than start_date!')
+        else:
+            list_of_income = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(start_date, end_date)
+            ).order_by(
+                '-date_added'
+            )
 
+            # Data for chart
+            income_data_last_30_days = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(start_date, end_date),
+            ).values(
+                'date_added'
+            ).order_by(
+                'date_added'
+            ).annotate(
+                sum=Sum('total')
+            )
+    else:
+        # List all of the income
+        list_of_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit'
+        ).order_by(
+            '-date_added'
+        )
+
+        # Data for chart
+        income_data_last_30_days = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit'
+        ).values(
+            'date_added'
+        ).order_by(
+            'date_added'
+        )[:30].annotate(
+            sum=Sum('total')
+        )
+    
     # Paginator, to split page into several pages
     page = request.GET.get('page', 1)
     paginator = Paginator(list_of_income, 10) # split page per 10 items
@@ -526,17 +711,6 @@ def list_of_income(request):
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
 
-    # Data for chart
-    income_data_last_30_days = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit'
-    ).values(
-        'date_added'
-    ).order_by(
-        'date_added'
-    )[:30].annotate(
-        sum=Sum('total')
-    )
     content = {
         'paginate': income_page,
         'page_range': page_range,
@@ -546,11 +720,51 @@ def list_of_income(request):
 
 @login_required
 def list_of_expense(request):
-    # List all of the expenses
-    list_of_expense = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit'
-    ).order_by('-date_added')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if start_date != None and start_date != '' and end_date != None and end_date != '':
+        if end_date < start_date:
+            messages.error(request, 'Hey! You can\'t have start date bigger than end date!')
+        else:
+            list_of_expense = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                date_added__range=(start_date, end_date),
+            ).order_by(
+                '-date_added'
+            )
+
+            # Data for chart for the last 30 days
+            expense_chart = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                date_added__range=(start_date, end_date),
+            ).values(
+                'date_added'
+            ).order_by(
+                'date_added'
+            ).annotate(
+                sum=Sum('total')
+            )
+    else:
+        # List all of the expenses
+        list_of_expense = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit'
+        ).order_by('-date_added')
+
+        # Data for chart for the last 30 days
+        expense_chart = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+        ).values(
+            'date_added'
+        ).order_by(
+            'date_added'
+        )[:30].annotate(
+            sum=Sum('total')
+        )
 
     #Paginator, to split page into several pages
     page = request.GET.get('page', 1)
@@ -571,22 +785,10 @@ def list_of_expense(request):
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
 
-    # Data for chart for the last 30 days
-    expense_chart_last_30_days = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-    ).values(
-        'date_added'
-    ).order_by(
-        'date_added'
-    )[:30].annotate(
-        sum=Sum('total')
-    )
-
     content = {
         'page_range': page_range,
-        'paginator': expense_page,
-        'expense_chart_last_30_days': expense_chart_last_30_days,
+        'paginate': expense_page,
+        'expense_chart_last_30_days': expense_chart,
     }
     return render(request, 'books/list_of_expense.html', content)
 
@@ -608,6 +810,9 @@ def edit_income(request, pk):
         income_form = IncomeForm(request.user, request.POST or None, instance=obj)
         if income_form.is_valid():
             income_form_save = income_form.save(commit=False)
+
+            if income_form_save.additional_price is None:
+                income_form_save.additional_price = 0
 
             income_form_save.total = (income_form_save.price*income_form_save.quantity)+income_form_save.additional_price
 
@@ -808,55 +1013,121 @@ def user_dashboard(request):
 
 @login_required
 def journal(request):
-    journal_all = Journal.objects.filter(
-        username=request.user.pk
-    ).order_by('-date_added')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-    expense_total = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit'
-    ).aggregate(
-        sum=Sum('total')
-    )
-    income_total = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit',
-    ).aggregate(
-        sum=Sum('total')
-    )
+    if start_date != None and end_date != None and start_date != '' and end_date != '':
+        if end_date < start_date:
+            messages.error(request, 'You can\'t have end date bigger than start date')
+        else:
+            
+            journal_all = Journal.objects.filter(
+                username=request.user.pk,
+                date_added__range=(start_date, end_date),
+            ).order_by(
+                'date_added',
+            )
+            
+            expense_total = Journal.objects.filter(
+                username=request.user.pk,
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    kredit_chart_for_last_30_days = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit'
-    ).values(
-        'date_added'
-    ).order_by(
-        'date_added'
-    )[:30].annotate(
-        sum=Sum('total')
-    )
-    debit_chart_for_last_30_days = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit'
-    ).values(
-        'date_added'
-    ).order_by(
-        'date_added'
-    )[:30].annotate(
-        sum=Sum('total')
-    )
+            income_total = Journal.objects.filter(
+                username=request.user.pk,
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    # In case one of income or expense not present in some dates, you might need to do this so it won't return NULL inside the charts
-    journal_date_for_chart = Journal.objects.filter(
-        username=request.user.pk,
-    ).values(
-        'date_added'
-    ).order_by(
-        'date_added'
-    )[:30].annotate(
-        sum=Sum('total')
-    )
+            kredit_chart = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                date_added__range=(start_date, end_date),
+            ).values(
+                'date_added'
+            ).order_by(
+                'date_added'
+            ).annotate(
+                sum=Sum('total')
+            )
+            debit_chart = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(start_date, end_date),
+            ).values(
+                'date_added'
+            ).order_by(
+                'date_added'
+            ).annotate(
+                sum=Sum('total')
+            )
 
+            # In case one of income or expense not present in some dates, you might need to do this so it won't return NULL inside the charts
+            journal_date_for_chart = Journal.objects.filter(
+                username=request.user.pk,
+                date_added__range=(start_date, end_date)
+            ).values(
+                'date_added'
+            ).order_by(
+                'date_added'
+            ).annotate(
+                sum=Sum('total')
+            )
+    else:
+        journal_all = Journal.objects.filter(
+            username=request.user.pk
+        ).order_by('date_added')
+
+        expense_total = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit'
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        income_total = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        kredit_chart = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit'
+        ).values(
+            'date_added'
+        ).order_by(
+            'date_added'
+        )[:30].annotate(
+            sum=Sum('total')
+        )
+        debit_chart = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit'
+        ).values(
+            'date_added'
+        ).order_by(
+            'date_added'
+        )[:30].annotate(
+            sum=Sum('total')
+        )
+
+        # In case one of income or expense not present in some dates, you might need to do this so it won't return NULL inside the charts
+        journal_date_for_chart = Journal.objects.filter(
+            username=request.user.pk,
+        ).values(
+            'date_added'
+        ).order_by(
+            'date_added'
+        )[:30].annotate(
+            sum=Sum('total')
+        )
+
+    # Pagination, to split the page
     page = request.GET.get('page', 1)
     paginator = Paginator(journal_all, 10)
     try:
@@ -873,16 +1144,20 @@ def journal(request):
 
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
+    
 
     content = {
         'paginate': journal,
         'page_range': page_range,
 
+        'start_date': start_date,
+        'end_date': end_date,
+
         'expense_total': expense_total,
         'income_total': income_total,
 
-        'kredit_chart_last_30_days': kredit_chart_for_last_30_days,
-        'debit_chart_last_30_days': debit_chart_for_last_30_days,
+        'kredit_chart': kredit_chart,
+        'debit_chart': debit_chart,
         'journal_date_for_chart': journal_date_for_chart,
     }
     return render(request, 'books/journal.html', content)
@@ -902,119 +1177,239 @@ def profit_loss(request):
         months[i] = j
     # End
 
-    # Income in running month
-    monthly_income = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Debit',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    if start_date != None and end_date != None and start_date != '' and start_date != '':
+        if end_date < start_date:
+            messages.error(request, 'End date can\'t be lower than start date')
+        else:
+            # Income in running month
+            monthly_income = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    # Inventory Value in running month
-    monthly_raw_material = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Bahan Mentah',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_wip = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Setengah Jadi',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_finished_goods = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Barang Jadi',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_production_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Produksi',
-        sub_category__sub_category='Biaya Produksi Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+            # Inventory Value in running month
+            monthly_raw_material = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Bahan Mentah',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_wip = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Barang Setengah Jadi',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_finished_goods = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Barang Jadi',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_production_misc = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Produksi',
+                sub_category__sub_category='Biaya Produksi Lainnya',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    # Operating Cost
-    monthly_marketing = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Pemasaran',
-        date_added__month=get_current_month
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_logistic = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Transportasi / Logistik',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_operation_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Operasional',
-        sub_category__sub_category='Biaya Operasional Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+            # Operating Cost
+            monthly_marketing = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Operasional',
+                sub_category__sub_category='Biaya Pemasaran',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_logistic = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Operasional',
+                sub_category__sub_category='Transportasi / Logistik',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_operation_misc = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Operasional',
+                sub_category__sub_category='Biaya Operasional Lainnya',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
 
-    # Administration Cost
-    monthly_office_needs = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Kebutuhan Kantor',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_salary = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Gaji Karyawan',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_rent = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Sewa',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-    monthly_administration_misc = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        category__category='Biaya Administrasi',
-        sub_category__sub_category='Biaya Administrasi Lainnya',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
+            # Administration Cost
+            monthly_office_needs = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Kebutuhan Kantor',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_salary = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Gaji Karyawan',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_rent = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Biaya Sewa',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+            monthly_administration_misc = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                category__category='Biaya Administrasi',
+                sub_category__sub_category='Biaya Administrasi Lainnya',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+    else:
+        # Income in running month
+        monthly_income = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Debit',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Inventory Value in running month
+        monthly_raw_material = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Bahan Mentah',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_wip = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Setengah Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_finished_goods = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Barang Jadi',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_production_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Produksi',
+            sub_category__sub_category='Biaya Produksi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Operating Cost
+        monthly_marketing = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Pemasaran',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_logistic = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Transportasi / Logistik',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_operation_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Operasional',
+            sub_category__sub_category='Biaya Operasional Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+
+        # Administration Cost
+        monthly_office_needs = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Kebutuhan Kantor',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_salary = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Gaji Karyawan',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_rent = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Sewa',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
+        monthly_administration_misc = Journal.objects.filter(
+            username=request.user.pk,
+            book_category='Kredit',
+            category__category='Biaya Administrasi',
+            sub_category__sub_category='Biaya Administrasi Lainnya',
+            date_added__month=get_current_month-1,
+        ).aggregate(
+            sum=Sum('total')
+        )
 
     # This to replace None type in dict into zero (0)
     def dict_clean(items):
@@ -1099,6 +1494,9 @@ def profit_loss(request):
 
     content = {
         'current_month': months[get_current_month],
+        'previous_month': months[get_current_month-1],
+        'start_date': start_date,
+        'end_date': end_date,
 
         'monthly_income': monthly_income,
 
@@ -1124,8 +1522,5 @@ def profit_loss(request):
         'monthly_business_load_sum': monthly_business_load_sum,
 
         'monthly_nett_profit': monthly_nett_profit,
-
-        'a': monthly_raw_material_0,
-        'b': monthly_wip_0,
     }
-    return render(request, 'books/ledger.html', content)
+    return render(request, 'books/profit_loss.html', content)

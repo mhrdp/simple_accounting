@@ -17,8 +17,10 @@
             <canvas id="expenseList"></canvas>
         </div>
     </div>
+</div>
 
-    <div class="mb-3">
+<div class="row">
+    <div class=" col mb-3">
             <a href="{% url 'list_of_income' %}">
                 <button class="btn btn-transparent-scd">Incomes List</button>
             </a>
@@ -35,10 +37,30 @@
                 <button class="btn btn-transparent-scd">Profit Loss</button>
             </a>
         </div>
+    </div>
+</div>
 
+<form method="GET" class="mb-4">
+    <div class="row">
+        <div class="col-12">
+            <h5>Filter</h5>
+        </div>
+
+        <div class="col-lg-3 col-5">
+            <label for="start_date" class="subtitles">Start Date</label>
+            <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
+        </div>
+        <div class="col-lg-3 col-5">
+            <label for="end_date" class="subtitles">End Date</label>
+            <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
+        </div>
+        <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
+    </div>
+</form>
+
+<div class="row mr-1">
     <div class="col-12">
         <h3 class="mb-3">List of Expenses</h3>
-        <a href="{% url 'expense_filter_by_date' %}">Filter the data</a>
         <div class="table-responsive-xl">
             <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
                 <tr>
@@ -53,7 +75,7 @@
                     <th scope="col" class="small-hid">Notes</th>
                     <th></th>
                 </tr>
-                {% for expense in paginator %}
+                {% for expense in paginate %}
                     <tr>
                         <td scope="row">{{forloop.counter}}</td>
                         <td>{{expense.date_added}}</td>
@@ -75,29 +97,75 @@
 {% endblock content %}
 
 {% block paginator %}
-{% if paginator.has_other_pages %}
-    <ul>
-        {% if paginator.has_previous %}
-            <a href="?page={{paginator.previous_page_number}}">&laquo;</a></li>
-        {% else %}
-            <li disabled><span>&laquo;</span></li>
-        {% endif %}
-
-        {% for i in page_range %}
-            {% if paginator.number == i %}
-                <li>{{ i }}</li>
+<div class="col-12">
+{% if paginate.has_other_pages %}
+    <ul class="pagination justify-content-end">
+        {% if start_date and end_date %}
+            {% if paginate.has_previous %}
+                <li class="page-item">
+                    <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
+                </li>
             {% else %}
-                <li><a href="?page={{i}}">{{i}}</a></li>
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
             {% endif %}
-        {% endfor %}
 
-        {% if paginator.has_next %}
-            <li><a href="?page={{paginator.next_page_number}}">&raquo;</a></li>
+            <!-- Split the displayed pages by the closest one page before and after-->
+            {% for i in page_range %}
+                {% if paginate.number == i %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginate.has_next %}
+                <li class="page-item">
+                    <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
         {% else %}
-            <li disabled><span>&raquo;</span></li>
+            {% if paginate.has_previous %}
+                <li class="page-item">
+                    <a href="?page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
+
+            <!-- Split the displayed pages by the closest one page before and after-->
+            {% for i in page_range %}
+                {% if paginate.number == i %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a href="?page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginate.has_next %}
+                <li class="page-item">
+                    <a href="?page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
         {% endif %}
     </ul>
 {% endif %}
+</div>
 {% endblock paginator %}
 
 {% block js %}
