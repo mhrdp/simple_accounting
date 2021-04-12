@@ -12,7 +12,8 @@
     <!-- Font Awesome Kit -->
     <script src="https://kit.fontawesome.com/bfc90f80b2.js" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="/../../static/base/main_test.css">
+    <link rel="stylesheet" href="/../../static/base/sidebar.css">
+    <link rel="stylesheet" href="/../../static/base/main.css">
   </head>
   <body>
     <div class="page-wrapper chiller-theme toggled">
@@ -23,6 +24,9 @@
             <div class="sidebar-content">
                 <div class="sidebar-brand">
                     <a href="#">Vislane Business</a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </div>
                 </div>
             <div class="sidebar-header">
                 <div class="user-pic">
@@ -92,7 +96,7 @@
                         </a>
                     </li>
                     <li class="header-menu">
-                        <span>Extra</span>
+                        <span>EXTRA</span>
                     </li>
                     <li>
                         <a href="#">
@@ -132,7 +136,15 @@
       </a>
     </div>
   </nav>
+
+    <div class="page-content">
+        <div class="container">
+            {% block container %}{% endblock container%}
+        </div>
+  </div>
 </div>
+
+
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -144,31 +156,44 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <script>
-    jQuery(function ($) {
+        jQuery(function ($) {
+            $(".sidebar-dropdown > a").click(function() {
+                $(".sidebar-submenu").slideUp(200);
+                if ($(this).parent().hasClass("active")){
+                    $(".sidebar-dropdown").removeClass("active");
+                    $(this).parent().removeClass("active");
+                } else {
+                    $(".sidebar-dropdown").removeClass("active");
+                    $(this).next(".sidebar-submenu").slideDown(200);
+                    $(this).parent().addClass("active");
+                }
+            });
 
-    $(".sidebar-dropdown > a").click(function() {
-  $(".sidebar-submenu").slideUp(200);
-  if (
-    $(this)
-      .parent()
-      .hasClass("active")
-  ) {
-    $(".sidebar-dropdown").removeClass("active");
-    $(this)
-      .parent()
-      .removeClass("active");
-  } else {
-    $(".sidebar-dropdown").removeClass("active");
-    $(this)
-      .next(".sidebar-submenu")
-      .slideDown(200);
-    $(this)
-      .parent()
-      .addClass("active");
-  }
-});
- 
-});
+            $("#close-sidebar").click(function(e) {
+                e.stopPropagation()
+                $(".page-wrapper").toggleClass("toggled");
+                $(".page-wrapper").removeClass("shows");
+            });
+            $("#show-sidebar").click(function(e) {
+                e.stopPropagation();
+                $(".page-wrapper").toggleClass("toggled");
+                $(".page-wrapper").addClass("shows");
+            });
+
+            // Close sidebar on click on body element
+            $("html, body").click(function(e){
+                if($(".page-wrapper").hasClass("toggled")){
+                    e.stopPropagation();
+                    $(".page-wrapper").removeClass("shows");
+                } else if($(".page-wrapper").hasClass("shows")) {
+                    e.stopPropagation();
+                    $(".page-wrapper").addClass("toggled");
+                    $(".page-wrapper").removeClass("shows");
+                } else {
+                    return false;
+                }
+            })
+        });
     </script>
   </body>
 </html>
