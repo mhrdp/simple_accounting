@@ -1,4 +1,4 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 {% load humanize %}
 
 {% block title %}
@@ -10,6 +10,37 @@
 {% endblock css %}
 
 {% block content %}
+<div class="dashboard-brand">
+    <strong>Dashboard</strong>
+</div>
+<hr style="background-color: #fff; width: 100vw;" />
+
+<div class="dashboard-bg-top">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="dashboard-container-sm">
+                    <h6 class="text-gr">
+                        <span><i class="fas fa-cash-register mr-1"></i></span>
+                        {% if income_in_running_month.sum > 0%}
+                            Rp. {{income_in_running_month.sum|intcomma}}
+                        {% else %}
+                            Rp. 0.00
+                        {% endif %}
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+
+
+
+
+
+
+
+
 <div class="row">
     <div class="col-12">
         <h4>{{month}}'s Performance</h4>

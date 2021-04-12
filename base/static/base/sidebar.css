@@ -1,3 +1,4 @@
+/*
 @keyframes swing {
     0% {
       transform: rotate(0deg);
@@ -27,14 +28,23 @@
       transform: rotate(0deg);
     }
   }
+*/
   
   @keyframes sonar {
     0% {
       transform: scale(0.9);
+      -o-transform: scale(0.9);
+      -ms-transform: scale(0.9);
+      -moz-transform: scale(0.9);
+      -webkit-transform: scale(0.9);
       opacity: 1;
     }
     100% {
       transform: scale(2);
+      -o-transform: scale(2);
+      -ms-transform: scale(2);
+      -moz-transform: scale(2);
+      -webkit-transform: scale(2);
       opacity: 0;
     }
   }
@@ -85,6 +95,15 @@
   
   @media screen and (min-width: 768px) {
     .page-wrapper.toggled .page-content {
+      padding-left: 240px;
+    }
+
+    .page-wrapper .page-content {
+      margin-left: 10px;
+    }
+
+    /* Additional CSS */
+    .page-wrapper.toggled div.dashboard-brand {
       padding-left: 300px;
     }
   }
@@ -291,6 +310,10 @@
   
   .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active > a:after {
     transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
     right: 17px;
   }
   
@@ -401,8 +424,7 @@
   .chiller-theme .sidebar-wrapper .sidebar-menu ul li:hover>a,
   .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active>a,
   .chiller-theme .sidebar-wrapper .sidebar-header .user-info,
-  .chiller-theme .sidebar-wrapper .sidebar-brand>a:hover,
-  .chiller-theme .sidebar-footer>a:hover i {
+  .chiller-theme .sidebar-wrapper .sidebar-brand>a:hover {
       color: #b8bfce;
   }
   
@@ -453,6 +475,28 @@
     -o-transition: all 0.25s ease-out;
     -moz-transition: all 0.25s ease-out;
     -webkit-transition: all 0.25s ease-out;
+  }
+
+  #close-sidebar {
+    right: 0;
+  }
+
+  .fixed-brand {
+    position: fixed;
+    width: 260px;
+    background-color: #31353D;
+  }
+
+  .chiller-theme .sidebar-footer>a.link-dgr i {
+    color: #ff3f80;
+    transition: all .25s ease-out;
+    -o-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    -webkit-transition: all 0.25s ease-out;
+  }
+
+  .chiller-theme .sidebar-footer>a.link-dgr:hover i {
+    color: #dc3545;
   }
 
   .page-wrapper .page-content {

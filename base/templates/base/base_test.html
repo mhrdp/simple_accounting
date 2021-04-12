@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Test</title>
+    <title>{% block title %}{% endblock title %}</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,7 +13,9 @@
     <script src="https://kit.fontawesome.com/bfc90f80b2.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="/../../static/base/sidebar.css">
-    <link rel="stylesheet" href="/../../static/base/main.css">
+    <link rel="stylesheet" href="/../../static/base/main_2.css">
+
+    {% block css %}{% endblock css %}
   </head>
   <body>
     <div class="page-wrapper chiller-theme toggled">
@@ -22,32 +24,36 @@
         </a>
         <nav id="sidebar" class="sidebar-wrapper">
             <div class="sidebar-content">
-                <div class="sidebar-brand">
+                <div class="sidebar-brand fixed-brand">
                     <a href="#">Vislane Business</a>
                     <div id="close-sidebar">
                         <i class="fas fa-times"></i>
                     </div>
                 </div>
-            <div class="sidebar-header">
+            <div class="sidebar-header mt-5">
                 <div class="user-pic">
                     <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
                     alt="User picture">
                 </div>
                 <div class="user-info">
-                    <span class="user-name">Jhon
-                        <strong>Smith</strong>
+                    <span class="user-name">
+                        <strong>{{request.user.companydetail.company_name}}</strong>
                     </span>
                     <span class="user-role">Administrator</span>
+
+                    <span class="user-status">
+                        <a href="{% url 'profile' %}" class="link">Profile</a>
+                    </span>
                 </div>
             </div>
             <!-- sidebar-header  -->
             <div class="sidebar-menu">
                 <ul>
                     <li class="header-menu">
-                        <span>ANALYTICS</span>
+                        <span>ANALISIS</span>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'user_dashboard' %}">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
                         </a>
@@ -60,16 +66,16 @@
                         <div class="sidebar-submenu">
                             <ul>
                                 <li>
-                                    <a href="#">Daftar Penghasilan</a>
+                                    <a href="{% url 'list_of_income' %}">Daftar Penghasilan</a>
                                 </li>
                                 <li>
-                                    <a href="#">Daftar Pengeluaran</a>
+                                    <a href="{% url 'list_of_expense' %}">Daftar Pengeluaran</a>
                                 </li>
                                 <li>
-                                    <a href="#">Jurnal</a>
+                                    <a href="{% url 'journal' %}">Jurnal</a>
                                 </li>
                                 <li>
-                                    <a href="#">Laba/Rugi</a>
+                                    <a href="{% url 'profit_loss' %}">Laba/Rugi</a>
                                 </li>
                             </ul>
                         </div>
@@ -78,19 +84,19 @@
                         <span>INPUT DATA</span>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'register_product' %}">
                             <i class="fa fa-shopping-cart"></i>
                             <span>Products</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'register_income' %}">
                             <i class="fas fa-arrow-left"></i>
                             <span>Penghasilan</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'register_expense' %}">
                             <i class="fas fa-arrow-right"></i>
                             <span>Pengeluaran</span>
                         </a>
@@ -105,17 +111,21 @@
                         <span class="badge badge-pill badge-primary">Help</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="sidebar-dropdown">
                         <a href="#">
-                        <i class="fa fa-calendar"></i>
-                        <span>Calendar</span>
+                            <i class="fa fa-calendar"></i>
+                            <span>Calendar</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                        <i class="fa fa-folder"></i>
-                        <span>Examples</span>
-                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                <li>
+                                    <a href="#">To do</a>
+                                </li>
+                                <li>
+                                    <a href="#">Jadwal Rapat</a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -129,17 +139,25 @@
       </a>
       <a href="#">
       </a>
-      <a href="#">
+      <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
         <i class="fa fa-power-off"></i>
-        <span class="badge badge-pill badge-danger notification">
+        <span class="badge badge-pill badge-danger notification">!
         </span>
       </a>
     </div>
   </nav>
 
-    <div class="page-content">
-        <div class="container">
-            {% block container %}{% endblock container%}
+    <div>
+        <div>
+            {% block messages %}{% endblock messages %}
+          
+            {% block register_product %}{%endblock register_product%}
+            {% block register_income %}{% endblock register_income %}
+            {% block register_expense %}{% endblock register_expense %}
+            {% block filter_income %}{% endblock filter_income %}
+
+            {% block content %}{% endblock content %}
+            {% block paginator %}{% endblock paginator %}
         </div>
   </div>
 </div>
