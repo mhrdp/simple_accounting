@@ -147,19 +147,15 @@
     </div>
   </nav>
 
-    <div>
-        <div>
-            {% block messages %}{% endblock messages %}
-          
-            {% block register_product %}{%endblock register_product%}
-            {% block register_income %}{% endblock register_income %}
-            {% block register_expense %}{% endblock register_expense %}
-            {% block filter_income %}{% endblock filter_income %}
+    {% block messages %}{% endblock messages %}
+    
+    {% block register_product %}{%endblock register_product%}
+    {% block register_income %}{% endblock register_income %}
+    {% block register_expense %}{% endblock register_expense %}
+    {% block filter_income %}{% endblock filter_income %}
 
-            {% block content %}{% endblock content %}
-            {% block paginator %}{% endblock paginator %}
-        </div>
-  </div>
+    {% block content %}{% endblock content %}
+    {% block paginator %}{% endblock paginator %}
 </div>
 
 
@@ -172,6 +168,8 @@
 
     <!-- jQuery for sidebar dropdown -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    {% block js %}{% endblock js %}
 
     <script>
         jQuery(function ($) {

@@ -10,140 +10,174 @@
 {% endblock css %}
 
 {% block content %}
-<div class="dashboard-brand">
-    <strong>Dashboard</strong>
-</div>
-<hr style="background-color: #fff; width: 100vw;" />
+<nav>
+    <div class="dashboard-brand">
+        <strong>Dashboard</strong>
+    </div>
+</nav>
 
 <div class="dashboard-bg-top">
     <div class="page-content">
         <div class="row">
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="dashboard-container-sm">
-                    <h6 class="text-gr">
-                        <span><i class="fas fa-cash-register mr-1"></i></span>
-                        {% if income_in_running_month.sum > 0%}
-                            Rp. {{income_in_running_month.sum|intcomma}}
-                        {% else %}
-                            Rp. 0.00
-                        {% endif %}
-                    </h6>
+            <div class="container-num col-12 col-xl-6">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="dashboard-container income-panel">
+                            <div class="subtitles">
+                                <i class="fas fa-cash-register fa-3x"></i>
+                            </div>
+                            <h4 class="text-gr"><strong>
+                                {% if income_in_running_month.sum > 0%}
+                                    Rp. {{income_in_running_month.sum|intcomma}}
+                                {% else %}
+                                    Rp. 0.00
+                                {% endif %}
+                            </strong></h4>
+                            <p class="subtitles text-right">Penghasilan bulan ini</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="dashboard-container expense-panel">
+                            <div class="subtitles">
+                                <i class="fas fas fa-credit-card fa-3x"></i>
+                            </div>
+                            <h4 class="text-rd"><strong>
+                                {% if expense_in_running_month.sum > 0 %}
+                                    Rp. {{expense_in_running_month.sum|intcomma}}
+                                {% else %}
+                                    Rp. 0.00
+                                {% endif %}
+                            </strong></h4>
+                            <p class="subtitles text-right">Pengeluaran bulan ini</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="dashboard-container profit-panel">
+                            {% if nett_profit > 0 %}
+                                <h4 class="text-gr">
+                                    <strong>
+                                    Rp. {{nett_profit|intcomma}}0
+                                    </strong>
+                                </h4>
+                            {% elif nett_profit < 0 %}
+                                <h4 class="text-rd">
+                                    <strong>
+                                    Rp. {{nett_profit|intcomma}}0
+                                    </strong>
+                                </h4>
+                            {% else %}
+                                <h4><strong>Rp. 0.00</strong></h4>
+                            {% endif %}
+                            <div class="mini-chart-container">
+                                <h3>
+                                    <strong>
+                                    {{profit_percentage}}<span style="font-size:18px"> %</span>
+                                    </strong>
+                                </h3>
+                                <p class="subtitles text-right">Profit bulan ini</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="container-transparent">
+                            <h5>Ingin lihat analisis bisnis Anda?</h5>
+                            <a href="{% url 'journal' %}">
+                                <button class="btn btn-color-primary btn-smooth">Click Disini!</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-xl-3 mt-2">
+                        <div class="dashboard-container">
+                            <h1>a</h1>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3 mt-2">
+                        <div class="dashboard-container">
+                            <h1>a</h1>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3 mt-2">
+                        <div class="dashboard-container">
+                            <h1>a</h1>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3 mt-2">
+                        <div class="dashboard-container">
+                            <h1>a</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-xl-6 mt-2">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="dashboard-chart-container">
+                            <h3>Income Chart</h3>
+                            <canvas id="incomeChart"></canvas>
+                        </div>
+                    </div>
+                    <hr style="background-color: white;" />
+                    <div class="col-12">
+                        <div class="dashboard-chart-container">
+                            <h3>Expense Chart</h3>
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div> 
-</div>
 
-
-
-
-
-
-
-
-<div class="row">
-    <div class="col-12">
-        <h4>{{month}}'s Performance</h4>
         <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-container-sm">
-                    <h6 class="text-gr">
-                        <span><i class="fas fa-cash-register mr-1"></i></span>
-                        {% if income_in_running_month.sum > 0%}
-                            Rp. {{income_in_running_month.sum|intcomma}}
-                        {% else %}
-                            Rp. 0.00
-                        {% endif %}
-                    </h6>
-                    <div class="mini-chart-container">
-                        <canvas id="incomeChart"></canvas>
+            <div class="col-12">
+                <div class="row mt-3">
+                    <div class="col-12 col-lg-6">
+                        <table class="table table-sm table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                        <h5>Last 5 Transaction for Income</h5>
+                        <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Items</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for income in income_list_trim %}
+                            <tr>
+                                <td scope="row">{{forloop.counter}}</td>
+                                <td>{{income.date_added}}</td>
+                                <td>{{income.product_name}}</td>
+                                <td>Rp. {{income.total|intcomma}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-container-sm">
-                    <h6 class="text-rd">
-                        <span><i class="fas fa-credit-card mr-1"></i></span>
-                        {% if expense_in_running_month.sum > 0 %}
-                            Rp. {{expense_in_running_month.sum|intcomma}}
-                        {% else %}
-                            Rp. 0.00
-                        {% endif %}
-                    </h6>
-                    <div class="mini-chart-container">
-                        <canvas id="expenseChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-container-sm">
-                    {% if nett_profit > 0 %}
-                        <h6 class="text-gr">Rp. {{nett_profit|intcomma}}0</h6>
-                    {% elif nett_profit < 0 %}
-                        <h6 class="text-rd">Rp. {{nett_profit|intcomma}}0</h6>
-                    {% else %}
-                        <h6>Rp. 0.00</h6>
-                    {% endif %}
-                    <div class="mini-chart-container">
-                        <h3>{{profit_percentage}}<span style="font-size:18px"> %</span></h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-container-sm">
-                    <h6>Some placeholder</h6>
-                    <div class="mini-chart-container">
-                        <canvas id="someChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-12 col-lg-6">
-                <table class="table table-sm table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-                <h5>Last 5 Transaction for Income</h5>
-                <thead>
+                    <div class="col-12 col-lg-6">
+                        <table class="table table-sm table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                        <h5>Last 5 Transaction for Expense</h5>
                     <tr>
                         <th scope="col">No.</th>
                         <th scope="col">Date</th>
                         <th scope="col">Items</th>
                         <th scope="col">Total</th>
                     </tr>
-                </thead>
-                <tbody>
-                {% for income in income_list_trim %}
-                    <tr>
-                        <td scope="row">{{forloop.counter}}</td>
-                        <td>{{income.date_added}}</td>
-                        <td>{{income.product_name}}</td>
-                        <td>Rp. {{income.total|intcomma}}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            </div>
-            <div class="col-12 col-lg-6">
-                <table class="table table-sm table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-                <h5>Last 5 Transaction for Expense</h5>
-            <tr>
-                <th scope="col">No.</th>
-                <th scope="col">Date</th>
-                <th scope="col">Items</th>
-                <th scope="col">Total</th>
-            </tr>
-            {% for expense in expense_list_trim %}
-                <tr>
-                    <td scope="row">{{forloop.counter}}</td>
-                    <td>{{expense.date_added}}</td>
-                    <td>{{expense.item_name}}</td>
-                    <td>Rp. {{expense.total|intcomma}}</td>
-                </tr>
-            {% endfor %}
-        </table>
+                    {% for expense in expense_list_trim %}
+                        <tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td>{{expense.date_added}}</td>
+                            <td>{{expense.item_name}}</td>
+                            <td>Rp. {{expense.total|intcomma}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </div> 
 </div>
 
 <canvas id="testCanvas" width="400" height="400"></canvas>
@@ -173,7 +207,7 @@
         },
         options: {
             // To make canvas height-width customizeable
-            maintainAspectRatio: false, 
+            maintainAspectRatio: true, 
 
             plugins: {
                 legend: {
@@ -182,11 +216,11 @@
             },
             scales: {
                 y: {
-                    display: false,
+                    display: true,
                     beginAtZero: true,
                 },
                 x: {
-                    display: false,
+                    display: true,
                 },
             }
         }
@@ -221,11 +255,11 @@
             },
             scales: {
                 y: {
-                    display: false,
+                    display: true,
                     beginAtZero: true,
                 },
                 x: {
-                    display: false,
+                    display: true,
                 },
             }
         }

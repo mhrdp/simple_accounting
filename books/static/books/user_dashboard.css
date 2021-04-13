@@ -1,6 +1,23 @@
-.dashboard-current {
-    padding-left: 10px;
-    border-left: 4px solid #3e50b4;
+/* Canvas */
+canvas#incomeChart {
+    max-height: 150px;
+    width:100%;
+}
+
+canvas#expenseChart {
+    max-height: 150px;
+    width: 100%;
+}
+
+/* Upper part of the dashboard */
+.dashboard-bg-top {
+    height: 40vh;
+    width: 100vw;
+    background: #000046;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1CB5E0, #000046); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #1CB5E0, #000046);
+    background: -moz-linear-gradient(to right, #1CB5E0, #000046);
 }
 
 div.dashboard-current > .link {
@@ -10,23 +27,49 @@ div.dashboard-current > .link {
 .dashboard-brand {
     display: inline-block;
     color: #fff;
-    height: 40px;
-    padding-top: 1%;
+    height: 20px;
+    margin-top: 1%;
+    margin-bottom: 1%;
     font-size: 1.5rem;
     font-weight: 800;;
 }
 
-.dashboard-bg-top {
-    height: 50vh;
-    width: 100vw;
-    background: rgb(3,5,83);
-    background: linear-gradient(0deg, rgba(3,5,83,1) 0%, rgba(9,72,161,1) 100%);
-}
-
-.dashboard-container-sm {
+.dashboard-container {
     background-color: #272727;
     width: 100%;
-    min-height: 75px;
+    min-height: 125px;
+    padding: 3%;
+}
+
+.page-content .container-num .row > .col-12.col-md-6 {
+    padding: 0px;
+}
+
+.page-content .container-num .row  > .col-12.col-md-6 > .dashboard-container,
+.page-content .container-num .row > .col-12.col-md-6 > .container-transparent {
+    padding: 10px;
+}
+
+.income-panel {
+    background-image: linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
+    background-image: -o-linear-gradient(102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
+    background-image: -moz-linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
+    background-image: -webkit-linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
+}
+
+.expense-panel {
+    background-image: linear-gradient( 135deg, #F05F57 10%, #360940 100%);
+    background-image: -o-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
+    background-image: -moz-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
+    background-image: -webkit-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
+}
+/* End top dashboard */
+
+/* Charts */
+.dashboard-chart-container {
+    background-color: #272727;
+    width: 100%;
+    max-height: 220px;
     padding: 3%;
 }
 
@@ -38,7 +81,14 @@ div.dashboard-current > .link {
     height: 55px;
     width: 100%;
 }
+/* End charts */
 
+/* Misc */
+.dashboard-current {
+    padding-left: 10px;
+    border-left: 4px solid #3e50b4;
+}
+/* End misc */
 @media(max-width: 1080px){
     .dashboard-container-sm {
         margin-top: 2%;
