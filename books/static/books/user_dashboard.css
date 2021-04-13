@@ -11,7 +11,7 @@ canvas#expenseChart {
 
 /* Upper part of the dashboard */
 .dashboard-bg-top {
-    height: 40vh;
+    height: 10%;
     width: 100vw;
     background: #000046;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  /* Chrome 10-25, Safari 5.1-6 */
@@ -35,19 +35,29 @@ div.dashboard-current > .link {
 }
 
 .dashboard-container {
-    background-color: #272727;
     width: 100%;
     min-height: 125px;
     padding: 3%;
 }
 
-.page-content .container-num .row > .col-12.col-md-6 {
+/* [container-num], [chart-row], and [no-whitespace] were a class created solely to make each combination unique */
+.page-content .container-num > .row > .col-12.col-md-6,
+.page-content .container-num .row.no-whitespace > .col-12.col-md-6.col-xl-12, 
+.page-content > .row > .chart-row.col-12.col-xl-6  {
     padding: 0px;
 }
 
-.page-content .container-num .row  > .col-12.col-md-6 > .dashboard-container,
-.page-content .container-num .row > .col-12.col-md-6 > .container-transparent {
+.page-content > .row > .chart-row.col-12.col-xl-6 {
+    padding-left: 1%;
+}
+
+.page-content .container-num .row  > .col-12.col-md-6 > .dashboard-container {
     padding: 10px;
+}
+
+.row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary.container-separator,
+.row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
+    margin-top: 10px;
 }
 
 .income-panel {
@@ -63,14 +73,56 @@ div.dashboard-current > .link {
     background-image: -moz-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
     background-image: -webkit-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
 }
+
+.profit-panel {
+    background: #485563;  /* fallback for old browsers */
+    background-image: linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
+    background-image: -o-linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
+    background-image: -moz-linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
+    background-image: -webkit-linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% )
+
+}
+
+.general-panel {
+    background: -webkit-linear-gradient(to right, #29323c, #485563);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #29323c, #485563);
+    background: -moz-linear-gradient(to right, #29323c, #485563);
+}
+
+.container-primary {
+    padding: 10px;
+    min-height: 120px;
+    max-width: 100%;
+    background: #373B44;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #4286f4, #373B44);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #4286f4, #373B44); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to left, #4286f4, #373B44);
+    background: -moz-linear-gradient(to left, #4286f4, #373B44);
+    border-radius: 5px;
+}
+
+.container-primary-sub {
+    background: #141E30;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #243B55, #141E30);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    padding: 10px;
+    min-height: 120px;
+    max-width: 100%;
+    border-radius: 5px;
+
+}
 /* End top dashboard */
 
 /* Charts */
 .dashboard-chart-container {
-    background-color: #272727;
     width: 100%;
     max-height: 220px;
     padding: 3%;
+    background: -webkit-linear-gradient(to right, #29323c, #485563);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 /* position: relative are needed to customize canvas width-height */
@@ -88,8 +140,19 @@ div.dashboard-current > .link {
     padding-left: 10px;
     border-left: 4px solid #3e50b4;
 }
+
+.hr-separator {
+    background: #000000;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #434343, #000000);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to left, #434343, #000000);
+    background: -moz-linear-gradient(to left, #434343, #000000);
+    width: 100%;
+    height: 5px;
+    margin: 0 auto;
+}
 /* End misc */
-@media(max-width: 1080px){
+@media(max-width: 1176px){
     .dashboard-container-sm {
         margin-top: 2%;
         height: 125px;
@@ -100,6 +163,16 @@ div.dashboard-current > .link {
         margin: auto;
         height: 70px;
         width: 100%;
+    }
+
+    .page-content > .row > .chart-row.col-12.col-xl-6 {
+        padding-left: 0;
+    }
+
+    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary.container-separator,
+    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
+        margin-top: 0;
+        margin-left: 2px;
     }
 }
 
@@ -114,5 +187,11 @@ div.dashboard-current > .link {
         margin: auto;
         height: 75px;
         width: 100%;
+    }
+
+    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary.container-separator,
+    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
+        margin-top: 10px;
+        margin-left: 0;
     }
 }
