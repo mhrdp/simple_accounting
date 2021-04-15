@@ -275,7 +275,7 @@
   
   .sidebar-wrapper .sidebar-menu ul li a:hover > i::before {
     display: inline-block;
-    animation: swing ease-in-out 0.5s 1 alternate;
+    /*animation: swing ease-in-out 0.5s 1 alternate;*/
   }
   
   .sidebar-wrapper .sidebar-menu .sidebar-dropdown > a:after {
@@ -499,7 +499,9 @@
   .fixed-brand {
     position: fixed;
     width: 260px;
-    background-color: #31353D;
+    background-color: #3a3f48;
+    box-shadow: 0px -1px 5px #282c33;
+    border-bottom: 1px solid #464a52;
   }
 
   .chiller-theme .sidebar-footer>a.link-dgr i {
