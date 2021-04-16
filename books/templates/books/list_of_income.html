@@ -1,4 +1,4 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 {% load humanize %}
 
 {% block title %}
@@ -22,13 +22,79 @@
 {% endblock messages %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12 col-md-12 mb-5">
-        <div class="books-canvas-container">
-            <canvas id="incomeList"></canvas>
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Books</strong>
+    </div>
+</nav>
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-12 col-md-12 mb-5">
+            <div class="books-chart-container">
+                <canvas id="incomeList"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <form method="GET" class="mb-4">
+        
+            <div class="col-12">
+                <h5>Filter</h5>
+            </div>
+
+            <div class="col-lg-3 col-5">
+                <label for="start_date" class="subtitles">Start Date</label>
+                <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
+            </div>
+            <div class="col-lg-3 col-5">
+                <label for="end_date" class="subtitles">End Date</label>
+                <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
+            </div>
+            <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
+        </div>
+    </form>
+
+    <div class="row mr-1">
+        <div class="col-12">
+            <h3 class="mb-3">List of Income</h3>
+            <div class="table-responsive-xl">
+                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                    <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Items</th>
+                        <th scope="col" class="small-hid">Qty</th>
+                        <th scope="col" class="small-hid">Price</th>
+                        <th scope="col" class="small-hid">Additional</th>
+                        <th scope="col">Total</th>
+                        <th scope="col" class="small-hid">Notes</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for income in paginate %}
+                        <tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td>{{income.date_added}}</td>
+                            <td>{{income.product_name}}</td>
+                            <td class="small-hid">{{income.quantity}}</td>
+                            <td class="small-hid">Rp. {{income.price|intcomma}}</td>
+                            <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
+                            <td>Rp. {{income.total|intcomma}}</td>
+                            <td class="small-hid">{{income.notes}}</td>
+                            <td><a href="{% url 'edit_income' income.pk %}">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 <div class="row">
     <div class="mb-3">
@@ -51,61 +117,7 @@
     </div>
 </div>
 
-<form method="GET" class="mb-4">
-    <div class="row">
-        <div class="col-12">
-            <h5>Filter</h5>
-        </div>
 
-        <div class="col-lg-3 col-5">
-            <label for="start_date" class="subtitles">Start Date</label>
-            <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
-        </div>
-        <div class="col-lg-3 col-5">
-            <label for="end_date" class="subtitles">End Date</label>
-            <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
-        </div>
-        <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
-    </div>
-</form>
-
-<div class="row mr-1">
-    <div class="col-12">
-        <h3 class="mb-3">List of Income</h3>
-        <div class="table-responsive-xl">
-            <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-                <thead>
-                <tr>
-                    <th scope="col">No.</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Items</th>
-                    <th scope="col" class="small-hid">Qty</th>
-                    <th scope="col" class="small-hid">Price</th>
-                    <th scope="col" class="small-hid">Additional</th>
-                    <th scope="col">Total</th>
-                    <th scope="col" class="small-hid">Notes</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for income in paginate %}
-                    <tr>
-                        <td scope="row">{{forloop.counter}}</td>
-                        <td>{{income.date_added}}</td>
-                        <td>{{income.product_name}}</td>
-                        <td class="small-hid">{{income.quantity}}</td>
-                        <td class="small-hid">Rp. {{income.price|intcomma}}</td>
-                        <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
-                        <td>Rp. {{income.total|intcomma}}</td>
-                        <td class="small-hid">{{income.notes}}</td>
-                        <td><a href="{% url 'edit_income' income.pk %}">Edit</a></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
 {% endblock content %}
 
@@ -207,27 +219,39 @@
             // To make canvas height-width customizeable
             maintainAspectRatio: false,
 
-            legend: {
-                display: true,
-                labels : {
-                    fontColor: "#bcccdc"
-                }
+            plugins: {
+                legend: {
+                    display: true,
+                        labels: {
+                            color: "rgba(255, 255, 255, 0.700)",
+                        },
+                },
             },
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
+                        color: "rgba(255, 255, 255, 0.700)",
                         font: {
                             size: 10,
-                        }
+                        },
+                    },
+                    grid: {
+                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        drawOnChartArea: false,
                     },
                 },
                 x: {
                     ticks: {
+                        color: "rgba(255, 255, 255, 0.700)",
                         font: {
                             size: 10,
-                        }
-                    }
+                        },
+                    },
+                    grid: {
+                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        drawOnChartArea: false,
+                    },
                 },
             }
         }

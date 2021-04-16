@@ -51,7 +51,64 @@ div.books-current > .link {
     height: 4px;
 }
 
-@media(max-width: 1080px){
+.books-brand {
+    transition: margin 0.25s ease-out;
+    -o-transition: margin 0.25s ease-out;
+    -moz-transition: margin 0.25s ease-out;
+    -webkit-transition: margin 0.25s ease-out;
+
+    transition-delay: 0.3s;
+    -o-transition-delay: 0.3s;
+    -moz-transition-delay: 0.3s;
+    -webkit-transition-delay: 0.3s;
+
+    display: inline-block;
+    color: #fff;
+    height: 30px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.books-bg-top {
+    min-height: 50px;
+    width: 100vw;
+    background: #000046;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1CB5E0, #000046); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #1CB5E0, #000046);
+    background: -moz-linear-gradient(to right, #1CB5E0, #000046);
+    border-bottom: 1px solid #000046;
+}
+
+.books-chart-container {
+    position: relative;
+    width: 100%;
+    max-height: 250px;
+    padding: 3%;
+    background: -webkit-linear-gradient(to right, #29323c, #485563);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #29323c, #485563);
+    background: -moz-linear-gradient(to right, #29323c, #485563);
+
+}
+
+.books-chart-container > canvas#incomeList {
+    height: 220px;
+}
+
+@media(min-width: 768px){
+    .page-wrapper.chiller-theme.toggled div.books-brand {
+        margin-left: 300px;
+    }
+  
+    .page-wrapper.chiller-theme div.books-brand {
+        margin-left: 40px;
+    }
+}
+
+@media(max-width: 1176px){
     .table-font-resize {
         font-size: 11px !important;
     }
@@ -80,6 +137,14 @@ div.books-current > .link {
 
     .books-canvas-container {
         height: auto;
+    }
+
+    .page-wrapper.chiller-theme.toggled div.books-brand {
+        margin-left: 40px;
+    }
+  
+    .page-wrapper.chiller-theme div.books-brand {
+        margin-left: 40px;
     }
 }
 
