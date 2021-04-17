@@ -24,38 +24,38 @@
 {% block content %}
 <nav class="books-bg-top">
     <div class="books-brand">
-        <strong>Books</strong>
+        <strong>Books' Reports</strong>
     </div>
 </nav>
 
 <div class="page-content">
     <div class="row">
-        <div class="col-12 col-md-12 mb-5">
+        <div class="col-12">
             <div class="books-chart-container">
                 <canvas id="incomeList"></canvas>
             </div>
         </div>
     </div>
-    <div class="row">
-    <form method="GET" class="mb-4">
-        
-            <div class="col-12">
-                <h5>Filter</h5>
-            </div>
-
-            <div class="col-lg-3 col-5">
-                <label for="start_date" class="subtitles">Start Date</label>
-                <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
-            </div>
-            <div class="col-lg-3 col-5">
-                <label for="end_date" class="subtitles">End Date</label>
-                <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
-            </div>
-            <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
-        </div>
-    </form>
 
     <div class="row mr-1">
+        <form method="GET" class="mb-4">
+            <div class="row">
+                <div class="col-12">
+                    <h5>Filter</h5>
+                </div>
+
+                <div class="col-lg-5 col-5">
+                    <label for="start_date" class="subtitles">Start Date</label>
+                    <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
+                </div>
+                <div class="col-lg-5 col-5">
+                    <label for="end_date" class="subtitles">End Date</label>
+                    <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
+                </div>
+                <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
+            </div>
+        </form>
+
         <div class="col-12">
             <h3 class="mb-3">List of Income</h3>
             <div class="table-responsive-xl">
@@ -93,32 +93,6 @@
         </div>
     </div>
 </div>
-
-
-
-<div class="row">
-    <div class="mb-3">
-        <a href="{% url 'list_of_income' %}">
-            <button class="btn content-current disabled">Incomes List</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a href="{% url 'list_of_expense' %}">
-            <button class="btn btn-transparent-scd">Expenses List</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a href="{% url 'journal' %}">
-            <button class="btn btn-transparent-scd">Journal</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a href="{% url 'profit_loss' %}">
-            <button class="btn btn-transparent-scd">Profit Loss</button>
-        </a>
-        </div>
-    </div>
-</div>
-
-
-
 {% endblock content %}
 
 {% block paginator %}
