@@ -25,6 +25,10 @@ body {
     text-decoration: None;
 }
 
+.separator-top {
+    border-top: 1px solid #121212;
+}
+
 /* Button */
 .btn {
     color: #fff !important;
