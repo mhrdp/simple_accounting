@@ -13,11 +13,11 @@ canvas#expenseChart {
 .dashboard-bg-top {
     min-height: 50px;
     width: 100vw;
-    background: #000046;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #1CB5E0, #000046); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: -o-linear-gradient(to right, #1CB5E0, #000046);
-    background: -moz-linear-gradient(to right, #1CB5E0, #000046);
+    background: #0558a5;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1CB5E0, #0558a5);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1CB5E0, #0558a5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #1CB5E0, #0558a5);
+    background: -moz-linear-gradient(to right, #1CB5E0, #0558a5);
     border-bottom: 1px solid #000046;
 }
 
@@ -43,13 +43,13 @@ div.dashboard-current > .link {
 
 /* [container-num], [chart-row], and [no-whitespace] were a class created solely to make each combination unique */
 .page-content .container-num > .row > .col-12.col-md-6,
-.page-content .container-num .row.no-whitespace > .col-12.col-md-6.col-xl-12, 
-.page-content > .row > .chart-row.col-12.col-xl-6  {
+.page-content .container-num .row.no-whitespace > .col-12.col-md-6.col-xl-12  {
     padding: 0px;
 }
 
 .page-content > .row > .chart-row.col-12.col-xl-6 {
-    padding-left: 1%;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .page-content .container-num .row  > .col-12.col-md-6 > .dashboard-container {
@@ -65,9 +65,8 @@ div.dashboard-current > .link {
     margin-right: 2%;
 }
 
-.row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary.container-separator,
-.row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
-    margin-top: 10px;
+.row.no-whitespace > .col-12 {
+    padding: 0;
 }
 
 .page-content .row > .col-12.col-md-6 {
@@ -185,6 +184,17 @@ div.dashboard-current > .link {
     border-radius: 5px;
 }
 
+.container-primary-btn {
+    background-color: #4286f4 !important;
+    border: 1px solid #b8fafa;
+    color: #fff !important;
+}
+
+.container-primary-btn:hover {
+    background-color: #b8fafa !important;
+    color:#29323c !important;
+}
+
 .container-primary-sub {
     /*
     background: #141E30;
@@ -249,7 +259,85 @@ table.table-content-container {
 
 .page-content .row.no-whitespace > .col-12 > .container-primary a > button.btn.btn-sm,
 .page-content .row.no-whitespace > .col-12 > .container-primary-sub a > button.btn.btn-sm {
-    padding: 0px 2px !important;
+    padding: 0px 5px !important;
+}
+
+.row > .anal-margin > .container-primary-sub > h5 > a,
+.row .container-primary > h5 > a {
+    font-size: medium;
+    font-weight: bold;
+}
+
+.row > .anal-margin > .container-primary-sub > h5 > a:hover,
+.row .container-primary > h5 > a:hover {
+    text-decoration: none;
+}
+
+.row > .anal-margin > .container-primary-sub > h5 > a > i.fa-2x,
+.row .container-primary > h5 > a > i.fa-2x {
+    font-size: medium;
+}
+
+.row > .anal-margin > .container-primary-sub > h5 > a {
+    color:rgb(79, 153, 202);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+.row > .anal-margin > .container-primary-sub > h5 > a > i {
+    color: rgba(80, 123, 151, 0.925);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+.row > .anal-margin > .container-primary-sub > h5 > a:hover,
+.row > .anal-margin > .container-primary-sub > h5 > a:hover > i {
+    color:rgb(92, 217, 226);
+}
+
+.row .container-primary > h5 > a {
+    color: rgb(17, 34, 131);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+.row .container-primary > h5 > a > i {
+    color: rgba(20, 41, 110, 0.904);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+.row .container-primary > h5 > a:hover,
+.row .container-primary > h5 > a:hover > i {
+    color:rgb(92, 217, 226);
+}
+
+table > tbody > tr > td.table-text-bottom > p,
+.dashboard-container.profit-panel > p {
+    margin-bottom: 0px;
+    border-top: 1px solid rgb(59, 59, 59);
+    box-shadow: 0 -5px 5px -6px rgb(126, 128, 127);
+}
+
+.table-text-bottom {
+    vertical-align: bottom !important;
+}
+
+a.link {
+    color: rgb(79, 153, 202);
+    font-weight: 600;
+}
+
+a.link:hover {
+    color: rgb(92, 217, 226);
 }
 /* End misc */
 @media(max-width: 1176px){
@@ -264,20 +352,52 @@ table.table-content-container {
         width: 100%;
     }
 
-    .page-content > .row > .chart-row.col-12.col-xl-6 {
-        padding-left: 0;
-    }
-
     .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary.container-separator,
     .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
         margin-top: 0;
         margin-left: 2px;
     }
-
+    
     .dashboard-chart-container.top-2 {
         margin-top: 2%;
     }
 
+    .page-content .row > .col-12.col-md-6 {
+        max-width: 45%;
+    }
+
+    .page-content .row > .income-margin.col-12.col-md-6 {
+        margin-right: 0;
+    }
+
+    .profit-panel {
+        margin-top: 0px;
+        margin-left: 4px;
+    }
+
+    .expense-panel {
+        margin-left: 2px;
+    }
+
+}
+
+@media(max-width: 990px){
+    .page-content .row > .col-12.col-md-6 {
+        max-width: 49%;
+    }
+
+    .page-content .row > .income-margin.col-12.col-md-6 {
+        margin-right: 1%;
+    }
+
+    .profit-panel {
+        margin-top: 2%;
+        margin-left: 0;
+    }
+
+    .expense-panel {
+        margin-left: 0;
+    }
 }
 
 @media(max-width: 768px){

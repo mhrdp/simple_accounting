@@ -29,6 +29,9 @@ body {
     border-top: 1px solid #121212;
 }
 
+a {
+    cursor: pointer;
+}
 /* Button */
 .btn {
     color: #fff !important;

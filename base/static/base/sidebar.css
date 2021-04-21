@@ -563,3 +563,9 @@
       margin-left: 40px;
     }
   }
+
+  @media(max-width: 576px){
+    .page-wrapper .page-content > div {
+      padding: 20px 30px 0 50px;
+    }
+  }
