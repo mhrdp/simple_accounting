@@ -121,6 +121,9 @@ def income_filter_by_date(request):
         'paginate': income_paginate,
         'page_range': page_range,
         'sum_of_filtered_income': sum_of_filtered_income,
+
+        'start_date': start_date,
+        'end_date': end_date,
     }
     return render(request, 'books/filtered_income.html', content)
 
@@ -711,10 +714,27 @@ def list_of_income(request):
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
 
+    # Get month
+    get_current_month = timezone.now().month
+    
+    # Convert month's number to the name of the month
+    # timezone.now() by default return number
+    months = {}
+    list_of_months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    for i, j in zip(range(1, 13), list_of_months):
+        months[i] = j
+
     content = {
         'paginate': income_page,
         'page_range': page_range,
         'income_chart_last_30_days': income_data_last_30_days,
+
+        'start_date': start_date,
+        'end_date': end_date,
+        'month': months[get_current_month],
     }
     return render(request, 'books/list_of_income.html', content)
 

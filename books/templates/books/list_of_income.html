@@ -7,6 +7,7 @@
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
 
 {% block messages %}
@@ -29,6 +30,38 @@
 </nav>
 
 <div class="page-content">
+    <div class="books-header">
+        <strong>Buku Penghasilan</strong>
+    </div>
+    <div class="books-header-subtitles subtitles">
+        <p>Daftar lengkap data penghasilan</p>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="general-panel">
+                <p class="subtitles">Penjualan Bulan {{month}}</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="general-panel">
+                <p class="subtitles">Profit Bulan {{month}}</p>
+            </div>
+        </div>
+        {% if start_date != '' and end_date != '' and start_date != None and end_date != None %}
+            <div class="col">
+                <div class="general-panel">
+                    <p class="subtitles">Total terjual (filtered)</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="general-panel">
+                    <p class="subtitles">Total profit (filtered)</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="books-chart-container">
@@ -37,27 +70,34 @@
         </div>
     </div>
 
-    <div class="row mr-1">
-        <form method="GET" class="mb-4">
-            <div class="row" style="padding-left: 15px">
-                <div class="col-12">
-                    <h5>Filter</h5>
+    <div class="row">
+        <form method="GET">
+            <div class="row">
+                <div class="start-date col-4">
+                    <input type="text" id="flatpickr" name="start_date" placeholder="Tanggal Mulai" class="form-control form-control-sm">
                 </div>
-
-                <div class="col-lg-5 col-5">
-                    <label for="start_date" class="subtitles">Start Date</label>
-                    <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
+                <div class="col-4">
+                    <input type="text" id="flatpickr" name="end_date" placeholder="Tanggal Selesai" class="form-control form-control-sm">
                 </div>
-                <div class="col-lg-5 col-5">
-                    <label for="end_date" class="subtitles">End Date</label>
-                    <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
-                </div>
-                <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
+                <button class="btn btn-color-primary btn-sm">
+                    <i class="fas fa-filter"></i>
+                </button>
             </div>
         </form>
+        <div class="row">
+            <div class="col no-padding">
+                <a href="{% url 'register_income' %}">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-plus mr-1"></i>
+                        Add New
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
         <div class="col-12">
-            <h3 class="mb-3">List of Income</h3>
             <div class="table-responsive-xl">
                 <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
                     <thead>
@@ -169,7 +209,12 @@
 
 {% block js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+<script>
+    var datepicker = flatpickr("#flatpickr");
+    
+</script>
 <script>
     var ctx = document.getElementById("incomeList").getContext("2d");
     var chart = new Chart(ctx, {
