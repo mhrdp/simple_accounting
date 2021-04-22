@@ -1,4 +1,4 @@
-{% extends 'base/base_test.html' %}
+{% extends 'base/base_all.html' %}
 {% load humanize %}
 
 {% block title %}
@@ -7,7 +7,6 @@
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
 
 {% block messages %}
@@ -23,116 +22,91 @@
 {% endblock messages %}
 
 {% block content %}
-<nav class="books-bg-top">
-    <div class="books-brand">
-        <strong>Books' Reports</strong>
-    </div>
-</nav>
-
-<div class="page-content">
-    <div class="books-header">
-        <strong>Buku Penghasilan</strong>
-    </div>
-    <div class="books-header-subtitles subtitles">
-        <p>Daftar lengkap data penghasilan</p>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <div class="general-panel">
-                <p class="subtitles">Penjualan Bulan {{month}}</p>
-            </div>
-        </div>
-        <div class="col">
-            <div class="general-panel">
-                <p class="subtitles">Profit Bulan {{month}}</p>
-            </div>
-        </div>
-        {% if start_date != '' and end_date != '' and start_date != None and end_date != None %}
-            <div class="col">
-                <div class="general-panel">
-                    <p class="subtitles">Total terjual (filtered)</p>
-                </div>
-            </div>
-            <div class="col">
-                <div class="general-panel">
-                    <p class="subtitles">Total profit (filtered)</p>
-                </div>
-            </div>
-        {% endif %}
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="books-chart-container">
-                <canvas id="incomeList"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <form method="GET">
-            <div class="row">
-                <div class="start-date col-4">
-                    <input type="text" id="flatpickr" name="start_date" placeholder="Tanggal Mulai" class="form-control form-control-sm">
-                </div>
-                <div class="col-4">
-                    <input type="text" id="flatpickr" name="end_date" placeholder="Tanggal Selesai" class="form-control form-control-sm">
-                </div>
-                <button class="btn btn-color-primary btn-sm">
-                    <i class="fas fa-filter"></i>
-                </button>
-            </div>
-        </form>
-        <div class="row">
-            <div class="col no-padding">
-                <a href="{% url 'register_income' %}">
-                    <button class="btn btn-color-primary btn-sm">
-                        <i class="fas fa-plus mr-1"></i>
-                        Add New
-                    </button>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive-xl">
-                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-                    <thead>
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Items</th>
-                        <th scope="col" class="small-hid">Qty</th>
-                        <th scope="col" class="small-hid">Price</th>
-                        <th scope="col" class="small-hid">Additional</th>
-                        <th scope="col">Total</th>
-                        <th scope="col" class="small-hid">Notes</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for income in paginate %}
-                        <tr>
-                            <td scope="row">{{forloop.counter}}</td>
-                            <td>{{income.date_added}}</td>
-                            <td>{{income.product_name}}</td>
-                            <td class="small-hid">{{income.quantity}}</td>
-                            <td class="small-hid">Rp. {{income.price|intcomma}}</td>
-                            <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
-                            <td>Rp. {{income.total|intcomma}}</td>
-                            <td class="small-hid">{{income.notes}}</td>
-                            <td><a href="{% url 'edit_income' income.pk %}">Edit</a></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+<div class="row">
+    <div class="col-12 col-md-12 mb-5">
+        <div class="books-canvas-container">
+            <canvas id="incomeList"></canvas>
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="mb-3">
+        <a href="{% url 'list_of_income' %}">
+            <button class="btn content-current disabled">Incomes List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'list_of_expense' %}">
+            <button class="btn btn-transparent-scd">Expenses List</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'journal' %}">
+            <button class="btn btn-transparent-scd">Journal</button>
+        </a>
+        <div class="vertical-ruler"></div>
+        <a href="{% url 'profit_loss' %}">
+            <button class="btn btn-transparent-scd">Profit Loss</button>
+        </a>
+        </div>
+    </div>
+</div>
+
+<form method="GET" class="mb-4">
+    <div class="row">
+        <div class="col-12">
+            <h5>Filter</h5>
+        </div>
+
+        <div class="col-lg-3 col-5">
+            <label for="start_date" class="subtitles">Start Date</label>
+            <input type="date" name="start_date" class="form-control form-control-sm" id="start_date">
+        </div>
+        <div class="col-lg-3 col-5">
+            <label for="end_date" class="subtitles">End Date</label>
+            <input type="date" name="end_date" class="form-control form-control-sm" id="end_date">
+        </div>
+        <button class="btn btn-sm" style="display: inline;"><i class="fas fa-filter"></i></button>
+    </div>
+</form>
+
+<div class="row mr-1">
+    <div class="col-12">
+        <h3 class="mb-3">List of Income</h3>
+        <div class="table-responsive-xl">
+            <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+                <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Items</th>
+                    <th scope="col" class="small-hid">Qty</th>
+                    <th scope="col" class="small-hid">Price</th>
+                    <th scope="col" class="small-hid">Additional</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" class="small-hid">Notes</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for income in paginate %}
+                    <tr>
+                        <td scope="row">{{forloop.counter}}</td>
+                        <td>{{income.date_added}}</td>
+                        <td>{{income.product_name}}</td>
+                        <td class="small-hid">{{income.quantity}}</td>
+                        <td class="small-hid">Rp. {{income.price|intcomma}}</td>
+                        <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
+                        <td>Rp. {{income.total|intcomma}}</td>
+                        <td class="small-hid">{{income.notes}}</td>
+                        <td><a href="{% url 'edit_income' income.pk %}">Edit</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
 
 {% block paginator %}
@@ -209,12 +183,7 @@
 
 {% block js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-<script>
-    var datepicker = flatpickr("#flatpickr");
-    
-</script>
 <script>
     var ctx = document.getElementById("incomeList").getContext("2d");
     var chart = new Chart(ctx, {
@@ -238,39 +207,27 @@
             // To make canvas height-width customizeable
             maintainAspectRatio: false,
 
-            plugins: {
-                legend: {
-                    display: true,
-                        labels: {
-                            color: "rgba(255, 255, 255, 0.700)",
-                        },
-                },
+            legend: {
+                display: true,
+                labels : {
+                    fontColor: "#bcccdc"
+                }
             },
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
                         font: {
                             size: 10,
-                        },
-                    },
-                    grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
-                        drawOnChartArea: false,
+                        }
                     },
                 },
                 x: {
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
                         font: {
                             size: 10,
-                        },
-                    },
-                    grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
-                        drawOnChartArea: false,
-                    },
+                        }
+                    }
                 },
             }
         }

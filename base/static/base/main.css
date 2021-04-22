@@ -20,11 +20,6 @@ body {
     margin-right: 5px;
 }
 
-.active {
-    color: rgba(255, 255, 255, 0.5);
-    text-decoration: None;
-}
-
 /* Button */
 .btn {
     color: #fff !important;
@@ -297,10 +292,6 @@ div footer.quote-footer {
 
 .dashboard-hidden, .input-hidden, .books-hidden {
     display: none !important;
-}
-
-.sidebar-hidden-sm {
-    display: inline-block;
 }
 
 @media(max-width: 1080px){

@@ -20,6 +20,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
     path('', include('books.urls')),
-
-    path('', include('base.urls')),
 ]
