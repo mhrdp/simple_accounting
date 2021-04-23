@@ -7,6 +7,8 @@
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/income_list.css" rel="stylesheet">
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
 
@@ -25,7 +27,7 @@
 {% block content %}
 <nav class="books-bg-top">
     <div class="books-brand">
-        <strong>Books' Reports</strong>
+        <strong>Laporan Pembukuan</strong>
     </div>
 </nav>
 
@@ -37,7 +39,7 @@
         <p>Daftar lengkap data penghasilan</p>
     </div>
 
-    <div class="row">
+    <div class="row sum-container">
         <div class="col">
             <div class="general-panel">
                 <p class="subtitles">Penjualan Bulan {{month}}</p>
@@ -70,7 +72,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row filter-container">
         <form method="GET">
             <div class="row">
                 <div class="start-date col-4">
@@ -213,8 +215,18 @@
 
 <script>
     var datepicker = flatpickr("#flatpickr");
-    
 </script>
+
+<script>
+    // To open the sub menu automatically when visiting this page
+    $(document).ready(function(){
+        $(".books-menu.sidebar-dropdown").addClass("active")
+        if($(".books-menu.sidebar-dropdown").hasClass("active")){
+            $(".books-menu.sidebar-dropdown > .sidebar-submenu").slideDown(200);
+        }
+    })
+</script>
+
 <script>
     var ctx = document.getElementById("incomeList").getContext("2d");
     var chart = new Chart(ctx, {
@@ -241,9 +253,9 @@
             plugins: {
                 legend: {
                     display: true,
-                        labels: {
-                            color: "rgba(255, 255, 255, 0.700)",
-                        },
+                    labels: {
+                        color: "rgba(255, 255, 255, 0.700)",
+                    },
                 },
             },
             scales: {
