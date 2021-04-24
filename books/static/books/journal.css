@@ -1,0 +1,36 @@
+a.journal-current {
+    color: #16c7ff !important;
+    text-shadow:0px 0px 10px rgba(22, 199, 255, 0.5);
+}
+
+@media(max-width: 824px){
+    .row.filter-container > .row > .col.no-padding {
+        margin-top: 0;
+    }
+}
+
+@media(max-width: 798px){
+    .row.filter-container > .row > .col.no-padding {
+        margin-top: 5px;
+    }
+}
+
+@media(max-width: 768px){
+    .row.filter-container > .row > .col.no-padding {
+        margin-top: 0;
+    }
+}
+
+@media(max-width: 576px){
+    .row.filter-container > .row > .col.no-padding {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+@media(max-width: 525px){
+    .row.filter-container > .row > .col.no-padding {
+        padding-left: 30px;
+        padding-top: 5px;
+    }
+}

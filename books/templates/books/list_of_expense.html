@@ -7,9 +7,22 @@
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/expense_list.css" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
+
+{% block messages %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock messages %}
 
 {% block content %}
 <nav class="books-bg-top">
@@ -24,6 +37,31 @@
     </div>
     <div class="books-header-subtitles subtitles">
         <p>Daftar lengkap data pengeluaran</p>
+    </div>
+
+    <div class="row sum-container">
+        <div class="col">
+            <div class="general-panel">
+                <p class="subtitles">Pembelian Bulan {{month}}</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="general-panel">
+                <p class="subtitles">Pengeluaran Bulan {{month}}</p>
+            </div>
+        </div>
+        {% if start_date != '' and end_date != '' and start_date != None and end_date != None %}
+            <div class="col">
+                <div class="general-panel">
+                    <p class="subtitles">Pembelian (filtered)</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="general-panel">
+                    <p class="subtitles">Total Pengeluaran (filtered)</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
     <div class="row">
@@ -50,10 +88,9 @@
         </form>
         <div class="row">
             <div class="col no-padding">
-                <a href="{% url 'register_expense' %}">
+                <a href="{% url 'register_expense' %}" title="Add New">
                     <button class="btn btn-color-primary btn-sm">
-                        <i class="fas fa-plus mr-1"></i>
-                        Add New
+                        <i class="fas fa-plus"></i>
                     </button>
                 </a>
             </div>

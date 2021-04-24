@@ -1,10 +1,13 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 {% load humanize %}
 
 {% block title %}Ledger{% endblock title %}
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/profit_loss.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
 
 {% block messages %}
@@ -20,380 +23,407 @@
 {% endblock messages %}
 
 {% block content %}
-<div class="row">
-    <div class="mb-3 col-12">
-        <a href="{% url 'list_of_income' %}">
-            <button class="btn btn-transparent-scd">Incomes List</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a>
-            <button class="btn btn-transparent-scd">Expenses List</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a href="{% url 'journal' %}">
-            <button class="btn btn-transparent-scd">Journal</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a href="{% url 'profit_loss' %}">
-            <button class="btn content-current disabled">Profit Loss</button>
-        </a>
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Laporan Pembukuan</strong>
     </div>
-    <div>
+</nav>
+
+<div class="page-content">
+    <div class="books-header">
+        <strong>Buku Penghasilan</strong>
+    </div>
+    <div class="books-header-subtitles subtitles mb-5">
+        <p>Daftar lengkap data penghasilan</p>
+    </div>
+
+    <div class="row filter-container">
         <form method="GET">
-            <label for="start_date">Start Date:</label>
-            <input type="date" name="start_date">
-
-            <label for="end_date">End Date:</label>
-            <input type="date" name="end_date">
-
-            <button class="btn"><i class="fas fa-filter"></i></button>
+            <div class="row">
+                <div class="start-date col-4">
+                    <input type="text" id="flatpickr" name="start_date" placeholder="Tanggal Mulai" class="form-control form-control-sm">
+                </div>
+                <div class="col-4">
+                    <input type="text" id="flatpickr" name="end_date" placeholder="Tanggal Selesai" class="form-control form-control-sm">
+                </div>
+                <button class="btn btn-color-primary btn-sm">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
         </form>
-    </div>
-    <div class="col-12">
-        <div class="table-font-resize">
-            <h3 class="text-right">
+        <div class="row">
+            <div class="col no-padding">
                 {% if not start_date and not end_date %}
-                    {{previous_month}}'s Laba / Rugi
+                <a href="{% url 'profit_loss_to_pdf' %}" title="Export to PDF">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-file-pdf"></i>
+                    </button>
+                </a>
                 {% else %}
-                    Laba / Rugi Periode {{start_date}} s/d {{end_date}}
+                <a href="{% url 'profit_loss_to_pdf' %}?start_date={{start_date}}&end_date={{end_date}}" title="Export to PDF">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
                 {% endif %}
-            </h3>
-            <br />
-            {% if not start_date and not end_date %}
-                <a href="{% url 'profit_loss_to_pdf' %}">PDF Export Test</a>
-            {% else %}
-                <a href="{% url 'profit_loss_to_pdf' %}?start_date={{start_date}}&end_date={{end_date}}">PDF Export Test</a>
-            {% endif %}
-            
-            <br />
-            <a href="#">For Browser's Print PDF Compatible HTML Page (TBA)</a>
 
-            <h4>Pendapatan Bulanan</h4>
-            <hr class="hr-styling" />
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Penjualan</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_income.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_income.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
+                <a title="For Browser's Print PDF Compatible HTML Page (TBA)">
+                    <button class="btn btn-color-primary btn-sm disabled">
+                        <i class="fa fa-edge"></i>
+                    </button>
+                </a>
             </div>
+        </div>
+    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="profit-loss-container">
+                <div class="table-font-resize">
+                    <h4>Pendapatan Bulanan</h4>
+                    <hr class="hr-styling" />
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Penjualan</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_income.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_income.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                        </div>
 
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_income.sum > 0 %}
-                        <h6>
-                            Rp. {{monthly_income.sum|intcomma}}
-                        </h6>
-                    {% else %}
-                        <h6 class="subtitles">Rp. 0</h6>
-                    {% endif %}
-                </div>
-            </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
 
-            <h4>Biaya Produksi</h4>
-            <hr class="hr-styling" />
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Bahan Mentah</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_raw_material.sum > 0%}
-                        <p class="subtitles">
-                            Rp. {{monthly_raw_material.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_income.sum > 0 %}
+                                <h6>
+                                    Rp. {{monthly_income.sum|intcomma}}
+                                </h6>
+                            {% else %}
+                                <h6 class="subtitles">Rp. 0</h6>
+                            {% endif %}
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Barang Setengah Jadi</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_wip.sum > 0%}
-                        <p class="subtitles">
-                            Rp. {{monthly_wip.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <h4>Biaya Produksi</h4>
+                    <hr class="hr-styling" />
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Bahan Mentah</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_raw_material.sum > 0%}
+                                <p class="subtitles">
+                                    Rp. {{monthly_raw_material.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Barang Jadi</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_finished_goods.sum > 0%}
-                        <p class="subtitles">
-                            Rp. {{monthly_finished_goods.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Barang Setengah Jadi</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_wip.sum > 0%}
+                                <p class="subtitles">
+                                    Rp. {{monthly_wip.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Produksi Lainnya</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_production_misc.sum > 0%}
-                        <p class="subtitles">
-                            Rp. {{monthly_production_misc.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Barang Jadi</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_finished_goods.sum > 0%}
+                                <p class="subtitles">
+                                    Rp. {{monthly_finished_goods.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_production_sum %}
-                        <h6>
-                            Rp. {{monthly_production_sum|intcomma}}
-                        </h6>
-                    {% else %}
-                        <h6>Rp. 0</h6>
-                    {% endif %}
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Produksi Lainnya</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_production_misc.sum > 0%}
+                                <p class="subtitles">
+                                    Rp. {{monthly_production_misc.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row mb-5">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Laba Kotor</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_gross_profit > 0 %}
-                        <h6 class="text-gr">Rp. {{monthly_gross_profit|intcomma}}0</h6>
-                    {% else %}
-                        <h6 class="text-rd">Rp. 0</h6>
-                    {% endif %}
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_production_sum %}
+                                <h6>
+                                    Rp. {{monthly_production_sum|intcomma}}
+                                </h6>
+                            {% else %}
+                                <h6>Rp. 0</h6>
+                            {% endif %}
+                        </div>
+                    </div>
 
-            <h3>Beban Usaha</h3>
-            <h4>Biaya Operasional</h4>
-            <hr class="hr-styling" />
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Pemasaran</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_marketing.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_marketing.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <div class="row mb-5">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Laba Kotor</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_gross_profit > 0 %}
+                                <h6 class="text-gr">Rp. {{monthly_gross_profit|intcomma}}0</h6>
+                            {% else %}
+                                <h6 class="text-rd">Rp. 0</h6>
+                            {% endif %}
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Logistik</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_logistic.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_logistic.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <h3>Beban Usaha</h3>
+                    <h4>Biaya Operasional</h4>
+                    <hr class="hr-styling" />
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Pemasaran</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_marketing.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_marketing.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Operasional Lainnya</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_operation_misc.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_operation_misc.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Logistik</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_logistic.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_logistic.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_operational_sum > 0 %}
-                        <h6>Rp. {{monthly_operational_sum|intcomma}}0</h6>
-                    {% else %}
-                        <h6>Rp. 0</h6>
-                    {% endif %}
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Operasional Lainnya</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_operation_misc.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_operation_misc.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <h4>Biaya Administrasi</h4>
-            <hr class="hr-styling" />
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Keperluan Kantor</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_office_needs.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_office_needs.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_operational_sum > 0 %}
+                                <h6>Rp. {{monthly_operational_sum|intcomma}}0</h6>
+                            {% else %}
+                                <h6>Rp. 0</h6>
+                            {% endif %}
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Upah Karyawan</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_salary.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_salary.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <h4>Biaya Administrasi</h4>
+                    <hr class="hr-styling" />
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Keperluan Kantor</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_office_needs.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_office_needs.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Sewa</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_rent.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_rent.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Upah Karyawan</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_salary.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_salary.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Biaya Administrasi Lainnya</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_administration_misc.sum > 0 %}
-                        <p class="subtitles">
-                            Rp. {{monthly_administration_misc.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p class="subtitles">Rp. 0</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Sewa</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_rent.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_rent.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_administration_sum > 0 %}
-                        <h6>
-                            Rp. {{monthly_administration_sum|intcomma}}
-                        </h6>
-                    {% else %}
-                        <h6>Rp. 0</h6>
-                    {% endif %}
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Biaya Administrasi Lainnya</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_administration_misc.sum > 0 %}
+                                <p class="subtitles">
+                                    Rp. {{monthly_administration_misc.sum|intcomma}}
+                                </p>
+                            {% else %}
+                                <p class="subtitles">Rp. 0</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>Total Beban Usaha</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_business_load_sum > 0 %}
-                        <h6 class="text-rd">
-                            Rp. {{monthly_business_load_sum|intcomma}}
-                        </h6>
-                    {% else %}
-                        <h6 class="subtitles">Rp. 0</h6>
-                    {% endif %}
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_administration_sum > 0 %}
+                                <h6>
+                                    Rp. {{monthly_administration_sum|intcomma}}
+                                </h6>
+                            {% else %}
+                                <h6>Rp. 0</h6>
+                            {% endif %}
+                        </div>
+                    </div>
 
-            <div class="row mb-5">
-                <div class="col-lg-5 col-md-4 col-5">
-                    <h5>NETT Profit</h5>
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                </div>
-                <div class="col-lg-3 col-md-4 col-3">
-                    {% if monthly_nett_profit > 0 %}
-                        <h6 class="text-gr">Rp. {{monthly_nett_profit|intcomma}}0</h6>
-                    {% elif monthly_nett_profit < 0 %}
-                        <h6 class="text-rd">Rp. {{monthly_nett_profit|intcomma}}0</h6>
-                    {% else %}
-                        <h6 class="text-rd">Rp. 0</h6>
-                    {% endif %}
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>Total Beban Usaha</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_business_load_sum > 0 %}
+                                <h6 class="text-rd">
+                                    Rp. {{monthly_business_load_sum|intcomma}}
+                                </h6>
+                            {% else %}
+                                <h6 class="subtitles">Rp. 0</h6>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-lg-5 col-md-4 col-5">
+                            <h5>NETT Profit</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-3">
+                            {% if monthly_nett_profit > 0 %}
+                                <h6 class="text-gr">Rp. {{monthly_nett_profit|intcomma}}0</h6>
+                            {% elif monthly_nett_profit < 0 %}
+                                <h6 class="text-rd">Rp. {{monthly_nett_profit|intcomma}}0</h6>
+                            {% else %}
+                                <h6 class="text-rd">Rp. 0</h6>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    var datepicker = flatpickr("#flatpickr");
+</script>
+
+<script>
+    // To open the sub menu automatically when visiting this page
+    $(document).ready(function(){
+        $(".books-menu.sidebar-dropdown").addClass("active")
+        if($(".books-menu.sidebar-dropdown").hasClass("active")){
+            $(".books-menu.sidebar-dropdown > .sidebar-submenu").slideDown(200);
+        }
+    })
+</script>
+{% endblock js %}
