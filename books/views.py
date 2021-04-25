@@ -1201,6 +1201,8 @@ def journal(request):
 
 @login_required
 def profit_loss(request):
+    company_name = get_object_or_404(CompanyDetail, username=request.user.pk)
+
     get_current_month = timezone.now().month
 
     # Convert month's number to the name of the month
@@ -1532,6 +1534,7 @@ def profit_loss(request):
     content = {
         'current_month': months[get_current_month],
         'previous_month': months[get_current_month-1],
+        'company_name': company_name,
         'start_date': start_date,
         'end_date': end_date,
 

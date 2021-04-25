@@ -10,7 +10,7 @@ class IncomeForm(forms.ModelForm):
     date_added = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                'class':'form-control',
+                'class':'form-control form-control-sm',
                 'type':'date'
                 }
         ),
@@ -18,24 +18,24 @@ class IncomeForm(forms.ModelForm):
     )
     quantity = forms.IntegerField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         )
     )
     price = forms.DecimalField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control',}
+            attrs={'class':'form-control form-control-sm',}
         )
     )
     additional_price = forms.DecimalField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         ),
         required=False,
         initial=0
     )
     notes = forms.CharField(
         widget=forms.Textarea(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         ),
         required=False,
     )
@@ -52,9 +52,9 @@ class IncomeForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super(IncomeForm, self).__init__(*args, **kwargs)
         self.fields['product_name'] = forms.ModelChoiceField(
-            queryset=Product.objects.filter(username=user),
+            queryset=Product.objects.filter(username=user).order_by('product_name'),
             widget=forms.Select(
-                attrs={'class':'form-control'}
+                attrs={'class':'form-control form-control-sm'}
             ),
             required=True,
         )

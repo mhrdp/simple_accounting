@@ -1,11 +1,12 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 
 {% block title %}
 Register Product
 {% endblock title %}
 
 {% block css %}
-<link href="/../../static/books/general.css" rel="stylesheet">
+<link href="/../../static/books/register_product.css" rel="stylesheet">
+<link href="/../../static/books/books.css" rel="stylesheet">
 {% endblock css %}
 
 {% block register_product %}
@@ -21,28 +22,34 @@ Register Product
 {% endblock register_product %}
 
 {% block content %}
-<div class="mb-3">
-    <a href="{% url 'register_income' %}">
-        <button class="btn btn-transparent-scd">Income Input</button>
-    </a>
-    <div class="vertical-ruler"></div>
-    <a href="{% url 'register_expense' %}">
-        <button class="btn btn-transparent-scd">Expense Input</button>
-    </a>
-    <div class="vertical-ruler"></div>
-    <a href="{% url 'register_product' %}">
-        <button class="btn content-current disabled">Register Products</button>
-    </a>
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Pendaftaran Data-data</strong>
+    </div>
+</nav>
+
+<div class="page-content">
+    <div class="h-100 w-100">
+        <div class="product-form-container">
+            <div class="form-header">
+                <h5>Formulir Pendaftaran Produk</h5>
+                <hr />
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <p class="subtitles text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
+                <div class="mb-2">
+                    <label for="product_name" class="subtitles">Product Name: <span class="text-rd">*</span></label>
+                    {{product_form.product_name}}
+                </div>
+
+                <label for="price" class="subtitles">Price: <span class="text-rd">*</span></label>
+                {{product_form.price}}
+
+                <button type="submit" class="btn btn-color-primary btn-sm float-right mt-2">Submit</button>
+            </form>
+        </div>
+    </div>
 </div>
-
-<form method="POST">
-    {% csrf_token %}
-    <label for="product_name" class="subtitles">Product Name: *</label>
-    {{product_form.product_name}}
-
-    <label for="price" class="subtitles">Price: *</label>
-    {{product_form.price}}
-
-    <button type="submit" class="btn btn-color-primary">Submit</button>
-</form>
 {% endblock content %}
