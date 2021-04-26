@@ -25,7 +25,7 @@ Add Income
 {% block content %}
 <nav class="books-bg-top">
     <div class="books-brand">
-        <strong>Pendaftaran Data-data</strong>
+        <strong>Input Data</strong>
     </div>
 </nav>
 
@@ -33,18 +33,18 @@ Add Income
     <div class="w-100 h-100">
         <div class="income-form-container">
             <div class="form-header">
-                <h5>Formulir Pendaftaran Produk</h5>
+                <h5>Input Data Pemasukan</h5>
                 <hr />
             </div>
             <form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}">
                 {% csrf_token %}
                 <div class="subtitles">
-                    <p class="subtitles text-right"><strong><span class="text-rd">*</span>wajib diisi</strong></p>
+                    <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
                     <table>
                         <tbody>
                             <tr class="table-padding-bottom">
                                 <td class="cell-1">
-                                    <label for="date_added">Date Added: <span class="red-dgr">*</span></label>
+                                    <label for="date_added">Date Added: <span class="text-rd">*</span></label>
                                 </td>
                                 <td>
                                     <div class="width-40">
@@ -54,7 +54,7 @@ Add Income
                             </tr>
                             <tr>
                                 <td class="cell-1">
-                                    <label for="product_name">Product Name: <span class="red-dgr">*</span></label>
+                                    <label for="product_name">Product Name: <span class="text-rd">*</span></label>
                                 </td>
                                 <td>
                                     <div class="width-40">
@@ -67,13 +67,13 @@ Add Income
 
                             <tr class="table-padding-top table-border-top">
                                 <td class="cell-1">
-                                    <label for="quantity">Quantity: <span class="red-dgr">*</span></label>
+                                    <label for="quantity">Quantity: <span class="text-rd">*</span></label>
                                     <div class="qty width-60">
                                         {{income_form.quantity}}
                                     </div>
                                 </td>
                                 <td>
-                                    <label for="price">Price: <span class="red-dgr">*</span></label>
+                                    <label for="price">Price: <span class="text-rd">*</span></label>
                                     <div class="width-50">
                                         {{income_form.price}}
                                     </div>
@@ -91,7 +91,7 @@ Add Income
 
                             <tr><td><br/></td></tr>
 
-                            <tr>
+                            <tr class="table-padding-bottom">
                                 <td class="cell-1">
                                     <label for="notes">Notes: (optional)</label>
                                 </td>

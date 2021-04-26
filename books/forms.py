@@ -63,7 +63,7 @@ class ExpenseForm(forms.ModelForm):
     date_added = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                'class':'form-control',
+                'class':'form-control form-control-sm',
                 'type':'date',
                 }
         ),
@@ -72,34 +72,34 @@ class ExpenseForm(forms.ModelForm):
     
     item_name = forms.CharField(
         widget=forms.TextInput(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         )
     )
     category = forms.ModelChoiceField(
         queryset=ExpenseCategory.objects.all().order_by('category'),
         widget=forms.Select(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         )
     )
     sub_category = forms.ModelChoiceField(
         queryset=SubCategory.objects.none(),
         widget=forms.Select(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         )
     )
     quantity = forms.IntegerField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         )
     )
     price = forms.DecimalField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         )
     )
     notes = forms.CharField(
         widget=forms.Textarea(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control form-control-sm'}
         ),
         required=False,
     )
@@ -110,6 +110,7 @@ class ExpenseForm(forms.ModelForm):
             'quantity', 'price', 'notes'
         ]
 
+    # This is to get sub_category data based on its foreign key
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['sub_category'].queryset = SubCategory.objects.none()
