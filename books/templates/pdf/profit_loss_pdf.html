@@ -151,8 +151,8 @@
                 <td></td>
                 <td></td>
                 <td class="upperline-light">
-                    {% if monthly_production_sum > 0 %}
-                        <h5>Rp. {{monthly_production_sum|intcomma}}0</h5>
+                    {% if monthly_production_sum %}
+                        <h5>Rp. {{monthly_production_sum|intcomma}}</h5>
                     {% else %}
                         <h5>Rp. 0.00</h5>
                     {% endif %}

@@ -1,61 +1,78 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 
 {% block title %}
 {{company_description.company_name}}'s Profile
 {% endblock title %}
 
 {% block css %}
+<link rel="stylesheet" href="/../../static/user/user.css">
 <link rel="stylesheet" href="/../../static/user/profile.css">
 {% endblock css%}
 
 {% block content %}
-<!-- First Row in Page -->
-<div class="row">
-    <div class="col-sm-3 mb-3" style="margin-left:0">
-        <div class="mb-3">
-            <h4 class="subtitles">
-                {{company_description.company_name}}
-            </h4>
-            <h6 class="subtitles">Company Profile</h4>
-        </div>
-        
+<nav class="bg-top">
+    <div class="user-brand">
+        Profile
     </div>
+</nav>
 
-    <div class="col-sm-4">
-        <h6 class="subtitles">Monthly Income</h6>
-        <div class="profile-container-sm-dark">
-            <h4 class="subtitles align-middle float-right"><b>Rp. 10,000,000,-</b></h4>
+<div class="page-content">
+    <div class="w-100">
+        <div class="user-content text-center">
+            <h3 class="mb-4">{{company_description.company_name}}</h3>
+
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <ul class="profile-ul text-left">
+                        <li>
+                            <a href="{% url 'user_edit' %}" class="link">
+                                <i class="fas fa-user-edit"></i>
+                                Edit Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'edit' %}" class="link">
+                                <i class="fas fa-edit"></i>
+                                Edit Detail
+                            </a>
+                        </li>
+
+                        <hr />
+
+                        <li>
+                            <a href="{% url 'change_password' %}" class="link">
+                                <i class="fas fa-lock-open"></i>
+                                Ganti Password
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-12 col-md-9">
+                    <div class="text-left subtitles">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="cell"><p>Username:</p></td>
+                                    <td><p>{{profile.username}}</p></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell"><p>Email:</p></td>
+                                    <td><p>{{profile.email}}</p></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell"><p>Industry:</p></td>
+                                    <td><p>{{company_description.industry}}</p></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell"><p>Description:</p></td>
+                                    <td><p>{{company_description.company_description}}</p></td>
+                            </tbody>
+                        </table> 
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-sm-4">
-        <h6 class="subtitles">Monthly Expense</h6>
-        <div class="profile-container-sm-dgr">
-            <h4 class="red-dgr float-right"><b>Rp. 9,999,999,-</b></h4>
-        </div>
-    </div>
-</div>
-
-<!-- Second Row -->
-<div class="row"> 
-    <div class="col-md-12 mt-1">
-        <strong>
-        <div class="sub-container-bg-light">
-            <h5 class="subtitles">Username:</h5>
-            <span class="subtitles">{{profile.username}}</span>
-            <br /><br />
-
-            <h5 class="subtitles">Email:</h5>
-            <span class="subtitles">{{profile.email}}</span>
-            <br /><br />
-
-            <h5 class="subtitles">Company's Industry:</h5>
-            <span class="subtitles">{{company_description.industry}}</span>
-            <br /><br />
-
-            <h5 class="subtitles">Description:</h5>
-            <span class="subtitles">{{company_description.company_description}}</span>
-        </div>
-        </strong>
     </div>
 </div>
 {% endblock content %}

@@ -1,0 +1,52 @@
+a.income-current {
+    color: #16c7ff !important;
+    text-shadow:0px 0px 10px rgba(22, 199, 255, 0.5);
+}
+
+@media(min-width: 768px){
+    .page-wrapper.chiller-theme.toggled div.books-brand {
+        margin-left: 300px;
+    }
+  
+    .page-wrapper.chiller-theme div.books-brand {
+        margin-left: 40px;
+    }
+}
+
+@media(max-width: 1176px){
+    .row.filter-container {
+        margin-right: 15px !important;
+    }
+}
+
+@media(max-width: 825px){
+    .row > .col.no-padding {
+        padding-left: 15px;
+        margin-left: 15px;
+        margin-top: 5px;
+    }
+}
+
+@media(max-width: 768px){
+    .row.filter-container {
+        margin-right: 15px !important;
+    }
+
+    .row > .col.no-padding {
+        padding-left: 0;
+        margin-left: 0;
+        margin-top: 0;
+    }
+}
+
+@media(max-width: 576px){
+    .row > .col.no-padding {
+        padding-left: 15px;
+        padding-top: 5px;
+        margin-left: 15px;
+    }
+
+    .row.filter-container {
+        padding-top: 15px !important;
+    }
+}

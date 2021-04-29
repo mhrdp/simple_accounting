@@ -1,0 +1,103 @@
+.bg-top {
+    min-height: 50px;
+    width: 100vw;
+
+    background: #94aabe;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1CB5E0, #0558a5);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1CB5E0, #0558a5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #1CB5E0, #0558a5);
+    background: -moz-linear-gradient(to right, #1CB5E0, #0558a5);
+    
+    border-bottom: 1px solid #000046;
+}
+
+.user-brand {
+    transition: margin 0.25s ease-out;
+    -o-transition: margin 0.25s ease-out;
+    -moz-transition: margin 0.25s ease-out;
+    -webkit-transition: margin 0.25s ease-out;
+
+    transition-delay: 0.3s;
+    -o-transition-delay: 0.3s;
+    -moz-transition-delay: 0.3s;
+    -webkit-transition-delay: 0.3s;
+
+    display: inline-block;
+    color: #fff;
+    height: 30px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.user-content {
+    width: 80%;
+    background-color: #29323c;
+    padding: 15px;
+    margin: 0 auto;
+    border-radius: 15px;
+}
+
+.user-content > .row > .col-12.col-md-3 {
+    border-right: 2px solid rgba(168, 168, 168, 0.623)
+}
+
+.user-content > .row > .col-12.col-md-3 > ul > li  {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+ul {
+    list-style: none;
+}
+
+hr {
+    background-color: rgba(255, 255, 255, 0.493);
+}
+
+.cell {
+    width: 25%;
+}
+
+/* --------------- OVERWRITE SIDEBAR/MAIN CSS ----------------- */
+a.link {
+    color: rgb(79, 153, 202);
+    font-weight: 600;
+}
+
+@media(min-width: 768px){
+    .page-wrapper.chiller-theme.toggled div.user-brand {
+        margin-left: 300px;
+    }
+  
+    .page-wrapper.chiller-theme div.user-brand {
+        margin-left: 40px;
+    }
+}
+
+@media(max-width: 1176px){
+    .user-content {
+        width: 90%;
+    }
+}
+
+@media(max-width: 768px){
+    .page-wrapper.chiller-theme.toggled .profile-header > h3 {
+        margin-left: 0;
+    }
+
+    .user-brand {
+        padding-left: 50px;
+    }
+
+    .user-content {
+        width: 95%;
+    }
+}
+
+@media(max-width: 576px){
+    .user-content {
+        width: 100%;
+    }
+}

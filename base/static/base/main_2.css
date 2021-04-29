@@ -25,6 +25,13 @@ body {
     text-decoration: None;
 }
 
+.separator-top {
+    border-top: 1px solid #121212;
+}
+
+a {
+    cursor: pointer;
+}
 /* Button */
 .btn {
     color: #fff !important;
@@ -175,14 +182,30 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
 }
 
-.link {
+a.link {
     color: #fff;
     font-weight: 400;
+    transition: all 0.25s ease-out;
+    -o-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    -webkit-transition: all 0.25s ease-out;
 }
 
-.link:hover {
+a.link:hover {
     color: rgba(255, 255, 255, 0.5);
     text-decoration: None;
+}
+
+a.link-dgr {
+    color: #ff3f80;
+    transition: all 0.25s ease-out;
+    -o-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    -webkit-transition: all 0.25s ease-out;
+}
+
+a.link-dgr:hover {
+    color: #dc3545;
 }
 /* End of text */
 
@@ -255,10 +278,6 @@ div ul li button.btn-mod:hover {
     padding: 0;
     display: block;
     min-width: 15% !important;
-}
-
-a.income-current, a.expense-current, a.product-current  {
-    padding-left: 5px;
 }
 
 /* End of sidebar */
