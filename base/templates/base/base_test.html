@@ -12,6 +12,10 @@
     <!-- Font Awesome Kit -->
     <script src="https://kit.fontawesome.com/bfc90f80b2.js" crossorigin="anonymous"></script>
 
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/../../static/base/sidebar.css">
     <link rel="stylesheet" href="/../../static/base/main_2.css">
 
@@ -43,6 +47,13 @@
 
                     <span class="user-status">
                         <a href="{% url 'profile' %}" class="link">Profile</a>
+                    </span>
+                    <span class="user-status ml-1">
+                        {% if request.user.is_superuser %}
+                        <a href="/admin/" target="_blank" class="link-dgr">
+                        <strong>Admin Page</strong>
+                        </a>
+                        {% endif %}
                     </span>
                 </div>
             </div>
@@ -146,13 +157,14 @@
       </a>
     </div>
   </nav>
-
-    {% block messages %}{% endblock messages %}
-    
-    {% block register_product %}{%endblock register_product%}
-    {% block register_income %}{% endblock register_income %}
-    {% block register_expense %}{% endblock register_expense %}
-    {% block filter_income %}{% endblock filter_income %}
+    <div class="row">
+        {% block messages %}{% endblock messages %}
+        
+        {% block register_product %}{%endblock register_product%}
+        {% block register_income %}{% endblock register_income %}
+        {% block register_expense %}{% endblock register_expense %}
+        {% block filter_income %}{% endblock filter_income %}
+    </div>
 
     {% block content %}{% endblock content %}
     {% block paginator %}{% endblock paginator %}

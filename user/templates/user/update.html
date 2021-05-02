@@ -1,52 +1,74 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 
 {% block title %}
 Edit Company Profile
 {% endblock title %}
 
 {% block css %}
-<link rel="stylesheet" href="/../../static/user/profile.css">
+<link rel="stylesheet" href="/../../static/user/user.css">
 {% endblock css%}
 
+{% block messages %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock messages %}
+
 {% block content %}
-<a>
-    <button class='btn content-current disabled'>Company Profile</button>
-</a>
+<nav class="bg-top">
+    <div class="user-brand">
+        Detail Pengguna
+    </div>
+</nav>
 
-<a href="{% url 'user_edit' %}">
-    <button class='btn btn-color-primary'>User Profile</button>
-</a>
-
-<form method="POST">
-    {% csrf_token %}
-    <fieldset class="form-group mb-5">
-        <span style="color:red">{{first_time_msg}}</span>
-        <legend class="mb-4 subtitles border-bottom">
-            <div class="float-right mb-2">
-                <strong>Company's Details</strong>
-            </div>
-        </legend>
-        <p class="subtitles">Company's Name:</p>
-        {{form_description.company_name}}
-        <p class="subtitles mt-2">Company's Description:</p>
-        {{form_description.company_description}}
-    </fieldset>
-    
-    <fieldset class="form-group">
-        <legend class="mb-4 subtitles border-bottom">
-            <div class="float-right mb-2">
-                <strong>Industry</strong>
-            </div>
-        </legend>
-            
-        <p class="subtitles">Industry:</p>
-        <div class="row">
-            <div class="col-md-3">
-                {{form_description.industry}}
-            </div>
+<div class="page-content">
+    <div class="w-100">
+        <div class="user-content">
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group mb-5">
+                    <span style="color:red">{{first_time_msg}}</span>
+                    <legend class="mb-4 subtitles border-bottom">
+                        <div class="float-right mb-2">
+                            <strong>Company's Details</strong>
+                        </div>
+                    </legend>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="subtitles">Company's Name:</p>
+                            {{form_description.company_name}}
+                        </div>
+                        <div class="col-12">
+                            <p class="subtitles mt-2">Company's Description:</p>
+                            {{form_description.company_description}}
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <fieldset class="form-group">
+                    <legend class="mb-4 subtitles border-bottom">
+                        <div class="float-right mb-2">
+                            <strong>Industry</strong>
+                        </div>
+                    </legend>
+                        
+                    <p class="subtitles">Industry:</p>
+                    <div class="row">
+                        <div class="col-6">
+                            {{form_description.industry}}
+                        </div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-color-primary btn-sm">Update!</button>
+                <a href="{% url 'profile' %}" class="ml-2 link-info">Cancel</a>
+            </form>
         </div>
-    </fieldset>
-    <button type="submit" class="btn btn-color-primary">Update!</button>
-    <a href="{% url 'profile' %}" class="ml-2">Cancel</a>
-</form>
+    </div>
+</div>
 {% endblock content%}

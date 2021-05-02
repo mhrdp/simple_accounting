@@ -1,63 +1,80 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 
 {% block title %}
 Edit User Profile
 {% endblock title %}
 
 {% block css %}
-<link rel="stylesheet" href="/../../static/user/profile.css">
+<link rel="stylesheet" href="/../../static/user/user.css">
 {% endblock css%}
 
-{% block content %}
-<a href="{% url 'edit' %}">
-    <button class="btn btn-color-primary">Company Profile</button>
-</a>
-<a>
-    <button class="btn content-current disabled">User Profile</button>
-</a>
+{% block messages %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock messages %}
 
-<form method="POST">
-    {% csrf_token %}
-    <span style="color:red">{{update_error}}</span>
-    <fieldset class="form-group mb-5">
-        <span style="color:red">{{first_time_msg}}</span>
-        <legend class="mb-4 subtitles border-bottom">
-            <div class="float-right mb-2">
-                <strong>User's Details</strong>
-            </div>
-        </legend>
-        <div class="row">
-            <div class="col-sm-3">
-                <p class="subtitles">Username: *</p>
-                {{user_form.username}}
-            </div>
-            <div class="col-sm-3">
-                <p class="subtitles">E-mail: *</p>
-                {{user_form.email}}
-            </div>
+{% block content %}
+<nav class="bg-top">
+    <div class="user-brand">
+        Detail Pengguna
+    </div>
+</nav>
+
+<div class="page-content">
+    <div class="w-100">
+        <div class="user-content">
+            <form method="POST">
+                {% csrf_token %}
+                <span style="color:red">{{update_error}}</span>
+                <fieldset class="form-group mb-5">
+                    <span style="color:red">{{first_time_msg}}</span>
+                    <legend class="mb-4 subtitles border-bottom">
+                        <div class="float-right mb-2">
+                            <strong>User's Details</strong>
+                        </div>
+                    </legend>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <p class="subtitles">Username: <span class="text-rd">*</span></p>
+                            {{user_form.username}}
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <p class="subtitles">E-mail: <span class="text-rd">*</span></p>
+                            {{user_form.email}}
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <fieldset class="form-group">
+                    <legend class="mb-4 subtitles border-bottom">
+                        <div class="float-right mb-2">
+                            <strong>Administrator's Data</strong>
+                        </div>
+                    </legend>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <p class="subtitles">First Name:</p>
+                            {{user_form.first_name}}
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <p class="subtitles">Last Name:</p>
+                            {{user_form.first_name}}
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-color-primary btn-sm">Update!</button>
+                    <a href="{% url 'profile' %}" class="ml-2 link-info">Cancel</a>
+                </class>
+            </form>
         </div>
-    </fieldset>
-    
-    <fieldset class="form-group">
-        <legend class="mb-4 subtitles border-bottom">
-            <div class="float-right mb-2">
-                <strong>Administrator's Data</strong>
-            </div>
-        </legend>
-        <div class="row">
-            <div class="col-sm-3">
-                <p class="subtitles">First Name:</p>
-                {{user_form.first_name}}
-            </div>
-            <div class="col-sm-3">
-                <p class="subtitles">Last Name:</p>
-                {{user_form.first_name}}
-            </div>
-        </div>
-    </fieldset>
-    <div class="mt-3">
-        <button type="submit" class="btn btn-color-primary">Update!</button>
-        <a href="{% url 'profile' %}" class="ml-2">Cancel</a>
-    </class>
-</form>
+    </div>
+</div>
 {% endblock content%}
