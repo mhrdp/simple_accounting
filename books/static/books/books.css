@@ -13,6 +13,7 @@
     height: 4px;
 }
 
+/* --------------- HEADER ----------------- */
 .books-brand {
     transition: margin 0.25s ease-out;
     -o-transition: margin 0.25s ease-out;
@@ -42,9 +43,13 @@
 
 .books-header-subtitles {
     text-align: right;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    padding: 0 !important;
+    margin-right: 40px;
+    font-size: small;
+}
 
+.books-header-subtitles > p {
+    margin-bottom: 2px;
 }
 
 .books-bg-top {
@@ -58,6 +63,7 @@
     border-bottom: 1px solid #000046;
 }
 
+/* ------------------- CONTAINER ------------------- */
 .books-chart-container {
     position: relative;
     width: 100%;
@@ -80,13 +86,18 @@
     /*box-shadow: 5px 5px 3px #222227;*/
 }
 
-.row > .col.no-padding, .row.no-padding {
-    padding: 0;
+.row.sum-container {
+    padding-bottom: 0 !important;
 }
 
 /* ------------------ BUTTONS -------------------- */
 .row > .col > a > button {
     border: 0;
+}
+
+.row.filter-container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 /* ------------------ FILTER FORM ------------------ */
@@ -113,6 +124,16 @@ form > .row > button > i {
     display: inline;
     border: 0 !important;
     border-radius: 0 !important;
+}
+
+/* --------------------- MISC --------------------- */
+.row > .col.no-padding, .row.no-padding {
+    padding: 0;
+}
+
+a.link {
+    color: rgb(79, 153, 202);
+    font-weight: 600;
 }
 
 @media(min-width: 768px){
@@ -168,9 +189,5 @@ form > .row > button > i {
 @media(max-width: 576px){
     .table-font-resize {
         font-size: 9px !important;
-    }
-
-    .row.no-padding {
-        padding-left: 15px;
     }
 }

@@ -1,4 +1,4 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 {% load humanize %}
 
 {% block title %}
@@ -7,6 +7,9 @@ Journal
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/journal.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
 
 {% block messages %}
@@ -22,116 +25,127 @@ Journal
 {% endblock messages %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12 col-md-12 mb-5">
-        <h4>Performance for the last 30 days:</h4>
-        <div class="books-canvas-container">
-            <canvas id="journalList"></canvas>
-        </div>
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Laporan Pembukuan</strong>
     </div>
-</div>
+</nav>
 
-<div class="row">
-    <div class=" col mb-3">
-        <a href="{% url 'list_of_income' %}">
-            <button class="btn btn-transparent-scd">Incomes List</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a href="{% url 'list_of_expense' %}">
-            <button class="btn btn-transparent-scd">Expenses List</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a>
-            <button class="btn content-current disabled">Journal</button>
-        </a>
-        <div class="vertical-ruler"></div>
-        <a href="{% url 'profit_loss' %}">
-            <button class="btn btn-transparent-scd">Profit Loss</button>
-        </a>
+<div class="page-content">
+    <div class="books-header">
+        <strong>Buku Jurnal</strong>
     </div>
-</div>
+    <div class="books-header-subtitles subtitles">
+        <p>Daftar lengkap data jurnal</p>
+    </div>
 
-<form method="GET" class="mb-4">
     <div class="row">
         <div class="col-12">
-            <h5>Filter:</h5>
+            <div class="books-chart-container">
+                <canvas id="journalList"></canvas>
+            </div>
         </div>
-
-        <div class="col-lg-3 col-5">
-            <label for="start_date" class="subtitles">Start Date</label><br/>
-            <input type="date" name="start_date" class="form-control form-control-sm">
-        </div>
-        <div class="col-lg-3 col-5">
-            <label for="end_date" class="subtitles">End Date</label><br/>
-            <input type="date" name="end_date" class="form-control form-control-sm">
-        </div>
-        <button class="btn btn-sm" style="display: inline"><i class="fas fa-filter"></i></button>
     </div>
-</form>
 
-<div class="row">    
-    <div class="col-12">
-        <a href="{% url 'journal_to_csv' %}?start_date={{start_date}}&end_date={{end_date}}">Export to CSV</a>
+    <div class="row filter-container">
+        <form method="GET">
+            <div class="row">
+                <div class="start-date col-4">
+                    <input type="text" id="flatpickr" name="start_date" placeholder="Tanggal Mulai" class="form-control form-control-sm">
+                </div>
+                <div class="col-4">
+                    <input type="text" id="flatpickr" name="end_date" placeholder="Tanggal Selesai" class="form-control form-control-sm">
+                </div>
+                <button class="btn btn-color-primary btn-sm">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col no-padding">
+                <a href="{% url 'register_expense' %}" title="Add New">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </a>
+
+                {% if start_date != None and start_date != '' and end_date != None and end_date != ''%}
+                    <a href="{% url 'journal_to_csv' %}?start_date={{start_date}}&end_date={{end_date}}" title="Export to CSV">
+                        <button class="btn btn-color-primary btn-sm">
+                            <i class="fas fa-file-export mr-1"></i>
+                        </button>
+                    </a>
+                {% else %}
+                    <a href="{% url 'journal_to_csv' %}" title="Export to CSV">
+                        <button class="btn btn-color-primary btn-sm">
+                            <i class="fas fa-file-export"></i>
+                        </button>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    <div class="table-responsive col-12">
-        <table class="table table-bordered table-hover table-dark table-stripped subtitles table-font-resize">
-            <thead>
-                <tr>
-                    <th scope="col" rowspan="2">No.</th>
-                    <th scope="col" rowspan="2">Date</th>
-                    <th scope="col" rowspan="1" colspan="2">Items</th>
-                    <th scope="col" rowspan="2" class="small-hid">Quantity</th>
-                    <th scope="col" rowspan="2" class="small-hid">Price</th>
-                    <th scope="col" rowspan="1" colspan="2">Type</th>
-                    <th scope="col" rowspan="2"></th>
-                </tr>
-                <tr>
-                    <th scope="col">Income</th>
-                    <th scope="col">Expense</th>
-                    <th scope="col">Debit</th>
-                    <th scope="col">Kredit</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for journal in paginate %}
+
+    <div class="row">    
+        <div class="table-responsive-xl col-12">
+            <table class="table table-bordered table-hover table-dark table-stripped subtitles table-font-resize">
+                <thead>
                     <tr>
-                        <td scope="row">{{forloop.counter}}</td>
-                        <td>{{journal.date_added}}</td>
-                        {% if journal.product_name == None %}
-                            <td></td>
-                        {% else %}
-                            <td>{{journal.product_name}}</td>
-                        {% endif %}
-                        <td>{{journal.item_name}}</td>
-                        <td class="small-hid">{{journal.quantity}}</td>
-                        <td class="small-hid">Rp. {{journal.price|intcomma}}</td>
-                        {% if journal.book_category == 'Debit' %}
-                            <td>Rp. {{journal.total|intcomma}}</td>
-                        {% endif %}
-                        <td></td>
-                        {% if journal.book_category == 'Kredit' %}
-                            <td>Rp. {{journal.total|intcomma}}</td>
-                        {% endif %}
-                        {% if journal.book_category == 'Debit' %}
-                            <td>
-                                <a href="{% url 'edit_income' journal.pk %}">
-                                    Edit
-                                </a>
-                            </td>
-                        {% else %}
-                            <td>
-                                <a href="{% url 'edit_expense' journal.pk %}">
-                                    Edit
-                                </a>
-                            </td>
-                        {% endif %}
+                        <th scope="col" rowspan="2">No.</th>
+                        <th scope="col" rowspan="2">Date</th>
+                        <th scope="col" rowspan="1" colspan="2">Items</th>
+                        <th scope="col" rowspan="2" class="small-hid">Quantity</th>
+                        <th scope="col" rowspan="2" class="small-hid">Price</th>
+                        <th scope="col" rowspan="1" colspan="2">Type</th>
+                        <th scope="col" rowspan="2"></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    <tr>
+                        <th scope="col">Income</th>
+                        <th scope="col">Expense</th>
+                        <th scope="col">Debit</th>
+                        <th scope="col">Kredit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for journal in paginate %}
+                        <tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td>{{journal.date_added}}</td>
+                            {% if journal.product_name == None %}
+                                <td></td>
+                            {% else %}
+                                <td>{{journal.product_name}}</td>
+                            {% endif %}
+                            <td>{{journal.item_name}}</td>
+                            <td class="small-hid">{{journal.quantity}}</td>
+                            <td class="small-hid">Rp. {{journal.price|intcomma}}</td>
+                            {% if journal.book_category == 'Debit' %}
+                                <td>Rp. {{journal.total|intcomma}}</td>
+                            {% endif %}
+                            <td></td>
+                            {% if journal.book_category == 'Kredit' %}
+                                <td>Rp. {{journal.total|intcomma}}</td>
+                            {% endif %}
+                            {% if journal.book_category == 'Debit' %}
+                                <td>
+                                    <a href="{% url 'edit_income' journal.pk %}">
+                                        Edit
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{% url 'edit_expense' journal.pk %}">
+                                        Edit
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-
 {% endblock content %}
 
 {% block paginator %}
@@ -208,6 +222,21 @@ Journal
 
 {% block js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    var datepicker = flatpickr("#flatpickr");
+</script>
+
+<script>
+    // To open the sub menu automatically when visiting this page
+    $(document).ready(function(){
+        $(".books-menu.sidebar-dropdown").addClass("active")
+        if($(".books-menu.sidebar-dropdown").hasClass("active")){
+            $(".books-menu.sidebar-dropdown > .sidebar-submenu").slideDown(200);
+        }
+    })
+</script>
 
 <script>
     var ctx = document.getElementById('journalList').getContext('2d');
@@ -248,6 +277,7 @@ Journal
             plugins: {
                 legend: {
                     labels: {
+                        color: "rgba(255, 255, 255, 0.700)",
                         font: {
                             size: 12,
                         },
@@ -259,16 +289,26 @@ Journal
                     //stacked: true,
                     beginAtZero: true,
                     ticks: {
+                        color: "rgba(255, 255, 255, 0.700)",
                         font: {
                             size: 10,
                         }
-                    }
+                    },
+                    grid: {
+                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        drawOnChartArea: false,
+                    },
                 },
                 x: {
                     ticks: {
+                        color: "rgba(255, 255, 255, 0.700)",
                         font: {
                             size: 10,
                         }
+                    },
+                    grid: {
+                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        drawOnChartArea: false,
                     }
                 }
             },

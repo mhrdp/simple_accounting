@@ -12,6 +12,10 @@
     <!-- Font Awesome Kit -->
     <script src="https://kit.fontawesome.com/bfc90f80b2.js" crossorigin="anonymous"></script>
 
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/../../static/base/sidebar.css">
     <link rel="stylesheet" href="/../../static/base/main_2.css">
 
@@ -44,6 +48,13 @@
                     <span class="user-status">
                         <a href="{% url 'profile' %}" class="link">Profile</a>
                     </span>
+                    <span class="user-status ml-1">
+                        {% if request.user.is_superuser %}
+                        <a href="/admin/" target="_blank" class="link-dgr">
+                        <strong>Admin Page</strong>
+                        </a>
+                        {% endif %}
+                    </span>
                 </div>
             </div>
             <!-- sidebar-header  -->
@@ -53,12 +64,12 @@
                         <span>ANALISIS</span>
                     </li>
                     <li>
-                        <a href="{% url 'user_dashboard' %}">
+                        <a href="{% url 'user_dashboard' %}" class="dashboard-current">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="sidebar-dropdown">
+                    <li class="books-menu sidebar-dropdown">
                         <a>
                             <i class="fas fa-journal-whills    "></i>
                             <span>Pembukuan</span>
@@ -66,16 +77,16 @@
                         <div class="sidebar-submenu">
                             <ul>
                                 <li>
-                                    <a href="{% url 'list_of_income' %}">Daftar Penghasilan</a>
+                                    <a href="{% url 'list_of_income' %}" class="income-current">Daftar Penghasilan</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'list_of_expense' %}">Daftar Pengeluaran</a>
+                                    <a href="{% url 'list_of_expense' %}" class="expense-current">Daftar Pengeluaran</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'journal' %}">Jurnal</a>
+                                    <a href="{% url 'journal' %}" class="journal-current">Jurnal</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'profit_loss' %}">Laba/Rugi</a>
+                                    <a href="{% url 'profit_loss' %}" class="profit-loss-current">Laba/Rugi</a>
                                 </li>
                             </ul>
                         </div>
@@ -84,19 +95,19 @@
                         <span>INPUT DATA</span>
                     </li>
                     <li>
-                        <a href="{% url 'register_product' %}">
+                        <a href="{% url 'register_product' %}" class="register-product-current">
                             <i class="fa fa-shopping-cart"></i>
                             <span>Products</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'register_income' %}">
+                        <a href="{% url 'register_income' %}" class="register-income-current">
                             <i class="fas fa-arrow-left"></i>
                             <span>Penghasilan</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'register_expense' %}">
+                        <a href="{% url 'register_expense' %}" class="register-expense-current">
                             <i class="fas fa-arrow-right"></i>
                             <span>Pengeluaran</span>
                         </a>
@@ -146,13 +157,14 @@
       </a>
     </div>
   </nav>
-
-    {% block messages %}{% endblock messages %}
-    
-    {% block register_product %}{%endblock register_product%}
-    {% block register_income %}{% endblock register_income %}
-    {% block register_expense %}{% endblock register_expense %}
-    {% block filter_income %}{% endblock filter_income %}
+    <div class="row">
+        {% block messages %}{% endblock messages %}
+        
+        {% block register_product %}{%endblock register_product%}
+        {% block register_income %}{% endblock register_income %}
+        {% block register_expense %}{% endblock register_expense %}
+        {% block filter_income %}{% endblock filter_income %}
+    </div>
 
     {% block content %}{% endblock content %}
     {% block paginator %}{% endblock paginator %}

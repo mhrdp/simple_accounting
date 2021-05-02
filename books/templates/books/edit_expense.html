@@ -1,63 +1,159 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 
 {% block title %}
 Edit {{item_name}}
 {% endblock title %}
 
 {% block css %}
-<link href="/../../static/books/input.css" rel="stylesheet">
+<link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/books_edit_expense.css" rel="stylesheet">
 {% endblock css%}
 
+{% block register_expense %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock register_expense%}
+
 {% block content %}
-<form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}" novalidate>
-    {% csrf_token %}
-    <div class="col">
-        <h4 class="subtitles">Edit Expense Data</h4>
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Edit Data Pembukuan</strong>
     </div>
+</nav>
 
-    <div class="col-sm-3 subtitles">
-        <p class="red-dgr"><strong>*required field</strong></p>
-        
-        <label for="date_added" class="subtitles">Date Added</label>
-        {{expense_form.date_added}}
-    </div>
+<div class="page-content">
+    <div class="w-100 h-100">
+        <div class="expense-form-container">
+            <div class="form-header">
+                <h5>Input Data Pengeluaran</h5>
+                <hr />
+            </div>
+            <form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}">
+                {% csrf_token %}
+                <div class="subtitles">
+                    <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
 
-    <div class="col-md-5 subtitles">
-        <label for="item_name">Item Name: <span class="red-dgr">*</span></label>
-        {{expense_form.item_name}}
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td class="cell-1">
+                                    <label for="date_added">Date Added<span class="text-rd">*</span></label>
+                                </td>
+                                <td>
+                                    <div class="width-60">
+                                        {{expense_form.date_added}}
+                                    </div>
+                                </td>
+                            </tr>
 
-        <label for="category">Category: <span class="red-dgr">*</span></label>
-        {{expense_form.category}}
-        
-        <div id="subCategoryHidden">
-            <label for="sub_category">Sub Category: <span class="red-dgr">*</span></label>
-            {{expense_form.sub_category}}
+                            <tr>
+                                <td class="cell-1">
+                                    <label for="item_name">Item Name: <span class="text-rd">*</span></label>
+                                </td>
+                                <td>
+                                    <div class="width-60">
+                                        {{expense_form.item_name}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="w-100 table-border-top mt-3">
+                        </tbody>
+                            <tr class="table-padding-top">
+                                <td class="cell-2">
+                                    <label for="category">Category: <span class="text-rd">*</span></label>
+                                    <div>
+                                        {{expense_form.category}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display:none" id="subCategoryHidden" class="table-padding-left">
+                                        <label for="sub_category">Sub Category: <span class="text-rd">*</span></label>
+                                        <div class="width-55">
+                                        {{expense_form.sub_category}}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="w-100 table-border-bottom table-border-top mt-3 mb-3">
+                        <tbody>
+                            <tr class="table-padding-bottom table-padding-top">
+                                <td class="cell-1">
+                                    <label for="quantity">Quantity: <span class="text-rd">*</span></label>
+                                    <div class="width-40">
+                                        {{expense_form.quantity}}
+                                    </div>
+                                </td>
+                                <td class="table-padding-left">
+                                    <label for="price">Price: <span class="text-rd">*</span></label>
+                                    <div class="width-60">
+                                        {{expense_form.price}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td class="cell-1">
+                                    <label for="notes">Notes: (optional)</label>
+                                </td>
+                                <td>
+                                    {{expense_form.notes}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <h5>Total:</h5>
+                                </td>
+                                <td>
+                                    <h4 id="totalPrice">0</h4>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td></td>
+                                <td class="float-right">
+                                    <button type="submit" class="btn btn-color-primary btn-sm">Submit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
         </div>
-
-        <label for="quantity">Quantity: <span class="red-dgr">*</span></label>
-        {{expense_form.quantity}}
-
-        <label for="price">Price: <span class="red-dgr">*</span></label>
-        {{expense_form.price}}
-
-        <label for="notes">Notes: (optional)</label>
-        {{expense_form.notes}}
     </div>
-    
-    <div class="col-sm-4">
-        <h5 class="subtitles">Total:</h5>
-        <h4 id="totalPrice" class="subtitles">0</h4>
-    </div>
-
-    <div class="col">
-        <button type="submit" class="btn btn-color-primary mt-2">Submit</button>
-        <a href="{% url 'list_of_expense' %}" class="ml-2">Cancel</a>
-    </div>
-</form>
+</div>
 {% endblock content %}
 
 {% block js %}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script>
+    // To open the sub menu automatically when visiting this page
+    $(document).ready(function(){
+        $(".books-menu.sidebar-dropdown").addClass("active")
+        if($(".books-menu.sidebar-dropdown").hasClass("active")){
+            $(".books-menu.sidebar-dropdown > .sidebar-submenu").slideDown(200);
+        }
+    })
+</script>
+
 <script>
     $(document).ready(function(){
         // Ajax for dependent dropdown of category field and sub category field

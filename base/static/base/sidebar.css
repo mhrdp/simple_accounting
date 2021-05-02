@@ -228,6 +228,7 @@
   .sidebar-wrapper .sidebar-header .user-info .user-status {
     font-size: 11px;
     margin-top: 4px;
+    display: inline-block;
   }
   
   .sidebar-wrapper .sidebar-header .user-info .user-status i {

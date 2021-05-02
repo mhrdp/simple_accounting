@@ -1,0 +1,118 @@
+a.expense-current {
+    color: #16c7ff !important;
+    text-shadow:0px 0px 10px rgba(22, 199, 255, 0.5);
+}
+
+.expense-form-container {
+    background-color: #29323c;
+    max-width: 60%;
+    padding: 30px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.336);
+    border-radius: 20px;
+}
+
+.table-border-top {
+    border-top: 1px solid rgba(255, 255, 255, 0.336);
+}
+
+.table-border-bottom {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.336);
+}
+
+tr.table-padding-bottom > td {
+    padding-bottom: 10px;
+}
+
+.table-padding-left {
+    padding-left: 10px;
+}
+
+tr.table-padding-top > td {
+    padding-top: 10px;
+}
+
+tr > td.cell-1 {
+    width: 25%;
+}
+
+tr > td.cell-2 {
+    width: 30%;
+}
+
+.width-20 {
+    width: 20%;
+}
+
+.width-40 {
+    width: 40%;
+}
+
+.width-50 {
+    width: 50%;
+}
+
+.width-55 {
+    width: 55%;
+}
+
+.width-60 {
+    width: 60%
+}
+
+textarea.form-control {
+    height: 100px !important;
+    width: 60% !important;
+}
+
+hr {
+    background-color: rgba(255, 255, 255, 0.493);
+}
+
+@media(max-width: 1176px){
+    label {
+        font-size: 12px;
+    }
+
+    .expense-form-container {
+        max-width:70%;
+    }
+}
+
+@media(max-width: 968px){
+    .expense-form-container {
+        max-width:80%;
+    }
+
+    label {
+        font-size: 10px;
+    }
+
+    tr > td.cell-2 {
+        width: 50%;
+    }
+
+    .width-20 {
+        width: 100%;
+    }
+    
+    .width-40 {
+        width: 100%;
+    }
+    
+    .width-50 {
+        width: 100%;
+    }
+    
+    .width-55 {
+        width: 100%;
+    }
+    
+    .width-60 {
+        width: 100%
+    }
+
+    textarea.form-control {
+        width: 100% !important;
+    }
+}

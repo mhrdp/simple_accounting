@@ -1,26 +1,24 @@
-div.sub-container-bg-light{
-    /*background: rgb(36, 40, 65);*/
-    background: #2d383c;
-    padding: 10px;
-    border-radius: 10px;
-    min-height: 50vh;
-    opacity: .75;
+@media(max-width: 1176px){
+    div > ul.profile-ul {
+        padding-left: 0 !important;
+    }
+
+    ul.profile-ul > li > a,
+    table > tbody > tr > td > p {
+        font-size: small;
+    }
+
+    .cell {
+        width: 30%;
+    }
 }
 
-.profile-container-sm-dark {
-    min-height: 60%;
-    width: 100%;
-    border-radius: 10px;
-    padding: 5px;
-    background: #2d383c;
-    opacity: .8;
-}
+@media(max-width: 768px){
+    .user-content > .row > .col-12.col-md-3 {
+        border-right: 0;
+    }
 
-.profile-container-sm-dgr {
-    height: 60%;
-    min-width: 100%;
-    border-radius: 10px;
-    padding: 5px;
-    background: #c6282b;
-    opacity: .8;
+    div > ul.profile-ul > li {
+        text-align: center;
+    }
 }

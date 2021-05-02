@@ -1,11 +1,12 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 
 {% block title %}
 Add Expenses
 {% endblock title %}
 
 {% block css %}
-<link href="/../../static/books/input.css" rel="stylesheet">
+<link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/register_expense.css" rel="stylesheet">
 {% endblock css%}
 
 {% block register_expense %}
@@ -21,64 +22,125 @@ Add Expenses
 {% endblock register_expense%}
 
 {% block content %}
-<div class="mb-3">
-    <a href="{% url 'register_income' %}">
-        <button class="btn btn-transparent-scd">Income Input</button>
-    </a>
-    <div class="vertical-ruler"></div>
-    <a>
-        <button class="btn content-current disabled">Expense Input</button>
-    </a>
-    <div class="vertical-ruler"></div>
-    <a href="{% url 'register_product' %}">
-        <button class="btn btn-transparent-scd">Register Products</button>
-    </a>
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Pendaftaran Data</strong>
+    </div>
+</nav>
+
+<div class="page-content">
+    <div class="w-100 h-100">
+        <div class="expense-form-container">
+            <div class="form-header">
+                <h5>Input Data Pengeluaran</h5>
+                <hr />
+            </div>
+            <form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}">
+                {% csrf_token %}
+                <div class="subtitles">
+                    <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
+
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td class="cell-1">
+                                    <label for="date_added">Date Added<span class="text-rd">*</span></label>
+                                </td>
+                                <td>
+                                    <div class="width-60">
+                                        {{expense_form.date_added}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="cell-1">
+                                    <label for="item_name">Item Name: <span class="text-rd">*</span></label>
+                                </td>
+                                <td>
+                                    <div class="width-60">
+                                        {{expense_form.item_name}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="w-100 table-border-top mt-3">
+                        </tbody>
+                            <tr class="table-padding-top">
+                                <td class="cell-2">
+                                    <label for="category">Category: <span class="text-rd">*</span></label>
+                                    <div>
+                                        {{expense_form.category}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display:none" id="subCategoryHidden" class="table-padding-left">
+                                        <label for="sub_category">Sub Category: <span class="text-rd">*</span></label>
+                                        <div class="width-55">
+                                        {{expense_form.sub_category}}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="w-100 table-border-bottom table-border-top mt-3 mb-3">
+                        <tbody>
+                            <tr class="table-padding-bottom table-padding-top">
+                                <td class="cell-1">
+                                    <label for="quantity">Quantity: <span class="text-rd">*</span></label>
+                                    <div class="width-40">
+                                        {{expense_form.quantity}}
+                                    </div>
+                                </td>
+                                <td class="table-padding-left">
+                                    <label for="price">Price: <span class="text-rd">*</span></label>
+                                    <div class="width-60">
+                                        {{expense_form.price}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td class="cell-1">
+                                    <label for="notes">Notes: (optional)</label>
+                                </td>
+                                <td>
+                                    {{expense_form.notes}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <h5>Total:</h5>
+                                </td>
+                                <td>
+                                    <h4 id="totalPrice">0</h4>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button type="submit" class="btn btn-color-primary float-right">Submit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
-<form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}" novalidate>
-    {% csrf_token %}
-    <div class="col">
-        <h4>Input your expense here</h4>
-    </div>
 
-    <div class="col-sm-3 subtitles">
-        <p class="red-dgr"><strong>*required field</strong></p>
-        
-        <label for="date_added" class="subtitles">Date Added</label>
-        {{expense_form.date_added}}
-    </div>
-
-    <div class="col-md-5 subtitles">
-        <label for="item_name">Item Name: <span class="red-dgr">*</span></label>
-        {{expense_form.item_name}}
-
-        <label for="category">Category: <span class="red-dgr">*</span></label>
-        {{expense_form.category}}
-        
-        <div style="display:none" id="subCategoryHidden">
-            <label for="sub_category">Sub Category: <span class="red-dgr">*</span></label>
-            {{expense_form.sub_category}}
-        </div>
-
-        <label for="quantity">Quantity: <span class="red-dgr">*</span></label>
-        {{expense_form.quantity}}
-
-        <label for="price">Price: <span class="red-dgr">*</span></label>
-        {{expense_form.price}}
-
-        <label for="notes">Notes: (optional)</label>
-        {{expense_form.notes}}
-    </div>
-    
-    <div class="col-sm-4">
-        <h5 class="subtitles">Total:</h5>
-        <h4 id="totalPrice" class="subtitles">0</h4>
-    </div>
-
-    <div class="col">
-        <button type="submit" class="btn btn-color-primary mt-2">Submit</button>
-    </div>
-</form>
 {% endblock content%}
 
 {% block js %}
@@ -112,7 +174,7 @@ Add Expenses
 <script>
     // Auto sum in real time
     $(function(){
-        $("#id_quantity, #id_price").keyup(function(){
+        $("#id_quantity, #id_price").change(function(){
             var qty = parseFloat($("#id_quantity").val()) || 0;
             var prc = parseFloat($("#id_price").val()) || 0;
 
