@@ -5,10 +5,6 @@
     Vislane Business
 {% endblock title %}
 
-{% block css %}
-<link href="/../../static/user/password.css" rel="stylesheet">
-{% endblock css %}
-
 {% block navbar %}
 <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarNav">
     <span class="navbar-toggler-icon"></span>
@@ -73,32 +69,65 @@
 {% endblock modal %}
 
 {% block content %}
-<div class="w-100">
-    <div class="password-content mt-3">
-        <div class="row">
-            <div class="col-12">
-                <div class="subtitles text-center">
-                    <i class="fas fa-user-circle fa-6x"></i>
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-lg-4 mt-4">
+            <div class="card card-height">
+                <div class="card-header card-quote-title">
+                    <h4 class="subtitles">Organize Business Better</h4>
                 </div>
-                <form method="POST">
-                    {% csrf_token %}
-                    <fieldset class="form-group">
-                        <legend class="border-bottom mb-4">
-                            <div class="subtitles text-center">
-                                <h2><strong>Login</strong></h2>
-                            </div>
-                        </legend>
-                        <p class="subtitles">Username/Email</p>
-                        {{form.username}}
-                    
-                        <p class="subtitles">Password</p>
-                        {{form.password}}
-                    </fieldset>
-                    <button class="btn btn-color-primary mr-3" type="submit">Login</button>
-                </form>
+                <div class="d-flex card-body align-items-center card-quote-body">
+                    <blockqoute class="blockquote mb-0">
+                        <p class="subtitles">You <b>CAN'T</b> Work With <b>DIRTY</b> Folks</b></p>
+                        <p class="subtitles">You <b>CAN'T</b> Grow With <b>DIRTY</b> Books</p>
+                        <footer class="blockquote-footer quote-footer">
+                            A random wise man
+                        </footer>
+                    </blockquote>
+                </div>
             </div>
         </div>
+        <div class="col-lg-3 mt-4">
+            <div class="card-height">
+                <h2 class="text-center">Login</h2>
+                <p class="subtitles">Please Log In With Your Account Here</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <p class="subtitles">Username/Email</p>
+                        {{form.username}}
+                    </div>
+                    <div class="form-group">
+                        <p class="subtitles">Password</p>
+                        {{form.password}}
+                    </div>
+                    <button class="btn btn-primary">Login</button>
+                    <a href="{% url 'reset_password' %}" class="ml-3">
+                        Forgot your password?
+                    </a>
+                </form>
+            </div>
+        </div>  
     </div>
 </div>
 
+<div id="quotes"></div>
+
 {% endblock content%}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        var loginQuotes = new Array();
+        loginQuotes[0] = "<h2>Test1</h2>";
+        loginQuotes[1] = "<h2>Test2</h2>";
+        loginQuotes[2] = "<h2>Test3</h2>";
+        loginQuotes[3] = "<h2>Test4</h2>";
+
+        var randomPicker = Math.floor(Math.random()*loginQuotes.length);
+        $("#quotes").html(loginQuotes[randomPicker]);
+    })
+</script>
+
+{% endblock js%}

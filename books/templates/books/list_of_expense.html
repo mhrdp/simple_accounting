@@ -124,7 +124,7 @@
                             <td class="small-hid">Rp. {{expense.price|intcomma}}</td>
                             <td>Rp. {{expense.total|intcomma}}</td>
                             <td class="small-hid">{{expense.notes}}</td>
-                            <td><a href="{% url 'edit_expense' expense.pk %}">Edit</a>
+                            <td><a href="{% url 'edit_expense' expense.pk %}" class="link-info">Edit</a>
                         </tr>
                     {% endfor %}
                 </table>

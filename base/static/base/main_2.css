@@ -207,6 +207,18 @@ a.link-dgr {
 a.link-dgr:hover {
     color: #dc3545;
 }
+
+a.link-info {
+    color: rgb(79, 153, 202);
+    font-weight: 600;
+
+    transition: color .25s ease-in-out;
+}
+
+a.link-info:hover {
+    color:rgb(64, 96, 165);
+    text-decoration: none;
+}
 /* End of text */
 
 /* Alignment */

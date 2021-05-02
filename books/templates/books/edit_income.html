@@ -1,57 +1,142 @@
-{% extends 'base/base_all.html' %}
+{% extends 'base/base_test.html' %}
 
 {% block title %}
 Edit {{product_name}}
 {% endblock title %}
 
 {% block css %}
-<link href="/../../static/books/input.css" rel="stylesheet">
+<link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/books_edit_income.css" rel="stylesheet">
 {% endblock css%}
 
+{% block messages %}
+{% if messages %}
+    {% for msg in messages %}
+        {% if msg.tags %}
+            <div class="col-md-5 msg-{{msg.tags}}-container">
+                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock messages %}
+
 {% block content %}
-<form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}" novalidate>
-    {% csrf_token %}
-    <div class="col">
-        <h4 class="subtitles">Edit Income Data</h4>
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Edit Data Pembukuan</strong>
     </div>
+</nav>
 
-    <div class="col-sm-3 subtitles">
-        <p class="red-dgr"><strong>*required field</strong></p>
-        
-        <label for="date_added" class="subtitles">Date Added</label>
-        {{income_form.date_added}}
+<div class="page-content">
+    <div class="w-100">
+        <div class="income-form-container">
+            <div class="form-header">
+                <h5>Edit Data Pemasukan</h5>
+                <hr />
+            </div>
+            <form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}">
+                {% csrf_token %}
+                <div class="subtitles">
+                    <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
+                    <table>
+                        <tbody>
+                            <tr class="table-padding-bottom">
+                                <td class="cell-1">
+                                    <label for="date_added">Date Added: <span class="text-rd">*</span></label>
+                                </td>
+                                <td>
+                                    <div class="width-40">
+                                        {{income_form.date_added}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-1">
+                                    <label for="product_name">Product Name: <span class="text-rd">*</span></label>
+                                </td>
+                                <td>
+                                    <div class="width-40">
+                                    {{income_form.product_name}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr><td><br/></td></tr>
+
+                            <tr class="table-padding-top table-border-top">
+                                <td class="cell-1">
+                                    <label for="quantity">Quantity: <span class="text-rd">*</span></label>
+                                    <div class="qty width-60">
+                                        {{income_form.quantity}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <label for="price">Price: <span class="text-rd">*</span></label>
+                                    <div class="width-50">
+                                        {{income_form.price}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-padding-bottom table-border-bottom">
+                                <td></td>
+                                <td>
+                                    <label for="additional_price">Additional Price: (optional)</label>
+                                    <div class="width-50">
+                                        {{income_form.additional_price}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr><td><br/></td></tr>
+
+                            <tr class="table-padding-bottom">
+                                <td class="cell-1">
+                                    <label for="notes">Notes: (optional)</label>
+                                </td>
+                                <td>
+                                    <div style="max-height: 50%">
+                                        {{income_form.notes}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-1">
+                                    <h5 class="subtitles">Total:</h5>
+                                </td>
+                                <td>
+                                    <h4 id="totalPrice" class="subtitles">0</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="float-right">
+                                    <a href="{% url 'list_of_income' %}" class="link-info mr-2">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-color-primary btn-sm">Submit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="col-md-5 subtitles">
-        <label for="product_name">Item Name: <span class="red-dgr">*</span></label>
-        {{income_form.product_name}}
-
-        <label for="quantity">Quantity: <span class="red-dgr">*</span></label>
-        {{income_form.quantity}}
-
-        <label for="price">Price: <span class="red-dgr">*</span></label>
-        {{income_form.price}}
-
-        <label for="additional_price">Additional Price: (optional)</label>
-        {{income_form.additional_price}}
-
-        <label for="notes">Notes: (optional)</label>
-        {{income_form.notes}}
-    </div>
-    
-    <div class="col-sm-4">
-        <h5 class="subtitles">Total:</h5>
-        <h4 id="totalPrice" class="subtitles">0</h4>
-    </div>
-
-    <div class="col">
-        <button type="submit" class="btn btn-color-primary mt-2">Submit</button>
-        <a href="{% url 'list_of_income' %}" class="ml-2">Cancel</a>
-    </div>
-</form>
+</div>
 {% endblock content %}
 
 {% block js %}
+<script>
+    // To open the sub menu automatically when visiting this page
+    $(document).ready(function(){
+        $(".books-menu.sidebar-dropdown").addClass("active")
+        if($(".books-menu.sidebar-dropdown").hasClass("active")){
+            $(".books-menu.sidebar-dropdown > .sidebar-submenu").slideDown(200);
+        }
+    })
+</script>
+
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     $(document).ready(function(){
