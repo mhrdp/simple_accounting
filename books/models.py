@@ -54,20 +54,20 @@ class Journal(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
+    industry = models.ForeignKey(Industry, on_delete=models.DO_NOTHING)
 
     # Income Specific
-    product_name = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=False)
+    product_name = models.ForeignKey(Product, on_delete=models.DO_NOTHING, null=True, blank=False)
     additional_price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, default=0)
 
     # Expense Specific
     item_name = models.CharField(max_length=155, blank=False)
     category = models.ForeignKey(
-        ExpenseCategory, on_delete=models.SET_NULL,
+        ExpenseCategory, on_delete=models.DO_NOTHING,
         blank=False, null=True
         )
     sub_category = models.ForeignKey(
-        SubCategory, on_delete=models.SET_NULL,
+        SubCategory, on_delete=models.DO_NOTHING,
         blank=False, null=True
         )
 

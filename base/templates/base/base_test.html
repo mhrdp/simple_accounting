@@ -140,35 +140,35 @@
                     </li>
                 </ul>
             </div>
-      <!-- sidebar-menu  -->
-    </div>
-    <!-- sidebar-content  -->
-    <div class="sidebar-footer">
-      <a href="#">
-      </a>
-      <a href="#">
-      </a>
-      <a href="#">
-      </a>
-      <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
-        <i class="fa fa-power-off"></i>
-        <span class="badge badge-pill badge-danger notification">!
-        </span>
-      </a>
-    </div>
-  </nav>
-    <div class="row">
-        {% block messages %}{% endblock messages %}
-        
-        {% block register_product %}{%endblock register_product%}
-        {% block register_income %}{% endblock register_income %}
-        {% block register_expense %}{% endblock register_expense %}
-        {% block filter_income %}{% endblock filter_income %}
-    </div>
+            <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a href="#">
+                </a>
+                <a href="#">
+                </a>
+                <a href="#">
+                </a>
+                <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
+                    <i class="fa fa-power-off"></i>
+                    <span class="badge badge-pill badge-danger notification">!
+                    </span>
+                </a>
+            </div>
+        </nav>
+        <div class="row">
+            {% block messages %}{% endblock messages %}
+            
+            {% block register_product %}{%endblock register_product%}
+            {% block register_income %}{% endblock register_income %}
+            {% block register_expense %}{% endblock register_expense %}
+            {% block filter_income %}{% endblock filter_income %}
+        </div>
 
-    {% block content %}{% endblock content %}
-    {% block paginator %}{% endblock paginator %}
-</div>
+        {% block content %}{% endblock content %}
+        {% block paginator %}{% endblock paginator %}
+    </div>
 
 
       
@@ -209,6 +209,7 @@
             });
 
             // Close sidebar on click on body element
+            /*
             $("html, body").click(function(e){
                 if($(".page-wrapper").hasClass("toggled")){
                     e.stopPropagation();
@@ -220,7 +221,7 @@
                 } else {
                     return false;
                 }
-            })
+            })*/
         });
     </script>
   </body>

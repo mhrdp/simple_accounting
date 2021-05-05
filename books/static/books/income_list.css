@@ -42,7 +42,7 @@ a.income-current {
 @media(max-width: 576px){
     .row > .col.no-padding {
         padding-left: 15px;
-        padding-top: 5px;
+        padding-top: 0px;
         margin-left: 15px;
     }
 
