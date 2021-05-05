@@ -124,7 +124,14 @@
                             <td class="small-hid">Rp. {{expense.price|intcomma}}</td>
                             <td>Rp. {{expense.total|intcomma}}</td>
                             <td class="small-hid">{{expense.notes}}</td>
-                            <td><a href="{% url 'edit_expense' expense.pk %}" class="link-info">Edit</a>
+                            <td>
+                                <a href="{% url 'edit_expense' expense.pk %}" class="link-info" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="#" class="link-dgr ml-2" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

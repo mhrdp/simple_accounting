@@ -865,6 +865,30 @@ def edit_income(request, pk):
     return render(request, 'books/edit_income.html', content)
 
 @login_required
+def delete_income(request, pk):
+    user_obj = get_object_or_404(Journal, pk=pk)
+    if not request.user == user_obj.username:
+        messages.error(request, 'You\'re not authorized to use this page')
+        return redirect('list_of_income')
+    else:
+        income_obj = Journal.objects.get(pk=pk)
+        if income_obj:
+            income_obj.delete()
+            return redirect('list_of_income')
+
+    content = {
+        'del_income': income_obj,
+    }
+    return render(request, 'books/delete_income.html', content)
+
+@login_required
+def delete_expense(request):
+    content = {
+
+    }
+    return render(request, 'books/delete_expense.html', content)
+
+@login_required
 def edit_expense(request, pk):
     # Call ajax for dependent dropdown
     categories = request.GET.get('category')

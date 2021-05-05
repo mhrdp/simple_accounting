@@ -10,9 +10,11 @@ urlpatterns = [
 
     path('books/expense/list/', books_views.list_of_expense, name='list_of_expense'),
     path(r'books/expense/edit/<int:pk>/', books_views.edit_expense, name='edit_expense'),
+    path(r'books/expense/delete/<int:pk>/', books_views.delete_expense, name='delete_expense'),
 
     path('books/income/list/', books_views.list_of_income, name='list_of_income'),
     path(r'books/income/edit/<int:pk>/', books_views.edit_income, name='edit_income'),
+    path(r'books/income/delete/<int:pk>/', books_views.delete_income, name='delete_income'),
 
     path('books/journal/', books_views.journal, name='journal'),
     path('books/profit-loss/', books_views.profit_loss, name='profit_loss'),
