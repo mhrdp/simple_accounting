@@ -23,6 +23,13 @@ class SubCategory(models.Model):
 # End of dependent dropdown model
 
 class Product(models.Model):
+    goods = 'Goods'
+    services = 'Services'
+    PRODUCT_TYPES = [
+        (goods, 'Barang'),
+        (services, 'Jasa'),
+    ]
+
     username = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, null=True
@@ -30,6 +37,12 @@ class Product(models.Model):
 
     product_name = models.CharField(max_length=155, null=False, blank=False)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    types = models.CharField(
+        choices=PRODUCT_TYPES,
+        default=goods,
+        max_length=50,
+        null=True, blank=False,
+    )
 
     def __str__(self):
         return self.product_name

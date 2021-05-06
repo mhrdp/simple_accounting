@@ -835,10 +835,10 @@ def list_of_product(request):
     if keyword_search != None and keyword_search != '':
         product_obj = Product.objects.filter(
             username=request.user.pk,
-            product_name__contain=keyword_search,
-        ).order_by{
+            product_name__icontains=keyword_search,
+        ).order_by(
             '-product_name'
-        }
+        )
     else:
         product_obj = Product.objects.filter(
             username=request.user.pk,
@@ -851,9 +851,9 @@ def list_of_product(request):
     paginator = Paginator(product_obj, 10)
     try:
         product = paginator.page(page)
-    except:
+    except PageNotAnInteger:
         product = paginator.page(1)
-    except:
+    except EmptyPage:
         product = paginator.page(paginator.num_pages)
     
     # Make the paginator only show three pages before and after current page
@@ -873,6 +873,26 @@ def list_of_product(request):
     return render(request, 'books/list_of_product.html', content)
 
 @login_required
+def edit_product(request, pk):
+    user_obj = get_object_or_404(Product, pk=pk)
+    if not request.user == user_obj.username:
+        messages.error(request, 'Anda tidak memiliki izin untuk mengakses halaman ini.')
+        return redirect('list_of_product')
+    else:
+        product_obj = get_object_or_404(Product, pk=pk)
+        product_form = ProductForm(request.POST or None, instance=product_obj)
+        if product_form.is_valid():
+            form_save = product_form.save(commit=False)
+            form_save.save()
+
+            messages.success(request, 'Data berhasil diperbaharui!')
+            return redirect('list_of_product')
+    content = {
+        'product_form': product_form,
+    }
+    return render(request, 'books/edit_product.html', content)
+
+@login_required
 def edit_income(request, pk):
     # Call ajax for autofill price field
     product_name = request.GET.get('product_name')
@@ -883,10 +903,12 @@ def edit_income(request, pk):
     # Views for edit
     user_obj = get_object_or_404(Journal, pk=pk)
     if not request.user == user_obj.username:
-        messages.error(request, 'You\'re not authorized to see this page')
+        messages.error(request, 'Anda tidak memiliki izin untuk mengakses halaman ini.')
         return redirect('list_of_income')
     else:
         obj = get_object_or_404(Journal, pk=pk)
+
+        # request.user is needed here to filter products' list based on username, see IncomeForm in forms.py for detail
         income_form = IncomeForm(request.user, request.POST or None, instance=obj)
         if income_form.is_valid():
             income_form_save = income_form.save(commit=False)
@@ -897,7 +919,7 @@ def edit_income(request, pk):
             income_form_save.total = (income_form_save.price*income_form_save.quantity)+income_form_save.additional_price
 
             income_form_save.save()
-            messages.success(request, 'Your data has been updated!')
+            messages.success(request, 'Data berhasil diperbaharui')
             return redirect('list_of_income')
 
     content = {
@@ -908,10 +930,28 @@ def edit_income(request, pk):
     return render(request, 'books/edit_income.html', content)
 
 @login_required
+def delete_product(request, pk):
+    user_obj = get_object_or_404(Product, pk=pk)
+    if not request.user == user_obj.username:
+        messages.error(request, 'Anda tidak memiliki izin untuk mengakses halaman ini')
+        return redirect('list_of_product')
+    else:
+        product_obj = Product.objects.get(pk=pk)
+        if product_obj:
+            product_obj.delete()
+            return redirect('list_of_product')
+
+    content = {
+        'del_product': product_obj,
+    }
+
+    return render(request, 'books/delete_product.html', content)
+
+@login_required
 def delete_income(request, pk):
     user_obj = get_object_or_404(Journal, pk=pk)
     if not request.user == user_obj.username:
-        messages.error(request, 'You\'re not authorized to use this page')
+        messages.error(request, 'Anda tidak memiliki izin untuk mengakses halaman ini')
         return redirect('list_of_income')
     else:
         income_obj = Journal.objects.get(pk=pk)
@@ -928,7 +968,7 @@ def delete_income(request, pk):
 def delete_expense(request, pk):
     user_obj = get_object_or_404(Journal, pk=pk)
     if not request.user == user_obj.username:
-        messages.error(request, 'You\'re not authorized to use this page')
+        messages.error(request, 'Anda tidak memiliki izin untuk mengakses halaman ini')
         return redirect('list_of_expense')
     else:
         expense_obj = Journal.objects.get(pk=pk)
@@ -952,7 +992,7 @@ def edit_expense(request, pk):
     # Views for edit
     user_obj = get_object_or_404(Journal, pk=pk)
     if not request.user == user_obj.username:
-        messages.error(request, 'You\'re not authorized to see this page')
+        messages.error(request, 'Anda tidak memiliki izin untuk mengakses halaman ini')
         return redirect('list_of_expense')
     else:
         obj = get_object_or_404(Journal, pk=pk)
@@ -963,7 +1003,7 @@ def edit_expense(request, pk):
             save_expense_form.total = save_expense_form.quantity * save_expense_form.price
             save_expense_form.save()
 
-            messages.success(request, 'Your data has been updated!')
+            messages.success(request, 'Data berhasil di perbaharui')
             return redirect('list_of_expense')
 
     content = {

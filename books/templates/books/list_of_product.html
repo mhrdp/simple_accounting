@@ -1,14 +1,197 @@
 {% extends 'base/base_test.html' %}
+{% load humanize %}
 
 {% block title %}
 Daftar Produk
 {% endblock title %}
 
 {% block css %}
-<link href="/../../static/books/books.css">
+<link href="/../../static/books/books.css" rel="stylesheet">
+<link href="/../../static/books/product_list.css" rel="stylesheet">
 {% endblock css %}
 
 {% block content %}
+<nav class="books-bg-top">
+    <div class="books-brand">
+        <strong>Input Data</strong>
+    </div>
+</nav>
+
+<!-- include for deletion's confirmation Modal -->
+<!-- The include function must be in the same block -->
+{% include 'books/delete_product.html' %}
+
 <div class="page-content">
+    <div class="books-header">
+        <strong>Buku Pengeluaran</strong>
+    </div>
+    <div class="books-header-subtitles subtitles mb-5">
+        <p>Daftar lengkap data pengeluaran</p>
+    </div>
+    <div class="row filter-container">
+        <div class="w-100">
+            {% if messages %}
+                {% for msg in messages %}
+                    {% if msg.tags %}
+                        <div class="col-12 msg-{{msg.tags}}-container">
+                            <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <form method="GET" class="w-90">
+            <div class="row">
+                <div class="col-5 col-md-3">
+                    <input type="text" id="flatpickr" name="product_search" placeholder="Search..." class="form-control form-control-sm">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col no-padding">
+                <a href="{% url 'register_product' %}" title="Add New">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive-xl">
+        <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
+            <thead class="thead-dark">
+                <tr>
+                    <th>No.</th>
+                    <th>Nama Produk</th>
+                    <th>Jenis</th>
+                    <th>Harga</th>
+                    <th><th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in paginate %}
+                <tr>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{product.product_name}}</td>
+                    <td>{{product.types}}</td>
+                    <td>Rp.{{product.price|intcomma}}</td>
+                    <td>
+                        <a href="{% url 'edit_product' product.pk %}" class="link-info" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'delete_product' product.pk %}" class="link-dgr ml-2 confirm-delete" title="Delete" data-toggle="modal" data-target="#deleteProduct">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock content %}
+
+{% block paginator %}
+<div class="col-12" style="padding-bottom: 10px;">
+{% if paginate.has_other_pages %}
+    <ul class="pagination justify-content-end">
+        {% if start_date and end_date %}
+            {% if paginate.has_previous %}
+                <li class="page-item">
+                    <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
+
+            <!-- Split the displayed pages by the closest one page before and after-->
+            {% for i in page_range %}
+                {% if paginate.number == i %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginate.has_next %}
+                <li class="page-item">
+                    <a href="?start_date={{start_date}}&end_date={{end_date}}&page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+        {% else %}
+            {% if paginate.has_previous %}
+                <li class="page-item">
+                    <a href="?page={{paginate.previous_page_number}}" class="page-link">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
+
+            <!-- Split the displayed pages by the closest one page before and after-->
+            {% for i in page_range %}
+                {% if paginate.number == i %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a href="?page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginate.has_next %}
+                <li class="page-item">
+                    <a href="?page={{paginate.next_page_number}}" class="page-link">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+        {% endif %}
+    </ul>
+{% endif %}
+</div>
+{% endblock paginator %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $(".books-menu.sidebar-dropdown").addClass("active")
+        if($(".books-menu.sidebar-dropdown").hasClass("active")){
+            $(".books-menu.sidebar-dropdown > .sidebar-submenu").slideDown(200);
+        }
+    })
+</script>
+
+<script>
+    $(document).ready(function(){
+        // jQuery to call Modal pop up for deletion of the data
+        $(document).on("click", ".confirm-delete", function(){
+            $("#deleteProduct").attr("caller-id", $(this).attr("id"));
+        });
+
+        // jQuery for buttons' click event inside the Modal
+        $(document).on("click", "#confirmDeleteProduct", function(){
+            var caller = $("#confirmDeleteProduct").closest(".modal").attr("caller-id");
+            window.location = $("#".concat(caller)).attr("href");
+        })
+    })
+</script>
+{% endblock js %}

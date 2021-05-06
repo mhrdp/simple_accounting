@@ -9,6 +9,8 @@ urlpatterns = [
     path('input/expense/new/', books_views.register_expense, name='register_expense'),
 
     path('books/product/list/', books_views.list_of_product, name='list_of_product'),
+    path(r'books/product/edit/<int:pk>/', books_views.edit_product, name='edit_product'),
+    path(r'books/product/delete/<int:pk>/', books_views.delete_product, name='delete_product'),
     
     path('books/expense/list/', books_views.list_of_expense, name='list_of_expense'),
     path(r'books/expense/edit/<int:pk>/', books_views.edit_expense, name='edit_expense'),
