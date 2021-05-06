@@ -19,6 +19,9 @@
     -ms-word-wrap: break-word;
 }
 
+.notification-container {
+}
+
 /* --------------- HEADER ----------------- */
 .books-brand {
     transition: margin 0.25s ease-out;

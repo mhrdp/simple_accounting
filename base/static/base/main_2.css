@@ -115,6 +115,7 @@ a {
     background-color: aquamarine;
     border-radius: 25px;
     opacity: .7;
+    margin: 0 auto;
 }
 
 .msg-success {
@@ -126,6 +127,7 @@ a {
     background-color: tomato;
     border-radius: 25px;
     opacity: .7;
+    margin: 0 auto
 }
 
 .msg-error {

@@ -10,18 +10,6 @@ Add Income
 <link href="/../../static/books/register_income.css" rel="stylesheet">
 {% endblock css%}
 
-{% block register_income %}
-{% if messages %}
-    {% for msg in messages %}
-        {% if msg.tags %}
-            <div class="col-md-5 msg-{{msg.tags}}-container">
-                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-{% endblock register_income %}
-
 {% block content %}
 <nav class="books-bg-top">
     <div class="books-brand">
@@ -31,6 +19,17 @@ Add Income
 
 <div class="page-content">
     <div class="w-100 h-100">
+        <div>
+            {% if messages %}
+                {% for msg in messages %}
+                    {% if msg.tags %}
+                        <div class="col-8 msg-{{msg.tags}}-container">
+                            <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="income-form-container">
             <div class="form-header">
                 <h5>Input Data Pemasukan</h5>

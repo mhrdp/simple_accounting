@@ -69,7 +69,7 @@
             {% if messages %}
                 {% for msg in messages %}
                     {% if msg.tags %}
-                        <div class="col-md-5 msg-{{msg.tags}}-container">
+                        <div class="col-12 msg-{{msg.tags}}-container">
                             <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
                         </div>
                     {% endif %}
@@ -124,7 +124,13 @@
                         <tr>
                             <td scope="row" class="align-middle">{{forloop.counter}}</td>
                             <td class="align-middle">{{income.date_added}}</td>
-                            <td class="align-middle">{{income.product_name}}</td>
+                            <td class="align-middle">
+                                {% if not income.product_name == 'None' %}
+                                    {{income.product_name}}
+                                {% else %}
+                                    <i>deleted object</i>
+                                {% endif %}
+                            </td>
                             <td class="small-hid align-middle">{{income.quantity}}</td>
                             <td class="small-hid align-middle">Rp. {{income.price|intcomma}}</td>
                             <td class="small-hid align-middle">Rp. {{income.additional_price|intcomma}}</td>

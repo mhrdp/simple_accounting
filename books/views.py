@@ -830,6 +830,49 @@ def list_of_expense(request):
     return render(request, 'books/list_of_expense.html', content)
 
 @login_required
+def list_of_product(request):
+    keyword_search = request.GET.get('product_search')
+    if keyword_search != None and keyword_search != '':
+        product_obj = Product.objects.filter(
+            username=request.user.pk,
+            product_name__contain=keyword_search,
+        ).order_by{
+            '-product_name'
+        }
+    else:
+        product_obj = Product.objects.filter(
+            username=request.user.pk,
+        ).order_by(
+            '-product_name'
+        )
+    
+    # Pagination, to split the page
+    page = request.GET.get('page', 1)
+    paginator = Paginator(product_obj, 10)
+    try:
+        product = paginator.page(page)
+    except:
+        product = paginator.page(1)
+    except:
+        product = paginator.page(paginator.num_pages)
+    
+    # Make the paginator only show three pages before and after current page
+    index = product.number-1 # -1 because index start from 0
+    max_index = len(paginator.page_range)
+    start_index = index-3 if index>=3 else 0
+    end_index = index+3 if index<=max_index-3 else max_index
+
+    # Make a list to be looped with for loop
+    page_range = list(paginator.page_range)[start_index:end_index]
+    content = {
+        'paginate': product,
+        'page_range': page_range,
+
+        'keyword_search': keyword_search,
+    }
+    return render(request, 'books/list_of_product.html', content)
+
+@login_required
 def edit_income(request, pk):
     # Call ajax for autofill price field
     product_name = request.GET.get('product_name')
@@ -882,9 +925,19 @@ def delete_income(request, pk):
     return render(request, 'books/delete_income.html', content)
 
 @login_required
-def delete_expense(request):
-    content = {
+def delete_expense(request, pk):
+    user_obj = get_object_or_404(Journal, pk=pk)
+    if not request.user == user_obj.username:
+        messages.error(request, 'You\'re not authorized to use this page')
+        return redirect('list_of_expense')
+    else:
+        expense_obj = Journal.objects.get(pk=pk)
+        if expense_obj:
+            expense_obj.delete()
+            return redirect('list_of_expense')
 
+    content = {
+        'del_expense': expense_obj,
     }
     return render(request, 'books/delete_expense.html', content)
 
@@ -1198,6 +1251,7 @@ def journal(request):
     except EmptyPage:
         journal = paginator.page(paginator.num_pages)
     
+    # Make the paginator only show three pages before and after current page
     index = journal.number-1 # -1 because index start from 0
     max_index = len(paginator.page_range)
     start_index = index-3 if index>=3 else 0
