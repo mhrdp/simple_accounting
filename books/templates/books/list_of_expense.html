@@ -12,24 +12,16 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
 
-{% block messages %}
-{% if messages %}
-    {% for msg in messages %}
-        {% if msg.tags %}
-            <div class="col-md-5 msg-{{msg.tags}}-container">
-                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-{% endblock messages %}
-
 {% block content %}
 <nav class="books-bg-top">
     <div class="books-brand">
         <strong>Laporan Pembukuan</strong>
     </div>
 </nav>
+
+<!-- include for deletion's confirmation Modal -->
+<!-- The include function must be in the same block -->
+{% include 'books/delete_expense.html' %}
 
 <div class="page-content">
     <div class="books-header">
@@ -73,17 +65,30 @@
     </div>
 
     <div class="row filter-container">
-        <form method="GET">
+        <div>
+            {% if messages %}
+                {% for msg in messages %}
+                    {% if msg.tags %}
+                        <div class="col-12 msg-{{msg.tags}}-container">
+                            <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <form method="GET" class="w-90">
             <div class="row">
-                <div class="start-date col-4">
+                <div class="start-date col-5 col-md-3">
                     <input type="text" id="flatpickr" name="start_date" placeholder="Tanggal Mulai" class="form-control form-control-sm">
                 </div>
-                <div class="col-4">
+                <div class="col-5 col-md-3">
                     <input type="text" id="flatpickr" name="end_date" placeholder="Tanggal Selesai" class="form-control form-control-sm">
                 </div>
-                <button class="btn btn-color-primary btn-sm">
-                    <i class="fas fa-filter"></i>
-                </button>
+                <div class="col-2">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
             </div>
         </form>
         <div class="row">
@@ -124,7 +129,14 @@
                             <td class="small-hid">Rp. {{expense.price|intcomma}}</td>
                             <td>Rp. {{expense.total|intcomma}}</td>
                             <td class="small-hid">{{expense.notes}}</td>
-                            <td><a href="{% url 'edit_expense' expense.pk %}" class="link-info">Edit</a>
+                            <td>
+                                <a href="{% url 'edit_expense' expense.pk %}" class="link-info" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'delete_expense' expense.pk %}" class="link-dgr ml-2 confirm-delete" title="Delete" data-toggle="modal" data-target="#deleteExpense" id="expenseDelete-{{expense.pk}}">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -213,6 +225,21 @@
 
 <script>
     var datepicker = flatpickr("#flatpickr");
+</script>
+
+<script>
+$(document).ready(function(){
+    // jQuery to call Modal pop up for deletion of the data
+    $(document).on("click", ".confirm-delete", function(){
+        $("#deleteExpense").attr("caller-id", $(this).attr("id"));
+    })
+
+    // jQuery for buttons' click event inside the Modal
+    $(document).on("click", "#confirmDeleteExpense", function(){
+        var caller = $("#confirmDeleteExpense").closest(".modal").attr("caller-id");
+        window.location = $("#".concat(caller)).attr("href")
+    })
+})
 </script>
 
 <script>

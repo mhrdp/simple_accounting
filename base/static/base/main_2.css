@@ -115,6 +115,7 @@ a {
     background-color: aquamarine;
     border-radius: 25px;
     opacity: .7;
+    margin: 0 auto;
 }
 
 .msg-success {
@@ -126,6 +127,7 @@ a {
     background-color: tomato;
     border-radius: 25px;
     opacity: .7;
+    margin: 0 auto
 }
 
 .msg-error {
@@ -148,7 +150,7 @@ a {
 
 /* Text */
 h1, h2, h3, h4, h5, h6 {
-    color: #fff !important;
+    color: #fff;
 }
 
 .error-notification {

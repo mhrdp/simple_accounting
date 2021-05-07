@@ -77,6 +77,9 @@
                         <div class="sidebar-submenu">
                             <ul>
                                 <li>
+                                    <a href="{% url 'list_of_product' %}" class="product-current">Daftar Produk</a>
+                                </li>
+                                <li>
                                     <a href="{% url 'list_of_income' %}" class="income-current">Daftar Penghasilan</a>
                                 </li>
                                 <li>
@@ -140,35 +143,58 @@
                     </li>
                 </ul>
             </div>
-      <!-- sidebar-menu  -->
-    </div>
-    <!-- sidebar-content  -->
-    <div class="sidebar-footer">
-      <a href="#">
-      </a>
-      <a href="#">
-      </a>
-      <a href="#">
-      </a>
-      <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
-        <i class="fa fa-power-off"></i>
-        <span class="badge badge-pill badge-danger notification">!
-        </span>
-      </a>
-    </div>
-  </nav>
-    <div class="row">
-        {% block messages %}{% endblock messages %}
-        
-        {% block register_product %}{%endblock register_product%}
-        {% block register_income %}{% endblock register_income %}
-        {% block register_expense %}{% endblock register_expense %}
-        {% block filter_income %}{% endblock filter_income %}
-    </div>
+            <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a href="#">
+                </a>
+                <a href="#">
+                </a>
+                <a href="#">
+                </a>
+                <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
+                    <i class="fa fa-power-off"></i>
+                    <span class="badge badge-pill badge-danger notification">!
+                    </span>
+                </a>
+            </div>
+        </nav>
+        <div class="row">
+            {% block messages %}{% endblock messages %}
+            
+            {% block register_product %}{%endblock register_product%}
+            {% block register_income %}{% endblock register_income %}
+            {% block register_expense %}{% endblock register_expense %}
+            {% block filter_income %}{% endblock filter_income %}
+        </div>
 
-    {% block content %}{% endblock content %}
-    {% block paginator %}{% endblock paginator %}
-</div>
+        <!-- Notification Modal -->
+        <div class="modal fade" id="notificationPopup" tabindex="-1" role="dialog" aria-labelledby="expenseModalTitle" aria-hidden="true" caller-id="">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="expenseModalTitle">Konfirmasi Penghapusan</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Apakah Anda yakin akan menghapus data ini?</p>
+                        <p><span class="text-rd">PERHATIAN: </span>Data yang anda hapus akan hilang secara permanen!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="confirmDeleteExpense">Confirm</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Notification Modal -->
+
+        {% block content %}{% endblock content %}
+        {% block paginator %}{% endblock paginator %}
+    </div>
 
 
       
@@ -207,20 +233,22 @@
                 $(".page-wrapper").toggleClass("toggled");
                 $(".page-wrapper").addClass("shows");
             });
+        });
+    </script>
 
-            // Close sidebar on click on body element
-            $("html, body").click(function(e){
-                if($(".page-wrapper").hasClass("toggled")){
-                    e.stopPropagation();
-                    $(".page-wrapper").removeClass("shows");
-                } else if($(".page-wrapper").hasClass("shows")) {
-                    e.stopPropagation();
-                    $(".page-wrapper").addClass("toggled");
-                    $(".page-wrapper").removeClass("shows");
-                } else {
-                    return false;
-                }
-            })
+    <script>
+        // Close sidebar on click on body element
+        $(document).on("click", ".page-content", function(e){
+            if($(".page-wrapper").hasClass("toggled")){
+                e.stopPropagation();
+                $(".page-wrapper").removeClass("shows");
+            } else if($(".page-wrapper").hasClass("shows")){
+                e.stopPropagation();
+                $(".page-wrapper").removeClass("shows");
+                $(".page-wrapper").toggleClass("toggled");
+            } else {
+                return false;
+            }
         });
     </script>
   </body>

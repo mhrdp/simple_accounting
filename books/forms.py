@@ -129,6 +129,13 @@ class ExpenseForm(forms.ModelForm):
             )
 
 class ProductForm(forms.ModelForm):
+    goods = 'Goods'
+    services = 'Services'
+    PRODUCT_TYPES = [
+        (goods, 'Barang'),
+        (services, 'Jasa'),
+    ]
+
     product_name = forms.CharField(
         widget=forms.TextInput(
             attrs={'class':'form-control'}
@@ -139,6 +146,14 @@ class ProductForm(forms.ModelForm):
             attrs={'class':'form-control'}
         )
     )
+
+    types = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={'class':'form-control'}
+        ),
+        choices=PRODUCT_TYPES,
+    )
+
     class Meta:
         model = Product
         fields = {
