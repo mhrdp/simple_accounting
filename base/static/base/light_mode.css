@@ -1,0 +1,100 @@
+/* ------------ Text -------------- */
+body.light-mode .subtitles, body.light-mode h1, body.light-mode h2,
+body.light-mode h3, body.light-mode h4, body.light-mode h5,
+body.light-mode h6 {
+    color: #121212;
+}
+
+body.light-mode .text-gr {
+    color: #0f9b16 !important;
+}
+
+body.light-mode .text-rd {
+    color: #c00f2c !important;
+}
+
+body.light-mode table.subtitles,
+div.dashboard-chart-container h4 {
+    color: #fff;
+}
+
+
+/* ------------ Container boxes -------------- */
+body.light-mode .income-panel, body.light-mode .expense-panel,
+body.light-mode .profit-panel, body.light-mode .general-panel {
+    background-color: #fff;
+    border: 1px solid #485563;
+}
+
+body.light-mode .dashboard-chart-container {
+    background: -webkit-linear-gradient(to right, #b0bec5, #485563);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #b0bec5, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #b0bec5, #485563);
+    background: -moz-linear-gradient(to right, #b0bec5, #485563);
+}
+
+body.light-mode .container-primary {
+    background-color: #90dbf1;
+}
+
+body.light-mode .container-primary-sub {
+    background-color: #6976ec;
+}
+
+/* ----------- Link/Button ------------- */
+body.light-mode .row .container-primary > h5 > a {
+    color: rgb(17, 34, 131);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+body.light-mode .row .container-primary > h5 > a > i {
+    color: rgba(20, 41, 110, 0.904);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+body.light-mode .row .container-primary > h5 > a:hover,
+body.light-mode .row .container-primary > h5 > a:hover > i {
+    color:rgb(84, 111, 146);
+}
+
+body.light-mode .row > .anal-margin > .container-primary-sub > h5 > a {
+    color:rgb(53, 235, 204);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+body.light-mode .row > .anal-margin > .container-primary-sub > h5 > a > i {
+    color: rgb(53, 235, 204);
+    transition: color .25s ease-in-out;
+    -o-transition: color .25s ease-in-out;
+    -moz-transition: color .25s ease-in-out;
+    -webkit-transition: color .25s ease-in-out;
+}
+
+body.light-mode .row > .anal-margin > .container-primary-sub > h5 > a:hover,
+body.light-mode .row > .anal-margin > .container-primary-sub > h5 > a:hover > i {
+    color:rgb(67, 177, 158);
+}
+
+/* ---------- Various Page Headers -------------- */
+body.light-mode .dashboard-bg-top {
+    background: #ffffff;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #ffffff, #ffffff);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #ffffff, #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -o-linear-gradient(to right, #ffffff, #ffffff);
+    background: -moz-linear-gradient(to right, #ffffff, #ffffff);
+    border-bottom: 1px solid #4e4e4e;
+    box-shadow: 0 2px 5px #444444;
+}
+
+body.light-mode .dashboard-brand {
+    color: #000;
+}
