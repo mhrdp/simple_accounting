@@ -43,11 +43,6 @@ def company_profile(request):
     profile = get_object_or_404(UserModel, username=request.user)
 
     description_empty = CompanyDetail.objects.filter(username=request.user.pk)
-    test = UserPreferences.objects.filter(
-        username=request.user.pk
-    ).values(
-        'light_dark_mode'
-    )
 
     if not description_empty:
         return redirect('edit')
@@ -57,7 +52,6 @@ def company_profile(request):
     content = {
         'profile': profile,
         'company_description': company_description,
-        'test': test[0]['light_dark_mode'],
     }
     return render(request, 'user/profile.html', content)
 
