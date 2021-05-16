@@ -1141,13 +1141,6 @@ def user_dashboard(request):
         profit_percentage = 0
         format_profit_percentage = '{:.2f}'.format(profit_percentage)
 
-    # Activate User Config
-    ui_config = UserPreferences.objects.filter(
-        username=request.user.pk
-    ).values(
-        'light_dark_mode'
-    )
-
     content = {
         'month': months[get_current_month],
 
@@ -1165,8 +1158,6 @@ def user_dashboard(request):
 
         'nett_profit': nett_profit,
         'profit_percentage': format_profit_percentage,
-
-        'ui_config': ui_config[0]['light_dark_mode'],
     }
     return render(request, 'books/user_dashboard.html', content)
 
