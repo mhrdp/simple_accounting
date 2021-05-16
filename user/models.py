@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -27,6 +28,23 @@ class CompanyDetail(models.Model):
 
     def __str__(self):
         return self.company_name
+
+# This is unnecessary for now but let's keep it for future use
+class UserPreferences(models.Model):
+    DARK = 'Dark'
+    LIGHT = 'Light'
+    UI_MODE = [
+        (DARK, 'Dark'),
+        (LIGHT, 'Light'),
+    ]
+    username = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    light_dark_mode = models.CharField(
+        max_length=55, default=DARK,
+        choices=UI_MODE)
+
+    def __str__(self):
+        return f'{self.username}\'s Preferences'
     
 
 #class CompanyIndustry(models.Model):

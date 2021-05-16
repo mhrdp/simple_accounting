@@ -6,6 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Hide html tag before all elements and css applied -->
+    <!-- For when things already fully loaded, see <style> by the end of <body> -->
+    <style>
+        html {
+            visibility: hidden;
+            opacity: 0;
+        }
+    </style>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -18,8 +27,11 @@
 
     <link rel="stylesheet" href="/../../static/base/sidebar.css">
     <link rel="stylesheet" href="/../../static/base/main_2.css">
+    <link rel="stylesheet" href="/../../static/base/light_mode.css">
 
     {% block css %}{% endblock css %}
+
+    
   </head>
   <body>
     <div class="page-wrapper chiller-theme toggled">
@@ -151,13 +163,27 @@
                 </a>
                 <a href="#">
                 </a>
-                <a href="#">
-                </a>
-                <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
-                    <i class="fa fa-power-off"></i>
-                    <span class="badge badge-pill badge-danger notification">!
-                    </span>
-                </a>
+                
+                <div class="btn-group dropup">
+                    <button class="btn" title="Settings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <h6 class="dropdown-header">Settings</h6>
+                        <a class="dropdown-item" id="toggleLightDarkMode">
+                            <span id="toggleMode">
+                                Toggle Light Mode
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn">
+                        <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
+                            <i class="fa fa-power-off"></i>
+                        </a>
+                    </button>
+                </div>
             </div>
         </nav>
         <div class="row">
@@ -208,7 +234,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     {% block js %}{% endblock js %}
-
+    <!-- jQuery's Scripts -->
     <script>
         jQuery(function ($) {
             $(".sidebar-dropdown > a").click(function() {
@@ -234,9 +260,7 @@
                 $(".page-wrapper").addClass("shows");
             });
         });
-    </script>
 
-    <script>
         // Close sidebar on click on body element
         $(document).on("click", ".page-content", function(e){
             if($(".page-wrapper").hasClass("toggled")){
@@ -251,5 +275,45 @@
             }
         });
     </script>
+
+    <!-- Vanilla JS Scripts -->
+    <script>
+        // toggle light mode
+        document.addEventListener("DOMContentLoaded", function(event){
+            const link = document.getElementById("toggleLightDarkMode");
+            const currentTheme = localStorage.getItem("theme");
+
+            document.getElementById("toggleMode").innerHTML="Light Mode: OFF";
+
+            if (currentTheme == "light"){
+                document.getElementById("toggleMode").innerHTML="Light Mode: ON";
+                document.body.classList.add("light-mode");
+            }
+
+            link.addEventListener("click", function() {
+                document.body.classList.toggle("light-mode");
+                let theme = "dark";
+
+                const containLightTheme = document.body.classList.contains("light-mode");
+                if (containLightTheme){
+                    theme = "light";
+                    document.getElementById("toggleMode").innerHTML="Light Mode: ON";
+                    localStorage.setItem("theme", theme);
+                } else {
+                    theme = "dark";
+                    document.getElementById("toggleMode").innerHTML="Light Mode: OFF";
+                    localStorage.setItem("theme", theme);
+                }
+            });
+        })
+    </script>
+
+    <!-- Show it back after the elements and css fully loaded -->
+    <style>
+        html {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    </style>
   </body>
 </html>

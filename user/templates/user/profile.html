@@ -18,6 +18,15 @@
 
 <div class="page-content">
     <div class="w-100">
+        {% if messages %}
+            {% for msg in messages %}
+                {% if msg.tags %}
+                    <div class="col-md-5 msg-{{msg.tags}}-container">
+                        <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         <div class="user-content text-center">
             <h3 class="mb-4">{{company_description.company_name}}</h3>
 

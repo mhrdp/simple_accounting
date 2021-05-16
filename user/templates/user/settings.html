@@ -1,7 +1,7 @@
 {% extends 'base/base_test.html' %}
 
 {% block title %}
-Edit Company Profile
+Settings
 {% endblock title %}
 
 {% block css %}
@@ -33,32 +33,13 @@ Edit Company Profile
                     <span style="color:red">{{first_time_msg}}</span>
                     <legend class="mb-4 subtitles border-bottom">
                         <div class="float-right mb-2">
-                            <strong>Company's Details</strong>
+                            <strong>Settings</strong>
                         </div>
                     </legend>
                     <div class="row">
                         <div class="col-6">
-                            <p class="subtitles">Company's Name:</p>
-                            {{form_description.company_name}}
-                        </div>
-                        <div class="col-12">
-                            <p class="subtitles mt-2">Company's Description:</p>
-                            {{form_description.company_description}}
-                        </div>
-                    </div>
-                </fieldset>
-                
-                <fieldset class="form-group">
-                    <legend class="mb-4 subtitles border-bottom">
-                        <div class="float-right mb-2">
-                            <strong>Industry</strong>
-                        </div>
-                    </legend>
-                        
-                    <p class="subtitles">Industry:</p>
-                    <div class="row">
-                        <div class="col-6">
-                            {{form_description.industry}}
+                            <p class="subtitles">UI Mode:</p>
+                            {{user_preferences_form.light_dark_mode}}
                         </div>
                     </div>
                 </fieldset>

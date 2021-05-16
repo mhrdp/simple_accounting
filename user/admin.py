@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import UserExtended, CompanyDetail, Industry
+from .models import UserExtended, CompanyDetail, Industry, UserPreferences
 
 # Register your models here.
 
@@ -9,3 +9,4 @@ admin.site.register(UserExtended, UserAdmin)
 admin.site.register(CompanyDetail)
 # admin.site.register(CompanyIndustry)
 admin.site.register(Industry)
+admin.site.register(UserPreferences)

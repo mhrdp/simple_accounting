@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django import forms
 
 from .models import (
-    CompanyDetail, UserExtended, Industry
+    CompanyDetail, UserExtended, Industry, UserPreferences
 )
 
 class LoginForm(AuthenticationForm):
@@ -118,6 +118,26 @@ class UserForm(forms.ModelForm):
         model = UserExtended
         fields = [
             'username', 'email', 'first_name', 'last_name'
+        ]
+
+class UserPreferencesDB(forms.ModelForm):
+    DARK = 'Dark'
+    LIGHT = 'Light'
+    UI_MODE = [
+        (DARK, 'Dark'),
+        (LIGHT, 'Light'),
+    ]
+
+    light_dark_mode = forms.ChoiceField(
+        choices=UI_MODE,
+        widget=forms.Select(
+            attrs={'class':'form-control form-control-sm'}
+        )
+    )
+    class Meta:
+        model = UserPreferences
+        fields = [
+            'light_dark_mode'
         ]
 
 #class CompanyIndustryForm(forms.ModelForm):
