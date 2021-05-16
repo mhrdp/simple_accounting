@@ -31,24 +31,26 @@
 
 <div class="page-content">
     <div class="books-header">
-        <strong>Buku Penghasilan</strong>
+        <h4><strong>Buku Penghasilan</strong></h4>
     </div>
     <div class="books-header-subtitles subtitles mb-5">
         <p>Daftar lengkap data penghasilan</p>
     </div>
 
     <div class="row filter-container">
-        <form method="GET">
+        <form method="GET" class="w-90">
             <div class="row">
-                <div class="start-date col-4">
+                <div class="start-date col-5 col-md-3">
                     <input type="text" id="flatpickr" name="start_date" placeholder="Tanggal Mulai" class="form-control form-control-sm">
                 </div>
-                <div class="col-4">
+                <div class="col-5 col-md-3">
                     <input type="text" id="flatpickr" name="end_date" placeholder="Tanggal Selesai" class="form-control form-control-sm">
                 </div>
-                <button class="btn btn-color-primary btn-sm">
-                    <i class="fas fa-filter"></i>
-                </button>
+                <div class="col-2">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
             </div>
         </form>
         <div class="row">

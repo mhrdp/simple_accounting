@@ -16,7 +16,8 @@ from django.core.paginator import (
 from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory, Journal
 from .utils import render_to_pdf
-from user.models import CompanyDetail
+
+from user.models import CompanyDetail, UserPreferences
 
 from decimal import Decimal
 
@@ -121,9 +122,6 @@ def income_filter_by_date(request):
         'paginate': income_paginate,
         'page_range': page_range,
         'sum_of_filtered_income': sum_of_filtered_income,
-
-        'start_date': start_date,
-        'end_date': end_date,
     }
     return render(request, 'books/filtered_income.html', content)
 
@@ -1143,6 +1141,13 @@ def user_dashboard(request):
         profit_percentage = 0
         format_profit_percentage = '{:.2f}'.format(profit_percentage)
 
+    # Activate User Config
+    ui_config = UserPreferences.objects.filter(
+        username=request.user.pk
+    ).values(
+        'light_dark_mode'
+    )
+
     content = {
         'month': months[get_current_month],
 
@@ -1158,10 +1163,10 @@ def user_dashboard(request):
         'income_in_running_month': income_in_running_month,
         'income_in_running_month_per_day': income_in_running_month_per_day,
 
-        
-        # 'nett_profit_2': nett_profit_2,
         'nett_profit': nett_profit,
         'profit_percentage': format_profit_percentage,
+
+        'ui_config': ui_config[0]['light_dark_mode'],
     }
     return render(request, 'books/user_dashboard.html', content)
 
@@ -1179,7 +1184,7 @@ def journal(request):
                 username=request.user.pk,
                 date_added__range=(start_date, end_date),
             ).order_by(
-                'date_added',
+                '-date_added',
             )
             
             expense_total = Journal.objects.filter(
@@ -1233,7 +1238,7 @@ def journal(request):
     else:
         journal_all = Journal.objects.filter(
             username=request.user.pk
-        ).order_by('date_added')
+        ).order_by('-date_added')
 
         expense_total = Journal.objects.filter(
             username=request.user.pk,

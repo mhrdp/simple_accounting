@@ -9,15 +9,7 @@ Edit User Profile
 {% endblock css%}
 
 {% block messages %}
-{% if messages %}
-    {% for msg in messages %}
-        {% if msg.tags %}
-            <div class="col-md-5 msg-{{msg.tags}}-container">
-                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
+
 {% endblock messages %}
 
 {% block content %}
@@ -29,6 +21,15 @@ Edit User Profile
 
 <div class="page-content">
     <div class="w-100">
+        {% if messages %}
+            {% for msg in messages %}
+                {% if msg.tags %}
+                    <div class="col-md-5 msg-{{msg.tags}}-container">
+                        <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         <div class="user-content">
             <form method="POST">
                 {% csrf_token %}
@@ -65,7 +66,7 @@ Edit User Profile
                         </div>
                         <div class="col-12 col-sm-6">
                             <p class="subtitles">Last Name:</p>
-                            {{user_form.first_name}}
+                            {{user_form.last_name}}
                         </div>
                     </div>
                 </fieldset>

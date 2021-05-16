@@ -105,19 +105,22 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive-xl">
-                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Items</th>
-                        <th scope="col" class="small-hid">Category</th>
-                        <th scope="col" class="small-hid">Sub-category</th>
-                        <th scope="col" class="small-hid">Qty</th>
-                        <th scope="col" class="small-hid">Price</th>
-                        <th scope="col">Total</th>
-                        <th scope="col" class="small-hid">Notes</th>
-                        <th></th>
-                    </tr>
+                <table class="table table-bordered table-dark table-striped subtitles table-font-resize">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Items</th>
+                            <th scope="col" class="small-hid">Category</th>
+                            <th scope="col" class="small-hid">Sub-category</th>
+                            <th scope="col" class="small-hid">Qty</th>
+                            <th scope="col" class="small-hid">Price</th>
+                            <th scope="col">Total</th>
+                            <th scope="col" class="small-hid">Notes</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {% for expense in paginate %}
                         <tr>
                             <td scope="row">{{forloop.counter}}</td>
@@ -139,6 +142,7 @@
                             </td>
                         </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -279,7 +283,7 @@ $(document).ready(function(){
                 legend: {
                     display: true,
                     labels : {
-                        color: "rgba(255, 255, 255, 0.700)"
+                        color: "#9e9e9e"
                     }
                 },
             },
@@ -288,25 +292,25 @@ $(document).ready(function(){
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
+                        color: "#9e9e9e",
                         font: {
                             size: 10,
                         },
                     },
                     grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        borderColor: "#9e9e9e",
                         drawOnChartArea: false,
                     }
                 },
                 x: {
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
+                        color: "#9e9e9e",
                         font: {
                             size: 10,
                         }
                     },
                     grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        borderColor: "#9e9e9e",
                         drawOnChartArea: false,
                     }
                 },

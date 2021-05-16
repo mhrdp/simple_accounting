@@ -163,14 +163,27 @@
                 </a>
                 <a href="#">
                 </a>
-                <a class="link-info" id="toggleLightDarkMode" title="Toggle Dark/Light Mode">
-                    <i class="fas fa-adjust"></i>
-                </a>
-                <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
-                    <i class="fa fa-power-off"></i>
-                    <span class="badge badge-pill badge-danger notification">!
-                    </span>
-                </a>
+                
+                <div class="btn-group dropup">
+                    <button class="btn" title="Settings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <h6 class="dropdown-header">Settings</h6>
+                        <a class="dropdown-item" id="toggleLightDarkMode">
+                            <span id="toggleMode">
+                                Toggle Light Mode
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn">
+                        <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
+                            <i class="fa fa-power-off"></i>
+                        </a>
+                    </button>
+                </div>
             </div>
         </nav>
         <div class="row">
@@ -221,7 +234,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     {% block js %}{% endblock js %}
-
+    <!-- jQuery's Scripts -->
     <script>
         jQuery(function ($) {
             $(".sidebar-dropdown > a").click(function() {
@@ -247,9 +260,7 @@
                 $(".page-wrapper").addClass("shows");
             });
         });
-    </script>
 
-    <script>
         // Close sidebar on click on body element
         $(document).on("click", ".page-content", function(e){
             if($(".page-wrapper").hasClass("toggled")){
@@ -265,13 +276,17 @@
         });
     </script>
 
+    <!-- Vanilla JS Scripts -->
     <script>
         // toggle light mode
         document.addEventListener("DOMContentLoaded", function(event){
             const link = document.getElementById("toggleLightDarkMode");
             const currentTheme = localStorage.getItem("theme");
 
+            document.getElementById("toggleMode").innerHTML="Light Mode: OFF";
+
             if (currentTheme == "light"){
+                document.getElementById("toggleMode").innerHTML="Light Mode: ON";
                 document.body.classList.add("light-mode");
             }
 
@@ -282,9 +297,11 @@
                 const containLightTheme = document.body.classList.contains("light-mode");
                 if (containLightTheme){
                     theme = "light";
+                    document.getElementById("toggleMode").innerHTML="Light Mode: ON";
                     localStorage.setItem("theme", theme);
                 } else {
                     theme = "dark";
+                    document.getElementById("toggleMode").innerHTML="Light Mode: OFF";
                     localStorage.setItem("theme", theme);
                 }
             });
