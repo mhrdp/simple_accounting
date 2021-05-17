@@ -86,7 +86,7 @@ Daftar Produk
                         <a href="{% url 'edit_product' product.pk %}" class="link-info" title="Edit">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="{% url 'delete_product' product.pk %}" class="link-dgr ml-2 confirm-delete" title="Delete" data-toggle="modal" data-target="#deleteProduct">
+                        <a href="{% url 'delete_product' product.pk %}" class="link-dgr ml-2 confirm-delete" title="Delete" data-toggle="modal" data-target="#deleteProduct" id="productDelete-{{product.pk}}">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

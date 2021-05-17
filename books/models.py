@@ -23,8 +23,8 @@ class SubCategory(models.Model):
 # End of dependent dropdown model
 
 class Product(models.Model):
-    goods = 'Goods'
-    services = 'Services'
+    goods = 'Barang'
+    services = 'Jasa'
     PRODUCT_TYPES = [
         (goods, 'Barang'),
         (services, 'Jasa'),
@@ -39,9 +39,9 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     types = models.CharField(
         choices=PRODUCT_TYPES,
-        default=goods,
         max_length=50,
-        null=True, blank=False,
+        default=goods,
+        null=False, blank=False,
     )
 
     def __str__(self):

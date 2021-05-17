@@ -75,18 +75,16 @@
                     <li class="header-menu">
                         <span>ANALISIS</span>
                     </li>
-                    {% if request.user.is_superuser %}
-                        <li>
-                            <a href="{% url 'admin_dashboard' %}">
-                                <i class="fas fa-crown"></i>
-                                <span class="text-rd">Admin Dashboard</span>
-                            </a>
-                        </li>
-                    {% endif %}
                     <li>
-                        <a href="{% url 'user_dashboard' %}" class="dashboard-current">
+                        <a href="{% url 'user_dashboard' %}">
+                            <i class="fas fa-user-astronaut    "></i>
+                            <span class="text-rd">User Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_dashboard' %}" class="dashboard-current">
                             <i class="fas fa-tachometer-alt"></i>
-                            <span>Dashboard</span>
+                            <span>Home</span>
                         </a>
                     </li>
                     <li class="books-menu sidebar-dropdown">

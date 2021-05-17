@@ -1,23 +1,27 @@
+from django import db
+from django.core.checks.messages import DEBUG, Debug
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import HttpResponse
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.db.models.functions import TruncMonth
 from django.views.generic import View
 
 from django.core.paginator import (
     Paginator, EmptyPage, PageNotAnInteger
 )
+from django.core.exceptions import PermissionDenied
 
 from .forms import ProductForm, IncomeForm, ExpenseForm
 from .models import Product, ExpenseCategory, SubCategory, Journal
 from .utils import render_to_pdf
 
-from user.models import CompanyDetail, UserPreferences
+from user.models import CompanyDetail
 
 from decimal import Decimal
 
@@ -573,10 +577,10 @@ def register_product(request):
 
             product_form_save.save()
             
-            messages.success(request, 'Your product has been registered!')
+            messages.success(request, 'Produk Anda sudah di daftarkan')
             return redirect('register_product')
         else:
-            messages.error(request, 'There\'s something wrong! Please try again.')
+            messages.error(request, 'Ada Kesalahan Dalam Pendaftaran, Harap Coba Kembali')
     else:
         product_form = ProductForm()
     content = {
@@ -725,6 +729,10 @@ def list_of_income(request):
     for i, j in zip(range(1, 13), list_of_months):
         months[i] = j
 
+    # Catch the latest paginated page the user visit before editing the data, and store it to the session
+    # The number of page inside request.GET.get() must be converted into string so it can be concatinated
+    request.session['previous_page'] = request.path_info + '?page=' + request.GET.get('page', '1')
+
     content = {
         'paginate': income_page,
         'page_range': page_range,
@@ -816,6 +824,10 @@ def list_of_expense(request):
     for i, j in zip(range(1, 13), list_of_months):
         months[i] = j
 
+    # Catch the latest paginated page the user visit before editing the data, and store it to the session
+    # The number of page inside request.GET.get() must be converted into string so it can be concatinated
+    request.session['previous_page'] = request.path_info + '?page=' + request.GET.get('page', '1')
+
     content = {
         'page_range': page_range,
         'paginate': expense_page,
@@ -835,13 +847,13 @@ def list_of_product(request):
             username=request.user.pk,
             product_name__icontains=keyword_search,
         ).order_by(
-            '-product_name'
+            'product_name'
         )
     else:
         product_obj = Product.objects.filter(
             username=request.user.pk,
         ).order_by(
-            '-product_name'
+            'product_name'
         )
     
     # Pagination, to split the page
@@ -862,6 +874,11 @@ def list_of_product(request):
 
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
+
+    # Catch the latest paginated page the user visit before editing the data, and store it to the session
+    # The number of page inside request.GET.get() must be converted into string so it can be concatinated
+    request.session['previous_page'] = request.path_info + '?page=' + request.GET.get('page', '1')
+
     content = {
         'paginate': product,
         'page_range': page_range,
@@ -884,9 +901,13 @@ def edit_product(request, pk):
             form_save.save()
 
             messages.success(request, 'Data berhasil diperbaharui!')
-            return redirect('list_of_product')
+            if not request.session['previous_page']:
+                return redirect('list_of_product')
+            else:
+                return HttpResponseRedirect(request.session['previous_page'])
     content = {
         'product_form': product_form,
+        'product_obj': product_obj,
     }
     return render(request, 'books/edit_product.html', content)
 
@@ -918,7 +939,10 @@ def edit_income(request, pk):
 
             income_form_save.save()
             messages.success(request, 'Data berhasil diperbaharui')
-            return redirect('list_of_income')
+            if not request.session['previous_page']:
+                return redirect('list_of_income')
+            else:
+                return HttpResponseRedirect(request.session['previous_page'])
 
     content = {
         'income_form': income_form,
@@ -937,7 +961,11 @@ def delete_product(request, pk):
         product_obj = Product.objects.get(pk=pk)
         if product_obj:
             product_obj.delete()
-            return redirect('list_of_product')
+            messages.success(request, 'Anda berhasil menghapus data ini')
+            if not request.session['previous_page']:
+                return redirect('list_of_product')
+            else:              
+                return HttpResponseRedirect(request.session['previous_page'])
 
     content = {
         'del_product': product_obj,
@@ -955,7 +983,11 @@ def delete_income(request, pk):
         income_obj = Journal.objects.get(pk=pk)
         if income_obj:
             income_obj.delete()
-            return redirect('list_of_income')
+            messages.success(request, 'Anda berhasil menghapus data ini')
+            if not request.session['previous_page']:
+                return redirect('list_of_income')
+            else:
+                return HttpResponseRedirect(request.session['previous_page'])
 
     content = {
         'del_income': income_obj,
@@ -972,7 +1004,10 @@ def delete_expense(request, pk):
         expense_obj = Journal.objects.get(pk=pk)
         if expense_obj:
             expense_obj.delete()
-            return redirect('list_of_expense')
+            if not request.session['previous_page']:
+                return redirect('list_of_expense')
+            else:
+                return HttpResponseRedirect(request.session['previous_page'])
 
     content = {
         'del_expense': expense_obj,
@@ -1002,7 +1037,10 @@ def edit_expense(request, pk):
             save_expense_form.save()
 
             messages.success(request, 'Data berhasil di perbaharui')
-            return redirect('list_of_expense')
+            if not request.session['previous_page']:
+                return redirect('list_of_expense')
+            else:
+                return HttpResponseRedirect(request.session['previous_page'])
 
     content = {
         'sub_categories': sub_categories,
@@ -1678,3 +1716,73 @@ def profit_loss(request):
         'monthly_nett_profit': monthly_nett_profit,
     }
     return render(request, 'books/profit_loss.html', content)
+
+# Function to limit page to superuser only from backend
+def superuser_only(function):
+    def _inner(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        return function(request, *args, **kwargs)
+    return _inner
+
+@login_required
+@superuser_only
+def admin_dashboard(request):
+    # Aggregate the expenses
+    # Aggregate the incomes
+
+    # Aggregate total number of products and user group by product's type
+    goods_business_count = Product.objects.filter(
+        # You need to use the value of the variable inside models when you filter the ModelChoice
+        types='Barang'
+    ).values(
+        'username__username',
+    ).annotate(
+        products=Count('username'),
+    ).order_by()[:21]
+
+    user_selling_goods = Product.objects.filter(
+        types='Barang',
+    ).values(
+        'username',
+    ).distinct().count()
+
+    number_of_goods_listed = Product.objects.filter(
+        types='Barang',
+    ).values(
+        'username',
+    ).count()
+
+    services_business_count = Product.objects.filter(
+        # You need to use the value of the variable inside models when you filter the ModelChoice
+        types='Jasa'
+    ).values(
+        'username__username',
+    ).annotate(
+        products=Count('username'),
+    ).order_by()[:21]
+
+    user_selling_services = Product.objects.filter(
+        types='Jasa',
+    ).values(
+        'username'
+    ).distinct().count()
+
+    number_of_services_listed = Product.objects.filter(
+        types='Jasa',
+    ).values(
+        'username'
+    ).count()
+
+    # Data for goods vs services chart
+    
+    content = {
+        'goods_business_count': goods_business_count,
+        'user_selling_goods': user_selling_goods,
+        'number_of_goods_listed': number_of_goods_listed,
+
+        'services_business_count': services_business_count,
+        'user_selling_services': user_selling_services,
+        'number_of_services_listed': number_of_services_listed,
+    }
+    return render(request, 'books/admin_dashboard.html', content)

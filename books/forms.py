@@ -129,8 +129,8 @@ class ExpenseForm(forms.ModelForm):
             )
 
 class ProductForm(forms.ModelForm):
-    goods = 'Goods'
-    services = 'Services'
+    goods = 'Barang'
+    services = 'Jasa'
     PRODUCT_TYPES = [
         (goods, 'Barang'),
         (services, 'Jasa'),
@@ -157,5 +157,5 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = {
-            'product_name', 'price'
+            'product_name', 'price', 'types'
         }
