@@ -50,7 +50,11 @@ Edit Product
                 {{product_form.types}}
 
                 <button type="submit" class="btn btn-color-primary btn-sm float-right mt-2">Submit</button>
-                <a href="{% url 'list_of_product' %}" class="link-info float-right mt-3 mr-3">Cancel</a>
+                {% if not request.session.previous_page %}
+                    <a href="{% url 'list_of_product' %}" class="link-info float-right mt-3 mr-3">Cancel</a>
+                {% else %}
+                    <a href="{{request.session.previous_page}}" class="link-info float-right mt-3 mr-3">Cancel</a>
+                {% endif %}
             </form>
         </div>
     </div>

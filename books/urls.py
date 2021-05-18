@@ -30,6 +30,7 @@ urlpatterns = [
     path('books/expense/list/filter/', books_views.expense_filter_by_date, name='expense_filter_by_date'),
 
     path('dashboard/', books_views.user_dashboard, name='user_dashboard'),
+    path('admin/dashboard/', books_views.admin_dashboard, name='admin_dashboard'),
 
     url('books/journal/export/csv/', books_views.export_journal_to_csv, name='journal_to_csv'),
     url('books/ledger/pdf/', books_views.export_profit_loss_to_pdf, name='profit_loss_to_pdf'),

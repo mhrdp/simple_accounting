@@ -1,0 +1,227 @@
+{% extends 'base/base_admin.html' %}
+{% load humanize %}
+
+{% block title %}
+Admin Dashboard
+{% endblock title %}
+
+{% block css %}
+<link href="/../../static/books/user_dashboard.css" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <h5>Transaksi Global</h5>
+            <p class="subtitles">Rp. {{global_transactions.sum|intcomma}}</p>
+        </div>
+        <div class="col">
+            <h5>Total Penghasilan Global</h5>
+            <p class="subtitles">Rp. {{global_incomes.sum|intcomma}}</p>
+        </div>
+        <div class="col">
+            <h5>Total Pengeluaran Global</h5>
+            <p class="subtitles">Rp. {{global_expenses.sum|intcomma}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <canvas id="tradeChart" height="100"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 col-md-3">
+            <div class="table-responsive-xl">
+                <table class="table table-dark table-bordered table-dark table-striped table-sm subtitles table-font-resize">
+                    <div class="float-right" style="font-size: 14px">
+                        <a href="#" class="link">
+                            Detail
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </div>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Count</th>
+                            <th scope="col">Types</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in goods_business_count %}
+                            <tr>
+                                <td>{{i.username__username}}</td>
+                                <td class="text-right">{{i.products}}</td>
+                                <td>Barang</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="subtitles">Jumlah Pengguna: {{user_selling_goods}} Akun</p>
+            <p class="subtitles">Jumlah Barang Terdaftar: {{number_of_goods_listed}} Pcs</p>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="table-responsive-xl">
+                <table class="table table-dark table-bordered table-dark table-striped table-sm subtitles table-font-resize">
+                    <div class="float-right" style="font-size: 14px">
+                        <a href="#" class="link">
+                            Detail
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </div>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Count</th>
+                            <th scope="col">Types</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in services_business_count %}
+                            <tr>
+                                <td>{{i.username__username}}</td>
+                                <td class="text-right">{{i.products}}</td>
+                                <td>Jasa</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="subtitles">Jumlah Pengguna: {{user_selling_services}} Akun</p>
+            <p class="subtitles">Jumlah Barang Terdaftar: {{number_of_services_listed}} Pcs</p>
+        </div>
+
+        <div class="col-6 col-sm-3">
+            <div class="goods-vs-services-container">
+                <canvas id="productChart"></canvas>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3">
+            <div class="goods-vs-services-container">
+                <canvas id="companyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.2/chart.min.js" integrity="sha512-dnUg2JxjlVoXHVdSMWDYm2Y5xcIrJg1N+juOuRi0yLVkku/g26rwHwysJDAMwahaDfRpr1AxFz43ktuMPr/l1A==" crossorigin="anonymous"></script>
+
+<script>
+    var ctx = document.getElementById("tradeChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: [
+                {% for i in journal_date %}
+                    "{{i.month}}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: "Income",
+                data: [
+                {% for j in income_by_month %}
+                    {x: "{{j.month}}", y: {{j.sum}}},
+                {% endfor %}
+                ],
+                backgroundColor: "rgb(54, 162, 235, 0.5)",
+                borderColor: "rgb(54, 162, 235, 1)",
+                borderWidth: 2,
+            },{
+                label: "Expense",
+                data: [
+                {% for j in expense_by_month %}
+                    {x: "{{j.month}}", y: {{j.sum}}}, 
+                {% endfor %}
+                ],
+                backgroundColor: "rgb(255, 99, 132, 0.5)",
+                borderColor: "rgb(255, 99, 132)",
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                },
+                title: {
+                    display: true,
+                    text: "Global Record of Trade for Last 12 Months",
+                    font: {
+                        size: 18,
+                    },
+                },
+                tooltip: {
+                    enabled: false,
+                },
+            },
+        }
+    });
+
+    var ctx = document.getElementById("productChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: ["Barang", "Jasa"],
+            datasets: [{
+                label: "Barang di jual vs Jasa di jual",
+                data: [
+                {{number_of_goods_listed}}, {{number_of_services_listed}}
+                ],
+                backgroundColor: [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                ],
+                hoverOffset: 4,
+            }]
+        },
+        options: {
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: "Jumlah Barang dan Jasa yang di Jual"
+                }
+            },
+        }
+    });
+
+    var ctx = document.getElementById("companyChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Perusahaan Barang", "Perusahaan Jasa"],
+            datasets: [{
+                label: "Perusahaan Barang vs Perusahaan Jasa",
+                data: [
+                {{user_selling_goods}}, {{user_selling_services}}
+                ],
+                backgroundColor: [
+                    "rgb(75, 192, 192)",
+                    "rgb(255, 205, 86)",
+                ],
+                hoverOffset: 4,
+            }]
+        },
+        options: {
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: "Jumlah Perusahaan Penyedia Barang dan Jasa, atau Keduanya"
+                }
+            }
+        }
+    });
+</script>
+{% endblock js %}

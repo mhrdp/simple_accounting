@@ -9,18 +9,6 @@ Edit {{product_name}}
 <link href="/../../static/books/books_edit_income.css" rel="stylesheet">
 {% endblock css%}
 
-{% block messages %}
-{% if messages %}
-    {% for msg in messages %}
-        {% if msg.tags %}
-            <div class="col-md-5 msg-{{msg.tags}}-container">
-                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-{% endblock messages %}
-
 {% block content %}
 <nav class="books-bg-top">
     <div class="books-brand">
@@ -30,6 +18,16 @@ Edit {{product_name}}
 
 <div class="page-content">
     <div class="w-100">
+        {% if messages %}
+            {% for msg in messages %}
+                {% if msg.tags %}
+                    <div class="col-md-5 msg-{{msg.tags}}-container">
+                        <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         <div class="income-form-container">
             <div class="form-header">
                 <h5>Edit Data Pemasukan</h5>
@@ -109,12 +107,15 @@ Edit {{product_name}}
                                 </td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td class="float-right">
-                                    <a href="{% url 'list_of_income' %}" class="link-info mr-2">
-                                        Cancel
-                                    </a>
-                                    <button type="submit" class="btn btn-color-primary btn-sm">Submit</button>
+                                <td>
+                                </td>
+                                <td>
+                                    {% if not request.session.previous_page %}
+                                        <a href="{% url 'list_of_income' %}" class="link-info mt-3 ml-5">Cancel</a>
+                                    {% else %}
+                                        <a href="{{request.session.previous_page}}" class="link-info mt-3 ml-5">Cancel</a>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-color-primary btn-sm float-right">Submit</button>
                                 </td>
                             </tr>
                         </tbody>

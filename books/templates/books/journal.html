@@ -257,9 +257,7 @@ Journal
                     {x: '{{i.date_added}}', y: {{i.sum}}},
                 {% endfor %}
                 ],
-                //backgroundColor: '#8dfe36a1',
                 borderColor: '#8cfe36',
-                //fill: true,
                 tension: .3,
             },{
                 label: 'Kredit',
@@ -268,9 +266,7 @@ Journal
                     {x: '{{i.date_added}}', y: {{i.sum}}},
                 {% endfor %}
                 ],
-                //backgroundColor: 'rgba(255, 99, 71, 0.450)',
                 borderColor: '#ff3f80',
-                //fill: true,
                 tension: .3,
             }]
         },
@@ -288,7 +284,6 @@ Journal
             },
             scales: {
                 y: {
-                    //stacked: true,
                     beginAtZero: true,
                     ticks: {
                         color: "#9e9e9e",
