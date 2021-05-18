@@ -1,4 +1,5 @@
 {% extends 'base/base_admin.html' %}
+{% load humanize %}
 
 {% block title %}
 Admin Dashboard
@@ -10,6 +11,16 @@ Admin Dashboard
 
 {% block content %}
 <div class="page-content">
+    <div class="row">
+        <p class="subtitles">Rp. {{global_transactions.sum|intcomma}}</p>
+        <p class="subtitles">Rp. {{global_incomes.sum|intcomma}}</p>
+        <p class="subtitles">Rp. {{global_expenses.sum|intcomma}}</p>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <canvas id="tradeChart" height="100"></canvas>
+        </div>
+    </div>
     <div class="row">
         <div class="col-6 col-md-3">
             <div class="table-responsive-xl">
@@ -73,9 +84,14 @@ Admin Dashboard
             <p class="subtitles">Jumlah Barang Terdaftar: {{number_of_services_listed}} Pcs</p>
         </div>
 
-        <div class="col-12 col-md-6">
-            <div style="width: 300px; height: 300px;">
-            <canvas id="productChart"></canvas>
+        <div class="col-6 col-sm-3">
+            <div class="goods-vs-services-container">
+                <canvas id="productChart"></canvas>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3">
+            <div class="goods-vs-services-container">
+                <canvas id="companyChart"></canvas>
             </div>
         </div>
     </div>
@@ -86,19 +102,70 @@ Admin Dashboard
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.2/chart.min.js" integrity="sha512-dnUg2JxjlVoXHVdSMWDYm2Y5xcIrJg1N+juOuRi0yLVkku/g26rwHwysJDAMwahaDfRpr1AxFz43ktuMPr/l1A==" crossorigin="anonymous"></script>
 
 <script>
+    var ctx = document.getElementById("tradeChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: [
+                {% for i in journal_date %}
+                    "{{i.month}}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: "Income",
+                data: [
+                {% for j in income_by_month %}
+                    {x: "{{j.month}}", y: {{j.sum}}},
+                {% endfor %}
+                ],
+                backgroundColor: "rgb(54, 162, 235, 0.5)",
+                borderColor: "rgb(54, 162, 235, 1)",
+                borderWidth: 2,
+            },{
+                label: "Expense",
+                data: [
+                {% for j in expense_by_month %}
+                    {x: "{{j.month}}", y: {{j.sum}}}, 
+                {% endfor %}
+                ],
+                backgroundColor: "rgb(255, 99, 132, 0.5)",
+                borderColor: "rgb(255, 99, 132)",
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                },
+                title: {
+                    display: true,
+                    text: "Global Record of Trade for Last 12 Months",
+                    font: {
+                        size: 18,
+                    },
+                },
+                tooltip: {
+                    enabled: false,
+                },
+            },
+        }
+    });
+
     var ctx = document.getElementById("productChart").getContext("2d");
     var chart = new Chart(ctx, {
         type: "pie",
         data: {
-            labels: ['Barang', 'Jasa'],
+            labels: ["Barang", "Jasa"],
             datasets: [{
-                label: "Barang vs Jasa",
+                label: "Barang di jual vs Jasa di jual",
                 data: [
                 {{number_of_goods_listed}}, {{number_of_services_listed}}
                 ],
                 backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
                 ],
                 hoverOffset: 4,
             }]
@@ -107,10 +174,37 @@ Admin Dashboard
             maintainAspectRatio: true,
             plugins: {
                 legend: {
-                    display: true,
+                    display: false,
+                },
+            },
+        }
+    });
+
+    var ctx = document.getElementById("companyChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Perusahaan Barang", "Perusahaan Jasa"],
+            datasets: [{
+                label: "Perusahaan Barang vs Perusahaan Jasa",
+                data: [
+                {{user_selling_goods}}, {{user_selling_services}}
+                ],
+                backgroundColor: [
+                    "rgb(75, 192, 192)",
+                    "rgb(255, 205, 86)",
+                ],
+                hoverOffset: 4,
+            }]
+        },
+        options: {
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false,
                 }
             }
         }
-    })
+    });
 </script>
 {% endblock js %}

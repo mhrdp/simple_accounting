@@ -1728,8 +1728,42 @@ def superuser_only(function):
 @login_required
 @superuser_only
 def admin_dashboard(request):
-    # Aggregate the expenses
-    # Aggregate the incomes
+    # All dates for journal for chart
+    journal_date = Journal.objects.all().annotate(
+        month=TruncMonth('date_added')
+    ).values(
+        'month'
+    ).order_by(
+        'month'
+    )[:12].annotate(
+        sum=Count('month')
+    )
+
+    # Aggregate the expenses for the last 12 months
+    expense_by_month = Journal.objects.filter(
+        book_category='Kredit'
+    ).annotate(
+        month=TruncMonth('date_added')
+    ).values(
+        'month'
+    ).order_by(
+        'month'
+    )[:12].annotate(
+        sum=Sum('total')
+    )
+
+    # Aggregate the incomes for the last 12 months
+    income_by_month = Journal.objects.filter(
+        book_category='Debit',
+    ).annotate(
+        month=TruncMonth('date_added')
+    ).values(
+        'month'
+    ).order_by(
+        'month'
+    )[:12].annotate(
+        sum=Sum('total')
+    )
 
     # Aggregate total number of products and user group by product's type
     goods_business_count = Product.objects.filter(
@@ -1774,7 +1808,30 @@ def admin_dashboard(request):
         'username'
     ).count()
 
-    # Data for goods vs services chart
+    # Sum all of the transactions
+    global_transactions = Journal.objects.all().values(
+        'total'
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Sum all of the expenses
+    global_expenses = Journal.objects.filter(
+        book_category='Kredit',
+    ).values(
+        'total'
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    # Sum all of the income
+    global_incomes = Journal.objects.filter(
+        book_category='Debit',
+    ).values(
+        'total'
+    ).aggregate(
+        sum=Sum('total')
+    )
     
     content = {
         'goods_business_count': goods_business_count,
@@ -1784,5 +1841,13 @@ def admin_dashboard(request):
         'services_business_count': services_business_count,
         'user_selling_services': user_selling_services,
         'number_of_services_listed': number_of_services_listed,
+
+        'income_by_month': income_by_month,
+        'expense_by_month': expense_by_month,
+        'journal_date': journal_date,
+
+        'global_transactions': global_transactions,
+        'global_expenses': global_expenses,
+        'global_incomes': global_incomes,
     }
     return render(request, 'books/admin_dashboard.html', content)

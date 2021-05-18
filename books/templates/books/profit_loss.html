@@ -213,9 +213,15 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_gross_profit > 0 %}
-                                <h6 class="text-gr">Rp. {{monthly_gross_profit|intcomma}}0</h6>
+                                <h4 class="text-gr">
+                                    Rp. {{monthly_gross_profit|intcomma}}0
+                                </h4>
+                            {% elif monthly_gross_profit < 0 %}
+                                <h4 class="text-rd">
+                                    Rp. {{monthly_gross_profit|intcomma}}0
+                                </h4>
                             {% else %}
-                                <h6 class="text-rd">Rp. 0</h6>
+                                <h4>Rp. 0.00</h4>
                             {% endif %}
                         </div>
                     </div>
