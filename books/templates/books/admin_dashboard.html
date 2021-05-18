@@ -12,9 +12,18 @@ Admin Dashboard
 {% block content %}
 <div class="page-content">
     <div class="row">
-        <p class="subtitles">Rp. {{global_transactions.sum|intcomma}}</p>
-        <p class="subtitles">Rp. {{global_incomes.sum|intcomma}}</p>
-        <p class="subtitles">Rp. {{global_expenses.sum|intcomma}}</p>
+        <div class="col">
+            <h5>Transaksi Global</h5>
+            <p class="subtitles">Rp. {{global_transactions.sum|intcomma}}</p>
+        </div>
+        <div class="col">
+            <h5>Total Penghasilan Global</h5>
+            <p class="subtitles">Rp. {{global_incomes.sum|intcomma}}</p>
+        </div>
+        <div class="col">
+            <h5>Total Pengeluaran Global</h5>
+            <p class="subtitles">Rp. {{global_expenses.sum|intcomma}}</p>
+        </div>
     </div>
     <div class="row">
         <div class="col-12">
@@ -176,6 +185,10 @@ Admin Dashboard
                 legend: {
                     display: false,
                 },
+                title: {
+                    display: true,
+                    text: "Jumlah Barang dan Jasa yang di Jual"
+                }
             },
         }
     });
@@ -202,6 +215,10 @@ Admin Dashboard
             plugins: {
                 legend: {
                     display: false,
+                },
+                title: {
+                    display: true,
+                    text: "Jumlah Perusahaan Penyedia Barang dan Jasa, atau Keduanya"
                 }
             }
         }
