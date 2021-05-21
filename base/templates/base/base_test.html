@@ -47,25 +47,9 @@
                     </div>
                 </div>
             <div class="sidebar-header mt-5">
-                <div class="user-pic">
-                    <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
-                    alt="User picture">
-                </div>
                 <div class="user-info">
                     <span class="user-name">
                         <strong>{{request.user.companydetail.company_name}}</strong>
-                    </span>
-                    <span class="user-role">Administrator</span>
-
-                    <span class="user-status">
-                        <a href="{% url 'profile' %}" class="link">Profile</a>
-                    </span>
-                    <span class="user-status ml-1">
-                        {% if request.user.is_superuser %}
-                            <a href="/admin/" target="_blank" class="link-dgr">
-                                <strong>Admin Page</strong>
-                            </a>
-                        {% endif %}
                     </span>
                 </div>
             </div>
@@ -225,7 +209,22 @@
             </div>
         </div>
         <!-- End of Notification Modal -->
-
+        <div class="header">
+            <ul class="nav justify-content-end">
+            {% if request.user.is_superuser %}
+                <li class="nav-item">
+                    <a href="{% url 'admin_dashboard' %} "class="link-dgr nav-link">
+                        <i class="fas fa-chess-king"></i>
+                    </a>
+                </li>
+            {% endif %}
+                <li class="nav-item">
+                    <a href="{% url 'profile' %}" class="link nav-link">
+                        <i class="fas fa-user-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
         {% block content %}{% endblock content %}
         {% block paginator %}{% endblock paginator %}
     </div>

@@ -41,6 +41,23 @@ body {
 a {
     cursor: pointer;
 }
+
+.header {
+    min-height: 50px;
+    width: 100vw;
+    position: fixed;
+    z-index: 990;
+    background-color: #3a3f48;
+}
+
+.page-content {
+    margin-top: 3% !important;
+}
+
+div.header i.fas {
+    font-size: 1.25rem;
+}
+
 /* Button */
 .btn {
     color: #fff !important;
@@ -184,7 +201,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-rd {
-    color: #ff3f80 !important;
+    color: #ff4646;
+}
+
+.text-white {
+    color: #fff;
 }
 
 .text-inline {
@@ -203,7 +224,7 @@ a.link {
 }
 
 a.link:hover {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgb(79, 153, 202);;
     text-decoration: None;
 }
 

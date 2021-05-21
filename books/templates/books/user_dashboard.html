@@ -10,13 +10,12 @@
 {% endblock css %}
 
 {% block content %}
-<nav class="dashboard-bg-top">
-    <div class="dashboard-brand">
-        <strong>Dashboard</strong>
-    </div>
-</nav>
-
 <div class="page-content">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-right">Dashboard</h2>
+        </div>
+    </div>
     <div class="row">
         <div class="container-num col-12 col-xl-6">
             <div class="row margin-auto">
@@ -89,31 +88,53 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-4 col-xl-6">
                     <div class="dashboard-container profit-panel">
-                        {% if nett_profit > 0 %}
-                            <h5 class="text-gr">
-                                <strong>
-                                Rp. {{nett_profit|intcomma}}0
-                                </strong>
-                            </h5>
-                        {% elif nett_profit < 0 %}
-                            <h5 class="text-rd">
-                                <strong>
-                                Rp. {{nett_profit|intcomma}}0
-                                </strong>
-                            </h5>
-                        {% else %}
-                            <h5><strong>Rp. 0.00</strong></h5>
-                        {% endif %}
-                        <div class="mini-chart-container">
-                            <h4 class="subtitles">
-                                <strong>
-                                {{profit_percentage}}<span style="font-size:14px"> %</span>
-                                </strong>
-                            </h4>
-                        </div>
-                        <p class="subtitles text-right">
-                            <strong>Profit bulan ini</strong>
-                        </p>
+                        <table class="table-content-container" style="height: 100%">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <i class="fas fas fa-credit-card"></i>
+                                        </div>
+                                    </td>
+                                    <td class="table-align-right">
+                                        <span>
+                                        {% if nett_profit > 0 %}
+                                            <h5 class="text-gr">
+                                                <strong>
+                                                Rp. {{nett_profit|intcomma}}0
+                                                </strong>
+                                            </h5>
+                                        {% elif nett_profit < 0 %}
+                                            <h5 class="text-rd">
+                                                <strong>
+                                                Rp. {{nett_profit|intcomma}}0
+                                                </strong>
+                                            </h5>
+                                        {% else %}
+                                            <h5><strong>Rp. 0.00</strong></h5>
+                                        {% endif %}
+                                        
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>  
+                                    </td>
+                                    <td class="table-text-bottom">
+                                        <p class="text-right">
+                                            <strong>
+                                                <span class="subtitles mr-1">
+                                                    Profit Bulan Ini:
+                                                </span>
+                                                <span class="text-white" style="font-size: 18px;">
+                                                {{profit_percentage}}<span style="font-size:14px"> %</span>
+                                                </span>
+                                            </strong>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
