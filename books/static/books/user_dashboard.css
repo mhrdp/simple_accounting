@@ -27,9 +27,12 @@ div.dashboard-current > .link {
 }
 
 /* [container-num], [chart-row], and [no-whitespace] were a class created solely to make each combination unique */
-.page-content .container-num > .row > .col-12.col-md-6,
-.page-content .container-num .row.no-whitespace > .col-12.col-md-6.col-xl-12  {
+.page-content .container-num > .row > .col-12.col-md-6 {
     padding: 0px;
+}
+
+.row > .container-num.col-12.col-xl-6 {
+    padding-right: 0;
 }
 
 .page-content > .row > .chart-row.col-12.col-xl-6 {
@@ -42,24 +45,16 @@ div.dashboard-current > .link {
     min-height: 80px;
 }
 
-.row.no-whitespace > .col-12.col-md-6.col-xl-12 {
-    max-width: 49%;
-}
-
-.row.no-whitespace > .anal-margin.col-12.col-md-6.col-xl-12 {
-    margin-right: 2%;
-}
-
 .row.no-whitespace > .col-12 {
     padding: 0;
 }
 
 .page-content .row > .col-12.col-md-6 {
-    max-width: 49%;
+    max-width: 48%;
 }
 
 .page-content .row > .income-margin.col-12.col-md-6 {
-    margin-right: 1%
+    margin-right: 10px;
 }
 
 table > tbody > tr > td > div > i.fa-cash-register {
@@ -95,7 +90,7 @@ td.table-align-right > span > h5 {
 .profit-panel {
     background-color: #29323c;
     height: 100px;
-    margin-top: 2%;
+    margin-top: 10px;
 }
 
 .general-panel {
@@ -139,6 +134,10 @@ table.table-content-container {
 .table-align-right {
     text-align: right;
 }
+
+.row > .table-left {
+    padding-right: 0;
+}
 /* End of tables */
 
 /* Charts */
@@ -157,6 +156,28 @@ table.table-content-container {
     position: relative;
     margin: auto;
     width: 100%;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #29323c;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: rgba(255, 255, 255, 0.7);
+    background-color: #29323c;
+    border-color: #29323c #29323c #29323c;
+}
+
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    border-color: #29323c #29323c #29323c;
+}
+
+ul.nav-tabs > li.nav-item > a {
+    color: #fff;
+}
+
+ul.nav-tabs > li.nav-item > a:hover {
+    color: rgba(255, 255, 255, 0.7);
 }
 /* End charts */
 
@@ -259,10 +280,8 @@ table > tbody > tr > td.table-text-bottom > p,
         width: 100%;
     }
 
-    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary.container-separator,
-    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
-        margin-top: 0;
-        margin-left: 2px;
+    .row.no-whitespace > .col-12 {
+        padding-right: 15px;
     }
     
     .chart-row.top-2 {
@@ -270,20 +289,15 @@ table > tbody > tr > td.table-text-bottom > p,
     }
 
     .page-content .row > .col-12.col-md-6 {
-        max-width: 45%;
+        max-width: 49%;
     }
 
     .page-content .row > .income-margin.col-12.col-md-6 {
-        margin-right: 0;
+        margin-right: 1%;
     }
 
     .profit-panel {
-        margin-top: 0px;
-        margin-left: 4px;
-    }
-
-    .expense-panel {
-        margin-left: 2px;
+        margin-top: 2%;
     }
 
 }
@@ -304,6 +318,10 @@ table > tbody > tr > td.table-text-bottom > p,
 
     .expense-panel {
         margin-left: 0;
+    }
+
+    .row > .table-right {
+        padding-right: 0;
     }
 
 }
@@ -340,12 +358,8 @@ table > tbody > tr > td.table-text-bottom > p,
         margin-bottom: 2%;
     }
 
-    .row.no-whitespace > .col-12.col-md-6.col-xl-12 {
-        max-width: 100%;
-    }
-    
-    .row.no-whitespace > .anal-margin.col-12.col-md-6.col-xl-12 {
-        margin-bottom: 2%;
+    .row.no-whitespace > .col-12 {
+        padding-right: 0;
     }
 
     .page-content .row.no-whitespace > .col-12 > .container-primary > h5,
@@ -372,5 +386,9 @@ table > tbody > tr > td.table-text-bottom > p,
     .profit-panel {
         min-height: 100px;
         margin-top: 2%;
+    }
+
+    .page-content > .row > .chart-row.col-12.col-xl-6 {
+        padding-right: 0;
     }
 }

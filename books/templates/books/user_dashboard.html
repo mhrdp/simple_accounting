@@ -11,15 +11,11 @@
 
 {% block content %}
 <div class="page-content">
-    <div class="row">
-        <div class="col">
-            <h2 class="text-right">Dashboard</h2>
-        </div>
-    </div>
+    <h2 class="text-left" style="padding-left:30px; padding-top: 30px;">Dashboard</h2>
     <div class="row">
         <div class="container-num col-12 col-xl-6">
             <div class="row margin-auto">
-                <div class="income-margin col-12 col-md-6 col-lg-4 col-xl-6">
+                <div class="income-margin col-12 col-md-6">
                     <div class="dashboard-container income-panel">
                         <table class="table-content-container" style="height: 100%">
                             <tbody>
@@ -52,7 +48,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4 col-xl-6">
+                <div class="col-12 col-md-6">
                     <div class="dashboard-container expense-panel">
                         <table class="table-content-container" style="height: 100%">
                             <tbody>
@@ -86,7 +82,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4 col-xl-6">
+                <div class="col-12 col-md-6">
                     <div class="dashboard-container profit-panel">
                         <table class="table-content-container" style="height: 100%">
                             <tbody>
@@ -127,7 +123,10 @@
                                                     Profit Bulan Ini:
                                                 </span>
                                                 <span class="text-white" style="font-size: 18px;">
-                                                {{profit_percentage}}<span style="font-size:14px"> %</span>
+                                                <strong>
+                                                {{profit_percentage}}
+                                                </strong>
+                                                <span style="font-size:14px"> %</span>
                                                 </span>
                                             </strong>
                                         </p>
@@ -138,10 +137,10 @@
                     </div>
                 </div>
             </div>
-            <div class="row no-whitespace mt-2 margin-auto">
+            <div class="row no-whitespace margin-auto" style="margin-top:10px">
                 <div class="anal-margin col-12">
                     <div class="container-primary-sub">
-                        <h5>Ingin lihat analisis bisnis Anda?
+                        <h5>Ingin lihat jurnal bisnis Anda?
                             <a href="{% url 'journal' %}" class="float-right">
                                 GO
                                 <i class="ml-1 fas fa-caret-square-right fa-2x"></i>
@@ -149,10 +148,10 @@
                         </h5>
                     </div>
                 </div>
-                <div class="col-12 mt-2">
+                <div class="col-12" style="margin-top: 10px;">
                     <div class="container-primary">
                         <h5>Butuh inspirasi? Coba kunjungi blog kami!
-                            <a href="#" class="float-right">
+                            <a href="https://www.vislane.com/blog/" class="float-right" target="_blank">
                                 GO
                                 <i class="ml-1 fas fa-caret-square-right fa-2x"></i>
                             </a>
@@ -162,7 +161,7 @@
             </div>
         </div>
         <div class="chart-row col-12 col-xl-6 top-2">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="income-tab" data-toggle="tab" href="#income" role="tab" aria-controls="income" aria-selected="true">Income Chart</a>
                 </li>
@@ -213,7 +212,7 @@
     <div class="row">
         <div class="col-12">
             <div class="row mt-3">
-                <div class="col-12 col-lg-6">
+                <div class="table-left col-12 col-lg-6">
                     <table class="table table-sm table-bordered table-dark table-striped subtitles table-font-resize">
                     <h5 style="display: inline-block">
                         Lima Transaksi Terakhir : Pemasukan
@@ -244,7 +243,7 @@
                     </tbody>
                 </table>
                 </div>
-                <div class="col-12 col-lg-6">
+                <div class="table-right col-12 col-lg-6">
                     <table class="table table-sm table-bordered table-dark table-striped subtitles table-font-resize">
                         <h5 style="display: inline-block;">
                             Lima Transaksi Terakhir : Pengeluaran

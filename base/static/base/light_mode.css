@@ -2,7 +2,7 @@
 body.light-mode .subtitles, body.light-mode h1, body.light-mode h2,
 body.light-mode h3, body.light-mode h4, body.light-mode h5,
 body.light-mode h6 {
-    color: #121212;
+    color: #121212 !important;
 }
 
 body.light-mode .text-gr {
@@ -11,6 +11,14 @@ body.light-mode .text-gr {
 
 body.light-mode .text-rd {
     color: #c00f2c !important;
+}
+
+body.light-mode .text-white {
+    color: #121212 !important;
+}
+
+body.light-mode .books-header {
+    color: #121212;
 }
 
 /* ------------ Container boxes -------------- */
@@ -25,11 +33,32 @@ body.light-mode .product-form-container {
 
 body.light-mode .dashboard-chart-container, 
 body.light-mode .books-chart-container {
-    background: -webkit-linear-gradient(to right, #fff, #fff);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #fff, #fff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: -o-linear-gradient(to right, #fff, #fff);
-    background: -moz-linear-gradient(to right, #fff, #fff);
+    background-color: #fff;
     border: 2px solid #b3b3b3;
+}
+
+body.light-mode .nav-tabs {
+    border-bottom: 1px solid #b3b3b3;
+}
+
+body.light-mode .nav-tabs .nav-item.show .nav-link, 
+body.light-mode .nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #b3b3b3;
+    border-color: #b3b3b3 #b3b3b3 #b3b3b3;
+}
+
+body.light-mode .nav-tabs .nav-link:focus, 
+body.light-mode .nav-tabs .nav-link:hover {
+    border-color: #b3b3b3 #b3b3b3 #b3b3b3;
+}
+
+body.light-mode ul.nav-tabs > li.nav-item > a {
+    color: #121212;
+}
+
+body.light-mode ul.nav-tabs > li.nav-item > a:hover {
+    color: rgba(0, 0, 0, 0.5);
 }
 
 body.light-mode .container-primary {
