@@ -13,12 +13,6 @@
 {% endblock css %}
 
 {% block content %}
-<nav class="books-bg-top">
-    <div class="books-brand">
-        <strong>Laporan Pembukuan</strong>
-    </div>
-</nav>
-
 <!-- include for deletion's confirmation Modal -->
 <!-- The include function must be in the same block -->
 {% include 'books/delete_expense.html' %}
@@ -131,7 +125,7 @@
                             <td class="small-hid">{{expense.quantity}}</td>
                             <td class="small-hid">Rp. {{expense.price|intcomma}}</td>
                             <td>Rp. {{expense.total|intcomma}}</td>
-                            <td class="small-hid">{{expense.notes}}</td>
+                            <td class="small-hid wrap-table">{{expense.notes}}</td>
                             <td>
                                 <a href="{% url 'edit_expense' expense.pk %}" class="link-info" title="Edit">
                                     <i class="fas fa-edit"></i>

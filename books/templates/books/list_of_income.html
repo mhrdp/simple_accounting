@@ -13,20 +13,13 @@
 {% endblock css %}
 
 {% block content %}
-<nav class="books-bg-top">
-    <div class="books-brand">
-        <strong>Laporan Pembukuan</strong>
-    </div>
-</nav>
-
 <!-- include for deletion's confirmation Modal -->
 <!-- The include function must be in the same block -->
 {% include 'books/delete_income.html' %}
 
 <div class="page-content">
-    
     <div class="books-header">
-        <h4><strong>Buku Penghasilan</strong></h4>
+        <strong>Buku Penghasilan</strong>
     </div>
     <div class="books-header-subtitles subtitles">
         <p>Daftar lengkap data penghasilan</p>
@@ -132,12 +125,12 @@
                                     <i>deleted object</i>
                                 {% endif %}
                             </td>
-                            <td class="small-hid align-middle">{{income.quantity}}</td>
-                            <td class="small-hid align-middle">Rp. {{income.price|intcomma}}</td>
-                            <td class="small-hid align-middle">Rp. {{income.additional_price|intcomma}}</td>
+                            <td class="small-hid">{{income.quantity}}</td>
+                            <td class="small-hid">Rp. {{income.price|intcomma}}</td>
+                            <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
                             <td class="align-middle">Rp. {{income.total|intcomma}}</td>
-                            <td class="small-hid wrap-table align-middle">{{income.notes}}</td>
-                            <td class="align-middle">
+                            <td class="small-hid wrap-table">{{income.notes}}</td>
+                            <td>
                                 <a href="{% url 'edit_income' income.pk %}" class="link-info" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>

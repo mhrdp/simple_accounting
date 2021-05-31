@@ -16,29 +16,8 @@ canvas#expenseChart {
 }
 
 /* Upper part of the dashboard */
-.dashboard-bg-top {
-    min-height: 50px;
-    width: 100vw;
-    background: #0558a5;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #1CB5E0, #0558a5);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #1CB5E0, #0558a5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: -o-linear-gradient(to right, #1CB5E0, #0558a5);
-    background: -moz-linear-gradient(to right, #1CB5E0, #0558a5);
-    border-bottom: 1px solid #000046;
-}
-
 div.dashboard-current > .link {
     margin-left: 5px;
-}
-
-.dashboard-brand {
-    display: inline-block;
-    color: #fff;
-    height: 30px;
-    font-size: 1.5rem;
-    font-weight: 800;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 .dashboard-container {
@@ -48,9 +27,12 @@ div.dashboard-current > .link {
 }
 
 /* [container-num], [chart-row], and [no-whitespace] were a class created solely to make each combination unique */
-.page-content .container-num > .row > .col-12.col-md-6,
-.page-content .container-num .row.no-whitespace > .col-12.col-md-6.col-xl-12  {
+.page-content .container-num > .row > .col-12.col-md-6 {
     padding: 0px;
+}
+
+.row > .container-num.col-12.col-xl-6 {
+    padding-right: 0;
 }
 
 .page-content > .row > .chart-row.col-12.col-xl-6 {
@@ -63,75 +45,32 @@ div.dashboard-current > .link {
     min-height: 80px;
 }
 
-.row.no-whitespace > .col-12.col-md-6.col-xl-12 {
-    max-width: 49%;
-}
-
-.row.no-whitespace > .anal-margin.col-12.col-md-6.col-xl-12 {
-    margin-right: 2%;
-}
-
 .row.no-whitespace > .col-12 {
     padding: 0;
 }
 
 .page-content .row > .col-12.col-md-6 {
-    max-width: 49%;
+    max-width: 48%;
 }
 
 .page-content .row > .income-margin.col-12.col-md-6 {
-    margin-right: 1%
-}
-
-.page-content .dashboard-container > div.circle {
-    width: 50px;
-    height: 50px;
-    background-color: #121212;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    display: inline-block;
-}
-
-.page-content .dashboard-container.income-panel > div.circle {
-    background: rgba(96,221,142,1);
-
-    background-image: linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-    background-image: -o-linear-gradient(102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-    background-image: -moz-linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-    background-image: -webkit-linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-
-
-}
-
-.page-content .dashboard-container.expense-panel > div.circle {
-    /* Prevent background color inside border-radius to be leaked out */
-    background-clip: padding-box;
-    -moz-background-clip: padding-box;
-    -webkit-background-clip: padding-box;
-
-    background: #F05F57; /* Fallback for old browser */
-
-    background-image: linear-gradient( 135deg, #F05F57 10%, #360940 100%);
-    background-image: -o-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
-    background-image: -moz-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
-    background-image: -webkit-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
+    margin-right: 10px;
 }
 
 table > tbody > tr > td > div > i.fa-cash-register {
-    font-size: 1.25rem;
-    padding: 6px;
+    font-size: 1rem;
+    padding: 10px;
     border-radius: 20px;
-    color: #29323c;
-    background: rgba(96,221,142,1);
+    color: rgba(255, 255, 255, 0.7);
+    background: #404e5e;
 }
 
 table > tbody > tr > td > div > i.fa-credit-card {
-    font-size: 1.25rem;
-    padding: 5px;
+    font-size: 1rem;
+    padding: 10px;
     border-radius: 20px;
-    color: #29323c;
-    background: #F05F57;
+    color: rgba(255, 255, 255, 0.7);
+    background: #404e5e;
 }
 
 td.table-align-right > span > h5 {
@@ -139,45 +78,19 @@ td.table-align-right > span > h5 {
 }
 
 .income-panel {
-    /*
-    background: rgba(96,221,142,1);
-
-    background-image: linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-    background-image: -o-linear-gradient(102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-    background-image: -moz-linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-    background-image: -webkit-linear-gradient( 102.1deg,  rgba(96,221,142,1) 8.7%, rgba(24,138,141,1) 88.1% );
-    */
     background-color: #29323c;
     height: 100px;
 }
 
 .expense-panel {
-    /*
-    background: #F05F57;
-
-    background-image: linear-gradient( 135deg, #F05F57 10%, #360940 100%);
-    background-image: -o-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
-    background-image: -moz-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
-    background-image: -webkit-linear-gradient( 135deg, #F05F57 10%, #360940 100%);
-    */
-
     background-color: #29323c;
     height: 100px;
 }
 
 .profit-panel {
-    /*
-    background: #485563;
-
-    background-image: linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
-    background-image: -o-linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
-    background-image: -moz-linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
-    background-image: -webkit-linear-gradient( 112.1deg,  rgba(32,38,57,1) 11.4%, rgba(63,76,119,1) 70.2% );
-    */
-
     background-color: #29323c;
-    max-height: 100px;
-    margin-top: 2%;
+    height: 100px;
+    margin-top: 10px;
 }
 
 .general-panel {
@@ -188,14 +101,6 @@ td.table-align-right > span > h5 {
     padding: 10px;
     max-height: 120px;
     max-width: 100%;
-    /*
-    background: #373B44;
-    background: -webkit-linear-gradient(to left, #4286f4, #373B44);
-    background: linear-gradient(to left, #4286f4, #373B44);
-    background: -o-linear-gradient(to left, #4286f4, #373B44);
-    background: -moz-linear-gradient(to left, #4286f4, #373B44);
-    */
-
     background-color: #4286f4;
     border-radius: 5px;
 }
@@ -212,12 +117,6 @@ td.table-align-right > span > h5 {
 }
 
 .container-primary-sub {
-    /*
-    background: #141E30;
-    background: -webkit-linear-gradient(to right, #243B55, #141E30);
-    background: linear-gradient(to right, #243B55, #141E30);
-    */
-
     background-color: #243B55;
     padding: 10px;
     max-height: 120px;
@@ -235,6 +134,10 @@ table.table-content-container {
 .table-align-right {
     text-align: right;
 }
+
+.row > .table-left {
+    padding-right: 0;
+}
 /* End of tables */
 
 /* Charts */
@@ -243,10 +146,7 @@ table.table-content-container {
     width: 100%;
     max-height: 220px;
     padding: 3%;
-    background: -webkit-linear-gradient(to right, #29323c, #485563);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: -o-linear-gradient(to right, #29323c, #485563);
-    background: -moz-linear-gradient(to right, #29323c, #485563);
+    background-color: #29323c;
 
 }
 
@@ -256,6 +156,28 @@ table.table-content-container {
     position: relative;
     margin: auto;
     width: 100%;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #29323c;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: rgba(255, 255, 255, 0.7);
+    background-color: #29323c;
+    border-color: #29323c #29323c #29323c;
+}
+
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    border-color: #29323c #29323c #29323c;
+}
+
+ul.nav-tabs > li.nav-item > a {
+    color: #fff;
+}
+
+ul.nav-tabs > li.nav-item > a:hover {
+    color: rgba(255, 255, 255, 0.7);
 }
 /* End charts */
 
@@ -339,22 +261,12 @@ table.table-content-container {
 table > tbody > tr > td.table-text-bottom > p,
 .dashboard-container.profit-panel > p {
     margin-bottom: 0px;
-    border-top: 1px solid rgb(59, 59, 59);
-    box-shadow: 0 -5px 5px -6px rgb(126, 128, 127);
 }
 
 .table-text-bottom {
     vertical-align: bottom !important;
 }
 
-a.link {
-    color: rgb(79, 153, 202);
-    font-weight: 600;
-}
-
-a.link:hover {
-    color: rgb(92, 217, 226);
-}
 /* End misc */
 @media(max-width: 1176px){
     .dashboard-container-sm {
@@ -368,31 +280,24 @@ a.link:hover {
         width: 100%;
     }
 
-    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary.container-separator,
-    .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
-        margin-top: 0;
-        margin-left: 2px;
+    .row.no-whitespace > .col-12 {
+        padding-right: 15px;
     }
     
-    .dashboard-chart-container.top-2 {
+    .chart-row.top-2 {
         margin-top: 2%;
     }
 
     .page-content .row > .col-12.col-md-6 {
-        max-width: 45%;
+        max-width: 49%;
     }
 
     .page-content .row > .income-margin.col-12.col-md-6 {
-        margin-right: 0;
+        margin-right: 1%;
     }
 
     .profit-panel {
-        margin-top: 0px;
-        margin-left: 4px;
-    }
-
-    .expense-panel {
-        margin-left: 2px;
+        margin-top: 2%;
     }
 
 }
@@ -414,6 +319,11 @@ a.link:hover {
     .expense-panel {
         margin-left: 0;
     }
+
+    .row > .table-right {
+        padding-right: 0;
+    }
+
 }
 
 @media(max-width: 768px){
@@ -436,6 +346,7 @@ a.link:hover {
     .row.no-whitespace > .col-12.col-md-6.col-xl-12 > .container-primary-sub.container-separator {
         margin-left: 0;
     }
+
 }
 
 @media(max-width: 576px){
@@ -447,12 +358,8 @@ a.link:hover {
         margin-bottom: 2%;
     }
 
-    .row.no-whitespace > .col-12.col-md-6.col-xl-12 {
-        max-width: 100%;
-    }
-    
-    .row.no-whitespace > .anal-margin.col-12.col-md-6.col-xl-12 {
-        margin-bottom: 2%;
+    .row.no-whitespace > .col-12 {
+        padding-right: 0;
     }
 
     .page-content .row.no-whitespace > .col-12 > .container-primary > h5,
@@ -479,5 +386,9 @@ a.link:hover {
     .profit-panel {
         min-height: 100px;
         margin-top: 2%;
+    }
+
+    .page-content > .row > .chart-row.col-12.col-xl-6 {
+        padding-right: 0;
     }
 }
