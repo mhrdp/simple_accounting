@@ -823,6 +823,38 @@ def list_of_expense(request):
     ]
     for i, j in zip(range(1, 13), list_of_months):
         months[i] = j
+    
+    expense_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    num_of_items_bought_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('quantity')
+    )
+
+    total_expense_filtered = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__range=(start_date, end_date),
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    total_num_items_bought_filtered = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__range=(start_date, end_date),
+    ).aggregate(
+        sum=Sum('quantity')
+    )
 
     # Catch the latest paginated page the user visit before editing the data, and store it to the session
     # The number of page inside request.GET.get() must be converted into string so it can be concatinated
@@ -836,6 +868,11 @@ def list_of_expense(request):
         'month': months[get_current_month],
         'start_date': start_date,
         'end_date': end_date,
+
+        'expense_in_running_month': expense_in_running_month,
+        'num_of_item_bought_in_running)month': num_of_items_bought_in_running_month,
+        'total_expense_filtered': total_expense_filtered,
+        'total_num_items_filtered': total_num_items_bought_filtered,
     }
     return render(request, 'books/list_of_expense.html', content)
 
