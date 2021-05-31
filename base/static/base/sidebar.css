@@ -129,6 +129,7 @@
     top: 10px;
     border-radius: 0 4px 4px 0px;
     width: 35px;
+    z-index: 995;
     transition-delay: 0.3s;
     -o-transition-delay: 0.3s;
     -moz-transition-delay: 0.3s;
@@ -503,6 +504,7 @@
     background-color: #3a3f48;
     box-shadow: 0px -1px 5px #282c33;
     border-bottom: 1px solid #464a52;
+    z-index: 1000;
   }
 
   .chiller-theme .sidebar-footer>a.link-dgr i {

@@ -8,6 +8,10 @@ urlpatterns = [
     path('input/income/new/', books_views.register_income, name='register_income'),
     path('input/expense/new/', books_views.register_expense, name='register_expense'),
 
+    path('books/product/list/', books_views.list_of_product, name='list_of_product'),
+    path(r'books/product/edit/<int:pk>/', books_views.edit_product, name='edit_product'),
+    path(r'books/product/delete/<int:pk>/', books_views.delete_product, name='delete_product'),
+    
     path('books/expense/list/', books_views.list_of_expense, name='list_of_expense'),
     path(r'books/expense/edit/<int:pk>/', books_views.edit_expense, name='edit_expense'),
     path(r'books/expense/delete/<int:pk>/', books_views.delete_expense, name='delete_expense'),
@@ -26,6 +30,7 @@ urlpatterns = [
     path('books/expense/list/filter/', books_views.expense_filter_by_date, name='expense_filter_by_date'),
 
     path('dashboard/', books_views.user_dashboard, name='user_dashboard'),
+    path('admin/dashboard/', books_views.admin_dashboard, name='admin_dashboard'),
 
     url('books/journal/export/csv/', books_views.export_journal_to_csv, name='journal_to_csv'),
     url('books/ledger/pdf/', books_views.export_profit_loss_to_pdf, name='profit_loss_to_pdf'),

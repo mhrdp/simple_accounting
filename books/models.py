@@ -23,6 +23,13 @@ class SubCategory(models.Model):
 # End of dependent dropdown model
 
 class Product(models.Model):
+    goods = 'Barang'
+    services = 'Jasa'
+    PRODUCT_TYPES = [
+        (goods, 'Barang'),
+        (services, 'Jasa'),
+    ]
+
     username = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, null=True
@@ -30,6 +37,12 @@ class Product(models.Model):
 
     product_name = models.CharField(max_length=155, null=False, blank=False)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    types = models.CharField(
+        choices=PRODUCT_TYPES,
+        max_length=50,
+        default=goods,
+        null=False, blank=False,
+    )
 
     def __str__(self):
         return self.product_name
@@ -54,20 +67,20 @@ class Journal(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    industry = models.ForeignKey(Industry, on_delete=models.DO_NOTHING)
+    industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
 
     # Income Specific
-    product_name = models.ForeignKey(Product, on_delete=models.DO_NOTHING, null=True, blank=False)
+    product_name = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=False)
     additional_price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, default=0)
 
     # Expense Specific
     item_name = models.CharField(max_length=155, blank=False)
     category = models.ForeignKey(
-        ExpenseCategory, on_delete=models.DO_NOTHING,
+        ExpenseCategory, on_delete=models.PROTECT,
         blank=False, null=True
         )
     sub_category = models.ForeignKey(
-        SubCategory, on_delete=models.DO_NOTHING,
+        SubCategory, on_delete=models.PROTECT,
         blank=False, null=True
         )
 

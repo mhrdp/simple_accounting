@@ -13,17 +13,11 @@
 {% endblock css %}
 
 {% block content %}
-<nav class="books-bg-top">
-    <div class="books-brand">
-        <strong>Laporan Pembukuan</strong>
-    </div>
-</nav>
-
 <!-- include for deletion's confirmation Modal -->
+<!-- The include function must be in the same block -->
 {% include 'books/delete_income.html' %}
 
 <div class="page-content">
-    
     <div class="books-header">
         <strong>Buku Penghasilan</strong>
     </div>
@@ -65,11 +59,11 @@
     </div>
 
     <div class="row filter-container">
-        <div>
+        <div class="w-100">
             {% if messages %}
                 {% for msg in messages %}
                     {% if msg.tags %}
-                        <div class="col-md-5 msg-{{msg.tags}}-container">
+                        <div class="col-12 msg-{{msg.tags}}-container">
                             <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
                         </div>
                     {% endif %}
@@ -105,8 +99,8 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive-xl">
-                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-                    <thead>
+                <table class="table table-bordered table-dark table-striped subtitles table-font-resize">
+                    <thead class="thead-dark">
                     <tr>
                         <th scope="col">No.</th>
                         <th scope="col">Date</th>
@@ -124,13 +118,19 @@
                         <tr>
                             <td scope="row" class="align-middle">{{forloop.counter}}</td>
                             <td class="align-middle">{{income.date_added}}</td>
-                            <td class="align-middle">{{income.product_name}}</td>
-                            <td class="small-hid align-middle">{{income.quantity}}</td>
-                            <td class="small-hid align-middle">Rp. {{income.price|intcomma}}</td>
-                            <td class="small-hid align-middle">Rp. {{income.additional_price|intcomma}}</td>
-                            <td class="align-middle">Rp. {{income.total|intcomma}}</td>
-                            <td class="small-hid wrap-table align-middle">{{income.notes}}</td>
                             <td class="align-middle">
+                                {% if not income.product_name == 'None' %}
+                                    {{income.product_name}}
+                                {% else %}
+                                    <i>deleted object</i>
+                                {% endif %}
+                            </td>
+                            <td class="small-hid">{{income.quantity}}</td>
+                            <td class="small-hid">Rp. {{income.price|intcomma}}</td>
+                            <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
+                            <td class="align-middle">Rp. {{income.total|intcomma}}</td>
+                            <td class="small-hid wrap-table">{{income.notes}}</td>
+                            <td>
                                 <a href="{% url 'edit_income' income.pk %}" class="link-info" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -280,7 +280,7 @@
                 legend: {
                     display: true,
                     labels: {
-                        color: "rgba(255, 255, 255, 0.700)",
+                        color: "#9e9e9e",
                     },
                 },
             },
@@ -288,25 +288,25 @@
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
+                        color: "#9e9e9e",
                         font: {
                             size: 10,
                         },
                     },
                     grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        borderColor: "#9e9e9e",
                         drawOnChartArea: false,
                     },
                 },
                 x: {
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
+                        color: "#9e9e9e",
                         font: {
                             size: 10,
                         },
                     },
                     grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        borderColor: "#9e9e9e",
                         drawOnChartArea: false,
                     },
                 },

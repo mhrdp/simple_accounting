@@ -47,9 +47,25 @@
                     </div>
                 </div>
             <div class="sidebar-header mt-5">
+                <div class="user-pic">
+                    <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
+                    alt="User picture">
+                </div>
                 <div class="user-info">
                     <span class="user-name">
                         <strong>{{request.user.companydetail.company_name}}</strong>
+                    </span>
+                    <span class="user-role">Administrator</span>
+
+                    <span class="user-status">
+                        <a href="{% url 'profile' %}" class="link">Profile</a>
+                    </span>
+                    <span class="user-status ml-1">
+                        {% if request.user.is_superuser %}
+                            <a href="/admin/" target="_blank" class="link-dgr">
+                                <strong>Admin Page</strong>
+                            </a>
+                        {% endif %}
                     </span>
                 </div>
             </div>
@@ -59,18 +75,16 @@
                     <li class="header-menu">
                         <span>ANALISIS</span>
                     </li>
-                    {% if request.user.is_superuser %}
-                        <li>
-                            <a href="{% url 'admin_dashboard' %}">
-                                <i class="fas fa-crown"></i>
-                                <span class="text-rd">Admin Dashboard</span>
-                            </a>
-                        </li>
-                    {% endif %}
                     <li>
-                        <a href="{% url 'user_dashboard' %}" class="dashboard-current">
+                        <a href="{% url 'user_dashboard' %}">
+                            <i class="fas fa-user-astronaut    "></i>
+                            <span class="text-rd">User Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_dashboard' %}" class="dashboard-current">
                             <i class="fas fa-tachometer-alt"></i>
-                            <span>Dashboard</span>
+                            <span>Home</span>
                         </a>
                     </li>
                     <li class="books-menu sidebar-dropdown">
@@ -123,7 +137,7 @@
                         <span>EXTRA</span>
                     </li>
                     <li>
-                        <a href="https://www.vislane.com/" target="_blank">
+                        <a href="#">
                         <i class="fas fa-phone"></i>
                         <span>Hubungi Kami</span>
                         <span class="badge badge-pill badge-primary">Help</span>
@@ -186,25 +200,30 @@
             {% block register_expense %}{% endblock register_expense %}
             {% block filter_income %}{% endblock filter_income %}
         </div>
-        
-        <div class="header">
-            <ul class="nav justify-content-end" style="padding-top: 5px;">
-            {% if request.user.is_superuser %}
-                <li class="nav-item">
-                    <a href="admin/"class="link-dgr nav-link">
-                        <i class="fas fa-chess-king"></i>
-                        <span class="ml-1">Admin Page</span>
-                    </a>
-                </li>
-            {% endif %}
-                <li class="nav-item">
-                    <a href="{% url 'profile' %}" class="link nav-link">
-                        <i class="fas fa-user-alt"></i>
-                        <span class="ml-1">Profile</span>
-                    </a>
-                </li>
-            </ul>
+
+        <!-- Notification Modal -->
+        <div class="modal fade" id="notificationPopup" tabindex="-1" role="dialog" aria-labelledby="expenseModalTitle" aria-hidden="true" caller-id="">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="expenseModalTitle">Konfirmasi Penghapusan</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Apakah Anda yakin akan menghapus data ini?</p>
+                        <p><span class="text-rd">PERHATIAN: </span>Data yang anda hapus akan hilang secara permanen!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="confirmDeleteExpense">Confirm</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- End of Notification Modal -->
+
         {% block content %}{% endblock content %}
         {% block paginator %}{% endblock paginator %}
     </div>

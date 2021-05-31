@@ -1,6 +1,15 @@
 body {
-    /*background: rgb(45, 56, 60);*/
-    background: #121212;
+    /* This is CSS's variable */
+    --theme-background: #121212;
+}
+
+body.light-mode {
+    /* This is CSS variable */
+    --theme-background: #eceff1;
+}
+
+body {
+    background-color: var(--theme-background);
     overflow-x: hidden;
     font-family: 'Dosis', sans-serif;
 }
@@ -32,6 +41,15 @@ body {
 a {
     cursor: pointer;
 }
+
+.header {
+    min-height: 50px;
+    width: 100vw;
+    position: fixed;
+    z-index: 990;
+    background-color: #3a3f48;
+}
+
 /* Button */
 .btn {
     color: #fff !important;
@@ -115,6 +133,7 @@ a {
     background-color: aquamarine;
     border-radius: 25px;
     opacity: .7;
+    margin: 0 auto;
 }
 
 .msg-success {
@@ -126,6 +145,7 @@ a {
     background-color: tomato;
     border-radius: 25px;
     opacity: .7;
+    margin: 0 auto
 }
 
 .msg-error {
@@ -148,7 +168,7 @@ a {
 
 /* Text */
 h1, h2, h3, h4, h5, h6 {
-    color: #fff !important;
+    color: #fff;
 }
 
 .error-notification {
@@ -173,7 +193,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-rd {
-    color: #ff3f80 !important;
+    color: #ff4646;
+}
+
+.text-white {
+    color: #fff;
 }
 
 .text-inline {
@@ -192,7 +216,7 @@ a.link {
 }
 
 a.link:hover {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgb(79, 153, 202);;
     text-decoration: None;
 }
 

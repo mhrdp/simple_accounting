@@ -12,24 +12,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
 
-{% block messages %}
-{% if messages %}
-    {% for msg in messages %}
-        {% if msg.tags %}
-            <div class="col-md-5 msg-{{msg.tags}}-container">
-                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-{% endblock messages %}
-
 {% block content %}
-<nav class="books-bg-top">
-    <div class="books-brand">
-        <strong>Laporan Pembukuan</strong>
-    </div>
-</nav>
+<!-- include for deletion's confirmation Modal -->
+<!-- The include function must be in the same block -->
+{% include 'books/delete_expense.html' %}
 
 <div class="page-content">
     <div class="books-header">
@@ -73,17 +59,30 @@
     </div>
 
     <div class="row filter-container">
-        <form method="GET">
+        <div class="w-100">
+            {% if messages %}
+                {% for msg in messages %}
+                    {% if msg.tags %}
+                        <div class="col-12 msg-{{msg.tags}}-container">
+                            <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <form method="GET" class="w-90">
             <div class="row">
-                <div class="start-date col-4">
+                <div class="start-date col-5 col-md-3">
                     <input type="text" id="flatpickr" name="start_date" placeholder="Tanggal Mulai" class="form-control form-control-sm">
                 </div>
-                <div class="col-4">
+                <div class="col-5 col-md-3">
                     <input type="text" id="flatpickr" name="end_date" placeholder="Tanggal Selesai" class="form-control form-control-sm">
                 </div>
-                <button class="btn btn-color-primary btn-sm">
-                    <i class="fas fa-filter"></i>
-                </button>
+                <div class="col-2">
+                    <button class="btn btn-color-primary btn-sm">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
             </div>
         </form>
         <div class="row">
@@ -100,19 +99,22 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive-xl">
-                <table class="table table-bordered table-hover table-dark table-striped subtitles table-font-resize">
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Items</th>
-                        <th scope="col" class="small-hid">Category</th>
-                        <th scope="col" class="small-hid">Sub-category</th>
-                        <th scope="col" class="small-hid">Qty</th>
-                        <th scope="col" class="small-hid">Price</th>
-                        <th scope="col">Total</th>
-                        <th scope="col" class="small-hid">Notes</th>
-                        <th></th>
-                    </tr>
+                <table class="table table-bordered table-dark table-striped subtitles table-font-resize">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Items</th>
+                            <th scope="col" class="small-hid">Category</th>
+                            <th scope="col" class="small-hid">Sub-category</th>
+                            <th scope="col" class="small-hid">Qty</th>
+                            <th scope="col" class="small-hid">Price</th>
+                            <th scope="col">Total</th>
+                            <th scope="col" class="small-hid">Notes</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {% for expense in paginate %}
                         <tr>
                             <td scope="row">{{forloop.counter}}</td>
@@ -123,17 +125,18 @@
                             <td class="small-hid">{{expense.quantity}}</td>
                             <td class="small-hid">Rp. {{expense.price|intcomma}}</td>
                             <td>Rp. {{expense.total|intcomma}}</td>
-                            <td class="small-hid">{{expense.notes}}</td>
+                            <td class="small-hid wrap-table">{{expense.notes}}</td>
                             <td>
                                 <a href="{% url 'edit_expense' expense.pk %}" class="link-info" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="#" class="link-dgr ml-2" title="Delete">
+                                <a href="{% url 'delete_expense' expense.pk %}" class="link-dgr ml-2 confirm-delete" title="Delete" data-toggle="modal" data-target="#deleteExpense" id="expenseDelete-{{expense.pk}}">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
                         </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -223,6 +226,21 @@
 </script>
 
 <script>
+$(document).ready(function(){
+    // jQuery to call Modal pop up for deletion of the data
+    $(document).on("click", ".confirm-delete", function(){
+        $("#deleteExpense").attr("caller-id", $(this).attr("id"));
+    })
+
+    // jQuery for buttons' click event inside the Modal
+    $(document).on("click", "#confirmDeleteExpense", function(){
+        var caller = $("#confirmDeleteExpense").closest(".modal").attr("caller-id");
+        window.location = $("#".concat(caller)).attr("href")
+    })
+})
+</script>
+
+<script>
     // To open the sub menu automatically when visiting this page
     $(document).ready(function(){
         $(".books-menu.sidebar-dropdown").addClass("active")
@@ -259,7 +277,7 @@
                 legend: {
                     display: true,
                     labels : {
-                        color: "rgba(255, 255, 255, 0.700)"
+                        color: "#9e9e9e"
                     }
                 },
             },
@@ -268,25 +286,25 @@
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
+                        color: "#9e9e9e",
                         font: {
                             size: 10,
                         },
                     },
                     grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        borderColor: "#9e9e9e",
                         drawOnChartArea: false,
                     }
                 },
                 x: {
                     ticks: {
-                        color: "rgba(255, 255, 255, 0.700)",
+                        color: "#9e9e9e",
                         font: {
                             size: 10,
                         }
                     },
                     grid: {
-                        borderColor: "rgba(255, 255, 255, 0.700)",
+                        borderColor: "#9e9e9e",
                         drawOnChartArea: false,
                     }
                 },

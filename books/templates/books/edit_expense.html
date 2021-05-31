@@ -9,27 +9,18 @@ Edit {{item_name}}
 <link href="/../../static/books/books_edit_expense.css" rel="stylesheet">
 {% endblock css%}
 
-{% block register_expense %}
-{% if messages %}
-    {% for msg in messages %}
-        {% if msg.tags %}
-            <div class="col-md-5 msg-{{msg.tags}}-container">
-                <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-{% endblock register_expense%}
-
 {% block content %}
-<nav class="books-bg-top">
-    <div class="books-brand">
-        <strong>Edit Data Pembukuan</strong>
-    </div>
-</nav>
-
 <div class="page-content">
     <div class="w-100 h-100">
+        {% if messages %}
+            {% for msg in messages %}
+                {% if msg.tags %}
+                    <div class="col-md-5 msg-{{msg.tags}}-container">
+                        <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         <div class="expense-form-container">
             <div class="form-header">
                 <h5>Input Data Pengeluaran</h5>
@@ -76,7 +67,7 @@ Edit {{item_name}}
                                     </div>
                                 </td>
                                 <td>
-                                    <div style="display:none" id="subCategoryHidden" class="table-padding-left">
+                                    <div id="subCategoryHidden" class="table-padding-left">
                                         <label for="sub_category">Sub Category: <span class="text-rd">*</span></label>
                                         <div class="width-55">
                                         {{expense_form.sub_category}}
@@ -128,8 +119,13 @@ Edit {{item_name}}
                             
                             <tr>
                                 <td></td>
-                                <td class="float-right">
-                                    <button type="submit" class="btn btn-color-primary btn-sm">Submit</button>
+                                <td>
+                                    {% if not request.session.previous_page %}
+                                        <a href="{% url 'list_of_expense' %}" class="link-info mt-3 mr-3">Cancel</a>
+                                    {% else %}
+                                        <a href="{{request.session.previous_page}}" class="link-info mt-3 mr-3">Cancel</a>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-color-primary btn-sm float-right">Submit</button>
                                 </td>
                             </tr>
                         </tbody>

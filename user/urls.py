@@ -2,7 +2,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf.urls import url
 
-from .views import LoginView
+from .views import LoginView, user_setting
 from .forms import ResetPasswordForm
 
 from . import views as user_views
@@ -12,10 +12,12 @@ urlpatterns = [
     
     path('login/', LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('company/profile/', user_views.company_profile, name='profile'),
-    path('company/profile/edit/', user_views.company_profile_edit, name='edit'),
+    path('company/profile/details/edit/', user_views.company_profile_edit, name='edit'),
     path('company/profile/user/edit', user_views.user_profile_edit, name='user_edit'),
     path('company/profile/change-password/', user_views.user_change_password, name='change_password'),
     path('logout/', user_views.user_logout, name='logout'),
+    #path('settings/', user_views.user_setting_ajax, name='setting'),
+    path('company/profile/user/configurations/', user_views.user_setting, name='conf'),
 
     # Reset password
     path(
