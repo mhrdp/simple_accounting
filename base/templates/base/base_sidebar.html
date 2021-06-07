@@ -1,0 +1,145 @@
+{% load static %}
+
+<a id="show-sidebar" class="btn btn-sm btn-dark">
+    <i class="fas fa-bars"></i>
+</a>
+<nav id="sidebar" class="sidebar-wrapper">
+    <div class="sidebar-content">
+        <div class="sidebar-brand fixed-brand">
+            <a href="#">Vislane Business</a>
+            <div id="close-sidebar">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    <div class="sidebar-header mt-5">
+        <div class="user-info">
+            <span class="user-name">
+                <strong>{{request.user.companydetail.company_name}}</strong>
+            </span>
+        </div>
+    </div>
+    <!-- sidebar-header  -->
+    <div class="sidebar-menu">
+        <ul>
+            <li class="header-menu">
+                <span>ANALISIS</span>
+            </li>
+            {% if request.user.is_superuser %}
+                <li>
+                    <a href="{% url 'admin_dashboard' %}">
+                        <i class="fas fa-crown"></i>
+                        <span class="text-rd">Admin Dashboard</span>
+                    </a>
+                </li>
+            {% endif %}
+            <li>
+                <a href="{% url 'user_dashboard' %}" class="dashboard-current">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="books-menu sidebar-dropdown">
+                <a>
+                    <i class="fas fa-journal-whills    "></i>
+                    <span>Pembukuan</span>
+                </a>
+                <div class="sidebar-submenu">
+                    <ul>
+                        <li>
+                            <a href="{% url 'list_of_product' %}" class="product-current">Daftar Produk</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'list_of_income' %}" class="income-current">Daftar Penghasilan</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'list_of_expense' %}" class="expense-current">Daftar Pengeluaran</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'journal' %}" class="journal-current">Jurnal</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'profit_loss' %}" class="profit-loss-current">Laba/Rugi</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="header-menu">
+                <span>INPUT DATA</span>
+            </li>
+            <li>
+                <a href="{% url 'register_product' %}" class="register-product-current">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>Products</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'register_income' %}" class="register-income-current">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Penghasilan</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'register_expense' %}" class="register-expense-current">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>Pengeluaran</span>
+                </a>
+            </li>
+            <li class="header-menu">
+                <span>EXTRA</span>
+            </li>
+            <li>
+                <a href="https://www.vislane.com/" target="_blank">
+                <i class="fas fa-phone"></i>
+                <span>Hubungi Kami</span>
+                <span class="badge badge-pill badge-primary">Help</span>
+                </a>
+            </li>
+            <li class="sidebar-dropdown">
+                <a>
+                    <i class="fa fa-calendar"></i>
+                    <span>Calendar</span>
+                </a>
+                <div class="sidebar-submenu">
+                    <ul>
+                        <li>
+                            <a href="#">To do</a>
+                        </li>
+                        <li>
+                            <a href="#">Jadwal Rapat</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- sidebar-menu  -->
+    </div>
+    <!-- sidebar-content  -->
+    <div class="sidebar-footer">
+        <a href="#">
+        </a>
+        <a href="#">
+        </a>
+        
+        <div class="btn-group dropup">
+            <button class="btn" title="Settings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cog"></i>
+            </button>
+            <div class="dropdown-menu">
+                <h6 class="dropdown-header">Settings</h6>
+                <a class="dropdown-item" id="toggleLightDarkMode">
+                    <span id="toggleMode">
+                        Toggle Light Mode
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn">
+                <a href="{% url 'logout' %}" class="link-dgr" title="Logout">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </button>
+        </div>
+    </div>
+</nav>
