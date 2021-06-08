@@ -1,0 +1,27 @@
+body {
+    --background: #121212;
+    --surface: #2a2a2a;
+    --surface-inside: #313131;
+    --surface-border: #272727;
+    --surface-alt: #353535; /* SIDEBAR */
+    --surface-top: #383838; /* SIDEBAR TOP */
+
+    --primary: #3368ff; /* MAINLY FOR BUTTON */
+    --primary-var: #03dac6;
+    --primary-hover: #2646a0;
+
+    --secondary: #fff333;
+    --secondary-hover: #a09926;
+    
+    --error: #ff4d4d;
+    --error-hover: #a03535;
+
+    --normal-text: #fff; /* HEADER, ETC */
+    --normal-text-alt: #717171; /* SUBTITLES */
+    --on-primary: #121212; /* TEXT ON ACCENT */
+}
+
+body.light-mode {
+    /* This is CSS variable */
+    --background: #eceff1;
+}

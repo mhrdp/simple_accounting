@@ -160,7 +160,7 @@ def user_dashboard(request):
         'nett_profit': nett_profit,
         'profit_percentage': format_profit_percentage,
     }
-    return render(request, 'books/user_dashboard.html', content)
+    return render(request, 'books/dashboard/user_dashboard.html', content)
 
 # Function to limit page to superuser only from backend
 def superuser_only(function):
