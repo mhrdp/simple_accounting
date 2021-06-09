@@ -7,9 +7,13 @@ body {
     --surface-top: #383838; /* SIDEBAR TOP */
 
     --primary: #3368ff; /* MAINLY FOR BUTTON */
-    --primary-var: #03dac6;
     --primary-hover: #2646a0;
 
+    --primary-var: #41ff33;
+    --primary-var-hover: #2ea026;
+
+    --primary-var-2: #03dac6;
+    
     --secondary: #fff333;
     --secondary-hover: #a09926;
     
