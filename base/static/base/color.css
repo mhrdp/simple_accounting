@@ -1,8 +1,8 @@
 body {
     --background: #121212;
-    --surface: #2a2a2a;
-    --surface-inside: #313131;
-    --surface-border: #272727;
+    --surface: #2a2a2a; /* PANEL */
+    --surface-inside: #313131; /* PANEL FOOTER */
+    --surface-border: #272727; /* INSIDE PANEL BORDER */
     --surface-alt: #353535; /* SIDEBAR */
     --surface-top: #383838; /* SIDEBAR TOP */
 

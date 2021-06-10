@@ -78,7 +78,7 @@ a {
 }
 
 .btn-accent:hover {
-    background-color: var(--secondary-hover);
+    background-color: var(--primary-var-hover);
 }
 
 .btn-danger {
@@ -181,7 +181,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .text-gr {
-    color: var(--primary) !important;
+    color: var(--primary-var) !important;
 }
 
 .text-rd {

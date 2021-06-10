@@ -6,7 +6,7 @@ Add Expenses
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
-<link href="/../../static/books/register_expense.css" rel="stylesheet">
+<link href="/../../static/books/input/register_expense.css" rel="stylesheet">
 {% endblock css%}
 
 {% block register_expense %}
@@ -34,14 +34,14 @@ Add Expenses
             </div>
             <form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}">
                 {% csrf_token %}
-                <div class="subtitles">
+                <div>
                     <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
 
                     <table class="w-100">
                         <tbody>
                             <tr>
                                 <td class="cell-1">
-                                    <label for="date_added">Date Added<span class="text-rd">*</span></label>
+                                    <label for="date_added"><span style="color:#fff;"><b>Date Added</b></span><span class="text-rd">*</span></label>
                                 </td>
                                 <td>
                                     <div class="width-60">
@@ -52,7 +52,7 @@ Add Expenses
 
                             <tr>
                                 <td class="cell-1">
-                                    <label for="item_name">Item Name: <span class="text-rd">*</span></label>
+                                    <label for="item_name"><span style="color:#fff;"><b>Item Name: </b></span><span class="text-rd">*</span></label>
                                 </td>
                                 <td>
                                     <div class="width-60">
@@ -67,14 +67,14 @@ Add Expenses
                         </tbody>
                             <tr class="table-padding-top">
                                 <td class="cell-2">
-                                    <label for="category">Category: <span class="text-rd">*</span></label>
+                                    <label for="category"><span style="color:#fff;"><b>Category: </b></span><span class="text-rd">*</span></label>
                                     <div>
                                         {{expense_form.category}}
                                     </div>
                                 </td>
                                 <td>
                                     <div style="display:none" id="subCategoryHidden" class="table-padding-left">
-                                        <label for="sub_category">Sub Category: <span class="text-rd">*</span></label>
+                                        <label for="sub_category"><span style="color:#fff;"><b>Sub Category: </b></span><span class="text-rd">*</span></label>
                                         <div class="width-55">
                                         {{expense_form.sub_category}}
                                         </div>
@@ -88,13 +88,13 @@ Add Expenses
                         <tbody>
                             <tr class="table-padding-bottom table-padding-top">
                                 <td class="cell-1">
-                                    <label for="quantity">Quantity: <span class="text-rd">*</span></label>
+                                    <label for="quantity"><span style="color:#fff;"><b>Quantity: </b></span><span class="text-rd">*</span></label>
                                     <div class="width-40">
                                         {{expense_form.quantity}}
                                     </div>
                                 </td>
                                 <td class="table-padding-left">
-                                    <label for="price">Price: <span class="text-rd">*</span></label>
+                                    <label for="price"><span style="color:#fff;"><b>Price: </b></span><span class="text-rd">*</span></label>
                                     <div class="width-60">
                                         {{expense_form.price}}
                                     </div>
@@ -107,7 +107,7 @@ Add Expenses
                         <tbody>
                             <tr>
                                 <td class="cell-1">
-                                    <label for="notes">Notes: (optional)</label>
+                                    <label for="notes"><span style="color:#fff;"><b>Notes: (optional)</b></span></label>
                                 </td>
                                 <td>
                                     {{expense_form.notes}}
@@ -171,7 +171,7 @@ Add Expenses
 <script>
     // Auto sum in real time
     $(function(){
-        $("#id_quantity, #id_price").change(function(){
+        $("#id_quantity, #id_price").keyup(function(){
             var qty = parseFloat($("#id_quantity").val()) || 0;
             var prc = parseFloat($("#id_price").val()) || 0;
 

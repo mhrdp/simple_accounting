@@ -27,7 +27,7 @@ def register_product(request):
     content = {
         'product_form': product_form,
     }
-    return render(request, 'books/register_product.html', content)
+    return render(request, 'books/input/register_product.html', content)
 
 @login_required
 def register_income(request):
@@ -59,7 +59,7 @@ def register_income(request):
     content = {
         'income_form': income_form,
     }
-    return render(request, 'books/register_income.html', content)
+    return render(request, 'books/input/register_income.html', content)
 
 @login_required
 def register_expense(request):
@@ -86,4 +86,4 @@ def register_expense(request):
         'expense_form': expense_form,
         'expense_form_notification': expense_form_notification,
     }
-    return render(request, 'books/register_expense.html', content)
+    return render(request, 'books/input/register_expense.html', content)

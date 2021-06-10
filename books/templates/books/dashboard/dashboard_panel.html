@@ -43,7 +43,7 @@
                 <tr>
                     <td>
                         <div>
-                            <i class="fas fas fa-credit-card"></i>
+                            <i class="fas fa-credit-card"></i>
                         </div>
                     </td>
                     <td class="table-align-right">
@@ -78,7 +78,7 @@
                 <tr>
                     <td>
                         <div>
-                            <i class="fas fas fa-credit-card"></i>
+                            <i class="fas fa-money-bill"></i>
                         </div>
                     </td>
                     <td class="table-align-right">
@@ -113,7 +113,17 @@
                                 </span>
                                 <span class="text-white" style="font-size: 18px;">
                                 <strong>
-                                {{profit_percentage}}
+                                {% if profit_percentage > 0 %}
+                                <span class="text-gr">
+                                    {{profit_percentage}}
+                                </span>
+                                {% elif profit_percentage < 0 %}
+                                <span class="text-rd">
+                                    {{profit_percentage}}
+                                </span>
+                                {% else %}
+                                    {{profit_percentage}}
+                                {% endif %}
                                 </strong>
                                 <span style="font-size:14px"> %</span>
                                 </span>

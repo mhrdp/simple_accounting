@@ -12,6 +12,8 @@ from .models import Journal, Product
 
 @login_required
 def list_of_income(request):
+    get_current_month = timezone.now().month
+
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
     
@@ -39,7 +41,26 @@ def list_of_income(request):
             ).annotate(
                 sum=Sum('total')
             )
+
+            quantity_filtered = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('quantity')
+            )
+
+            income_filtered = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Debit',
+                date_added__range=(start_date, end_date)
+            ).aggregate(
+                sum=Sum('total')
+            )
     else:
+        quantity_filtered = None
+        income_filtered = None
+
         # List all of the income
         list_of_income = Journal.objects.filter(
             username=request.user.pk,
@@ -59,6 +80,22 @@ def list_of_income(request):
         )[:30].annotate(
             sum=Sum('total')
         )
+
+    quantity_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('quantity')
+    )
+
+    income_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Debit',
+        date_added__month=get_current_month
+    ).aggregate(
+        sum=Sum('total')
+    )
     
     # Paginator, to split page into several pages
     page = request.GET.get('page', 1)
@@ -78,9 +115,6 @@ def list_of_income(request):
 
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
-
-    # Get month
-    get_current_month = timezone.now().month
     
     # Convert month's number to the name of the month
     # timezone.now() by default return number
@@ -101,14 +135,21 @@ def list_of_income(request):
         'page_range': page_range,
         'income_chart_last_30_days': income_data_last_30_days,
 
+        'quantity_in_running_month': quantity_in_running_month,
+        'income_in_running_month': income_in_running_month,
+        'quantity_filtered': quantity_filtered,
+        'income_filtered': income_filtered,
+
         'start_date': start_date,
         'end_date': end_date,
         'month': months[get_current_month],
     }
-    return render(request, 'books/list_of_income.html', content)
+    return render(request, 'books/lists/list_of_income.html', content)
 
 @login_required
 def list_of_expense(request):
+    get_current_month = timezone.now().month
+
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
@@ -136,7 +177,26 @@ def list_of_expense(request):
             ).annotate(
                 sum=Sum('total')
             )
+
+            expense_filtered = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('total')
+            )
+
+            num_of_items_bought_filtered = Journal.objects.filter(
+                username=request.user.pk,
+                book_category='Kredit',
+                date_added__range=(start_date, end_date),
+            ).aggregate(
+                sum=Sum('quantity')
+            )
     else:
+        expense_filtered = None
+        num_of_items_bought_filtered = None
+        
         # List all of the expenses
         list_of_expense = Journal.objects.filter(
             username=request.user.pk,
@@ -154,6 +214,22 @@ def list_of_expense(request):
         )[:30].annotate(
             sum=Sum('total')
         )
+
+    expense_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('total')
+    )
+
+    num_of_items_bought_in_running_month = Journal.objects.filter(
+        username=request.user.pk,
+        book_category='Kredit',
+        date_added__month=get_current_month,
+    ).aggregate(
+        sum=Sum('quantity')
+    )
 
     #Paginator, to split page into several pages
     page = request.GET.get('page', 1)
@@ -173,9 +249,6 @@ def list_of_expense(request):
 
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
-
-    # Get month
-    get_current_month = timezone.now().month
     
     # Convert month's number to the name of the month
     # timezone.now() by default return number
@@ -186,38 +259,6 @@ def list_of_expense(request):
     ]
     for i, j in zip(range(1, 13), list_of_months):
         months[i] = j
-    
-    expense_in_running_month = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('total')
-    )
-
-    num_of_items_bought_in_running_month = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        date_added__month=get_current_month,
-    ).aggregate(
-        sum=Sum('quantity')
-    )
-
-    total_expense_filtered = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('total')
-    )
-
-    total_num_items_bought_filtered = Journal.objects.filter(
-        username=request.user.pk,
-        book_category='Kredit',
-        date_added__range=(start_date, end_date),
-    ).aggregate(
-        sum=Sum('quantity')
-    )
 
     # Catch the latest paginated page the user visit before editing the data, and store it to the session
     # The number of page inside request.GET.get() must be converted into string so it can be concatinated
@@ -233,11 +274,11 @@ def list_of_expense(request):
         'end_date': end_date,
 
         'expense_in_running_month': expense_in_running_month,
-        'num_of_item_bought_in_running)month': num_of_items_bought_in_running_month,
-        'total_expense_filtered': total_expense_filtered,
-        'total_num_items_filtered': total_num_items_bought_filtered,
+        'num_of_item_bought_in_running_month': num_of_items_bought_in_running_month,
+        'expense_filtered': expense_filtered,
+        'num_items_filtered': num_of_items_bought_filtered,
     }
-    return render(request, 'books/list_of_expense.html', content)
+    return render(request, 'books/lists/list_of_expense.html', content)
 
 @login_required
 def list_of_product(request):
@@ -285,4 +326,4 @@ def list_of_product(request):
 
         'keyword_search': keyword_search,
     }
-    return render(request, 'books/list_of_product.html', content)
+    return render(request, 'books/lists/list_of_product.html', content)

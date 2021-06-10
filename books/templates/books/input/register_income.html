@@ -7,7 +7,7 @@ Add Income
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
-<link href="/../../static/books/register_income.css" rel="stylesheet">
+<link href="/../../static/books/input/register_income.css" rel="stylesheet">
 {% endblock css%}
 
 {% block content %}
@@ -31,13 +31,13 @@ Add Income
             </div>
             <form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}">
                 {% csrf_token %}
-                <div class="subtitles">
+                <div>
                     <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
                     <table>
                         <tbody>
                             <tr class="table-padding-bottom">
                                 <td class="cell-1">
-                                    <label for="date_added">Date Added: <span class="text-rd">*</span></label>
+                                    <label for="date_added"><span style="color: #fff;"><b>Date Added: </b></span><span class="text-rd">*</span></label>
                                 </td>
                                 <td>
                                     <div class="width-40">
@@ -47,7 +47,7 @@ Add Income
                             </tr>
                             <tr>
                                 <td class="cell-1">
-                                    <label for="product_name">Product Name: <span class="text-rd">*</span></label>
+                                    <label for="product_name"><span style="color: #fff;"><b>Product Name: </b></span><span class="text-rd">*</span></label>
                                 </td>
                                 <td>
                                     <div class="width-40">
@@ -60,13 +60,13 @@ Add Income
 
                             <tr class="table-padding-top table-border-top">
                                 <td class="cell-1">
-                                    <label for="quantity">Quantity: <span class="text-rd">*</span></label>
+                                    <label for="quantity"><span style="color: #fff;"><b>Quantity: </b></span><span class="text-rd">*</span></label>
                                     <div class="qty width-60">
                                         {{income_form.quantity}}
                                     </div>
                                 </td>
                                 <td>
-                                    <label for="price">Price: <span class="text-rd">*</span></label>
+                                    <label for="price"><span style="color: #fff;"><b>Price: </b></span><span class="text-rd">*</span></label>
                                     <div class="width-50">
                                         {{income_form.price}}
                                     </div>
@@ -75,7 +75,7 @@ Add Income
                             <tr class="table-padding-bottom table-border-bottom">
                                 <td></td>
                                 <td>
-                                    <label for="additional_price">Additional Price: (optional)</label>
+                                    <label for="additional_price"><span style="color: #fff;"><b>Additional Price: (optional)</b></span></label>
                                     <div class="width-50">
                                         {{income_form.additional_price}}
                                     </div>
@@ -86,7 +86,7 @@ Add Income
 
                             <tr class="table-padding-bottom">
                                 <td class="cell-1">
-                                    <label for="notes">Notes: (optional)</label>
+                                    <label for="notes"><span style="color: #fff;"><b>Notes: (optional)</b></span></label>
                                 </td>
                                 <td>
                                     <div style="max-height: 50%">
@@ -96,10 +96,10 @@ Add Income
                             </tr>
                             <tr>
                                 <td class="cell-1">
-                                    <h5 class="subtitles">Total:</h5>
+                                    <h5>Total:</h5>
                                 </td>
                                 <td>
-                                    <h4 id="totalPrice" class="subtitles">0</h4>
+                                    <h4 id="totalPrice">0</h4>
                                 </td>
                             </tr>
                             <tr>
@@ -141,7 +141,7 @@ Add Income
 </script>
 <script>
     $(function(){
-        $("#id_quantity, #id_price, #id_additional_price").change(function(){
+        $("#id_quantity, #id_price, #id_additional_price").keyup(function(){
             var qty = parseFloat($("#id_quantity").val()) || 0;
             var prc = parseFloat($("#id_price").val()) || 0;
             var add_prc = parseFloat($("#id_additional_price").val()) || 0;

@@ -137,10 +137,8 @@ def user_dashboard(request):
     profit_percentage = None
     if float(income_0['sum']) > 0:
         profit_percentage = (nett_profit / float(income_0['sum'])) * 100
-        format_profit_percentage = '{:.2f}'.format(profit_percentage)
     else:
         profit_percentage = 0
-        format_profit_percentage = '{:.2f}'.format(profit_percentage)
 
     content = {
         'month': months[get_current_month],
@@ -158,7 +156,7 @@ def user_dashboard(request):
         'income_in_running_month_per_day': income_in_running_month_per_day,
 
         'nett_profit': nett_profit,
-        'profit_percentage': format_profit_percentage,
+        'profit_percentage': profit_percentage,
     }
     return render(request, 'books/dashboard/user_dashboard.html', content)
 

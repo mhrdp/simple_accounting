@@ -5,7 +5,7 @@ Register Product
 {% endblock title %}
 
 {% block css %}
-<link href="/../../static/books/register_product.css" rel="stylesheet">
+<link href="/../../static/books/input/register_product.css" rel="stylesheet">
 <link href="/../../static/books/books.css" rel="stylesheet">
 {% endblock css %}
 
@@ -31,16 +31,16 @@ Register Product
 
             <form method="POST">
                 {% csrf_token %}
-                <p class="subtitles text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
+                <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
                 <div class="mb-2">
-                    <label for="product_name" class="subtitles">Product Name: <span class="text-rd">*</span></label>
+                    <label for="product_name"><span style="color: #fff;"><b>Product Name: </b></span><span class="text-rd">*</span></label>
                     {{product_form.product_name}}
                 </div>
 
-                <label for="price" class="subtitles">Price: <span class="text-rd">*</span></label>
+                <label for="price"><span style="color: #fff;"><b>Price:</b></span> <span class="text-rd">*</span></label>
                 {{product_form.price}}
 
-                <label for="type" class="subtitles mt-2">Type:<span class="text-rd">*</span></label>
+                <label for="type" class="mt-2"><span style="color: #fff;"><b>Type:</b></span><span class="text-rd">*</span></label>
                 {{product_form.types}}
 
                 <button type="submit" class="btn btn-color-primary btn-sm float-right mt-2">Submit</button>

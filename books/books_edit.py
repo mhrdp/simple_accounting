@@ -30,7 +30,7 @@ def edit_product(request, pk):
         'product_form': product_form,
         'product_obj': product_obj,
     }
-    return render(request, 'books/edit_product.html', content)
+    return render(request, 'books/edit/edit_product.html', content)
 
 @login_required
 def delete_product(request, pk):
@@ -52,7 +52,7 @@ def delete_product(request, pk):
         'del_product': product_obj,
     }
 
-    return render(request, 'books/delete_product.html', content)
+    return render(request, 'books/edit/delete_product.html', content)
 
 @login_required
 def edit_income(request, pk):
@@ -92,7 +92,7 @@ def edit_income(request, pk):
         'product_name': obj.product_name,
         'product_price': price,
     }
-    return render(request, 'books/edit_income.html', content)
+    return render(request, 'books/edit/edit_income.html', content)
 
 @login_required
 def delete_income(request, pk):
@@ -113,7 +113,7 @@ def delete_income(request, pk):
     content = {
         'del_income': income_obj,
     }
-    return render(request, 'books/delete_income.html', content)
+    return render(request, 'books/edit/delete_income.html', content)
 
 @login_required
 def delete_expense(request, pk):
@@ -133,7 +133,7 @@ def delete_expense(request, pk):
     content = {
         'del_expense': expense_obj,
     }
-    return render(request, 'books/delete_expense.html', content)
+    return render(request, 'books/edit/delete_expense.html', content)
 
 @login_required
 def edit_expense(request, pk):
@@ -168,4 +168,4 @@ def edit_expense(request, pk):
         'expense_form': expense_form,
         'item_name': obj.item_name,
     }
-    return render(request, 'books/edit_expense.html', content)
+    return render(request, 'books/edit/edit_expense.html', content)
