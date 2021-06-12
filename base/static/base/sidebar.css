@@ -366,7 +366,7 @@
   }
   
   .page-wrapper .page-content > div {
-    padding: 20px 40px;
+    padding: 15px 40px;
   }
   
   .page-wrapper .page-content {
@@ -384,7 +384,7 @@
     height: 0px;
   }
   ::-webkit-scrollbar-thumb {
-    background: #525965;
+    background: var(--normal-text-alt);
     border: 0px none #ffffff;
     border-radius: 0px;
   }
@@ -413,13 +413,13 @@
   /*-----------------------------chiller-theme-------------------------------------------------*/
   
   .chiller-theme .sidebar-wrapper {
-      background: #31353D;
+      background: var(--surface-alt);
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-header,
   .chiller-theme .sidebar-wrapper .sidebar-search,
   .chiller-theme .sidebar-wrapper .sidebar-menu {
-      border-top: 1px solid #3a3f48;
+      border-top: 1px solid var(--surface);
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
@@ -435,7 +435,7 @@
   .chiller-theme .sidebar-wrapper .sidebar-brand>a,
   .chiller-theme .sidebar-wrapper .sidebar-menu ul li a,
   .chiller-theme .sidebar-footer>a {
-      color: #818896;
+      color: var(--normal-text);
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-menu ul li:hover>a,
@@ -465,17 +465,16 @@
   .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown div,
   .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
   .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
-      background: #3a3f48;
+      background: var(--surface-top);
   }
   
   .chiller-theme .sidebar-wrapper .sidebar-menu .header-menu span {
-      color: #6c7b88;
+      color: var(--normal-text-alt);
   }
   
   .chiller-theme .sidebar-footer {
-      background: #3a3f48;
-      box-shadow: 0px -1px 5px #282c33;
-      border-top: 1px solid #464a52;
+      background: var(--surface-top);
+      border-top: 1px solid var(--surface);
   }
   
   .chiller-theme .sidebar-footer>a:first-child {
@@ -501,9 +500,8 @@
   .fixed-brand {
     position: fixed;
     width: 260px;
-    background-color: #3a3f48;
-    box-shadow: 0px -1px 5px #282c33;
-    border-bottom: 1px solid #464a52;
+    background-color: var(--surface-top);
+    border-bottom: 1px solid var(--surface);
     z-index: 1000;
   }
 
@@ -569,6 +567,6 @@
 
   @media(max-width: 576px){
     .page-wrapper .page-content > div {
-      padding: 20px 30px 0 50px;
+      padding: 15px 30px 0 50px;
     }
   }

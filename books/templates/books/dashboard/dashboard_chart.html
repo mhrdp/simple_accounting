@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="chart-row col-12 top-2">
+    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="income-tab" data-toggle="tab" href="#income" role="tab" aria-controls="income" aria-selected="true">Income Chart</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="expense-tab" data-toggle="tab" href="#expense" role="tab" aria-controls="expense" aria-selected="false">Expense Chart</a>
+        </li>
+    </ul>
+    <div class="tab-content"> 
+        <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="income-tab" id="income">
+            <div class="dashboard-chart-container">
+                <h5>Penghasilan Bulan {{month}}</h5>
+                <canvas id="incomeChart"></canvas>
+            </div>
+        </div>
+        <div class="tab-pane fade" role="tabpanel" aria-labelledby="expense-tab" id="expense">
+            <div class="dashboard-chart-container">
+                <h5>Pengeluaran Bulan {{month}}</h5>
+                <canvas id="expenseChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

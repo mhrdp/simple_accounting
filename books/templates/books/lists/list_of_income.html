@@ -2,12 +2,12 @@
 {% load humanize %}
 
 {% block title %}
-{{request.user.companydetail.company_name}}'s List of Expense
+{{request.user.companydetail.company_name}}'s List of Income
 {% endblock title %}
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
-<link href="/../../static/books/expense_list.css" rel="stylesheet">
+<link href="/../../static/books/lists/income_list.css" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock css %}
@@ -15,36 +15,40 @@
 {% block content %}
 <!-- include for deletion's confirmation Modal -->
 <!-- The include function must be in the same block -->
-{% include 'books/delete_expense.html' %}
+{% include 'books/edit/delete_income.html' %}
 
 <div class="page-content">
     <div class="books-header">
-        <strong>Buku Pengeluaran</strong>
+        <strong>Buku Penghasilan</strong>
     </div>
     <div class="books-header-subtitles subtitles">
-        <p>Daftar lengkap data pengeluaran</p>
+        <p>Daftar lengkap data penghasilan</p>
     </div>
 
     <div class="row sum-container">
         <div class="col">
             <div class="general-panel">
-                <p class="subtitles">Pembelian Bulan {{month}}</p>
+                <p>Penjualan Bulan {{month}}</p>
+                <p>{{quantity_in_running_month.sum}}</p>
             </div>
         </div>
         <div class="col">
             <div class="general-panel">
-                <p class="subtitles">Pengeluaran Bulan {{month}}</p>
+                <p>Profit Bulan {{month}}</p>
+                <p>Rp.{{income_in_running_month.sum|intcomma}}</p>
             </div>
         </div>
         {% if start_date != '' and end_date != '' and start_date != None and end_date != None %}
             <div class="col">
                 <div class="general-panel">
-                    <p class="subtitles">Pembelian (filtered)</p>
+                    <p>Total terjual (filtered)</p>
+                    <p>{{quantity_filtered.sum}}</p>
                 </div>
             </div>
             <div class="col">
                 <div class="general-panel">
-                    <p class="subtitles">Total Pengeluaran (filtered)</p>
+                    <p>Total profit (filtered)</p>
+                    <p>Rp.{{income_filtered.sum|intcomma}}</p>
                 </div>
             </div>
         {% endif %}
@@ -53,7 +57,7 @@
     <div class="row">
         <div class="col-12">
             <div class="books-chart-container">
-                <canvas id="expenseList"></canvas>
+                <canvas id="incomeList"></canvas>
             </div>
         </div>
     </div>
@@ -87,7 +91,7 @@
         </form>
         <div class="row">
             <div class="col no-padding">
-                <a href="{% url 'register_expense' %}" title="Add New">
+                <a href="{% url 'register_income' %}" title="Add New">
                     <button class="btn btn-color-primary btn-sm">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -99,50 +103,52 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive-xl">
-                <table class="table table-bordered table-dark table-striped subtitles table-font-resize">
+                <table class="table table-bordered table-dark table-striped table-font-resize">
                     <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Items</th>
-                            <th scope="col" class="small-hid">Category</th>
-                            <th scope="col" class="small-hid">Sub-category</th>
-                            <th scope="col" class="small-hid">Qty</th>
-                            <th scope="col" class="small-hid">Price</th>
-                            <th scope="col">Total</th>
-                            <th scope="col" class="small-hid">Notes</th>
-                            <th></th>
-                        </tr>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Items</th>
+                        <th scope="col" class="small-hid">Qty</th>
+                        <th scope="col" class="small-hid">Price</th>
+                        <th scope="col" class="small-hid">Additional</th>
+                        <th scope="col">Total</th>
+                        <th scope="col" class="small-hid">Notes</th>
+                        <th></th>
+                    </tr>
                     </thead>
                     <tbody>
-                    {% for expense in paginate %}
+                    {% for income in paginate %}
                         <tr>
-                            <td scope="row">{{forloop.counter}}</td>
-                            <td>{{expense.date_added}}</td>
-                            <td>{{expense.item_name}}</td>
-                            <td class="small-hid">{{expense.category}}</td>
-                            <td class="small-hid">{{expense.sub_category}}</td>
-                            <td class="small-hid">{{expense.quantity}}</td>
-                            <td class="small-hid">Rp. {{expense.price|intcomma}}</td>
-                            <td>Rp. {{expense.total|intcomma}}</td>
-                            <td class="small-hid wrap-table">{{expense.notes}}</td>
+                            <td scope="row" class="align-middle">{{forloop.counter}}</td>
+                            <td class="align-middle">{{income.date_added}}</td>
+                            <td class="align-middle">
+                                {% if not income.product_name == 'None' %}
+                                    {{income.product_name}}
+                                {% else %}
+                                    <i>deleted object</i>
+                                {% endif %}
+                            </td>
+                            <td class="small-hid">{{income.quantity}}</td>
+                            <td class="small-hid">Rp. {{income.price|intcomma}}</td>
+                            <td class="small-hid">Rp. {{income.additional_price|intcomma}}</td>
+                            <td class="align-middle">Rp. {{income.total|intcomma}}</td>
+                            <td class="small-hid wrap-table">{{income.notes}}</td>
                             <td>
-                                <a href="{% url 'edit_expense' expense.pk %}" class="link-info" title="Edit">
+                                <a href="{% url 'edit_income' income.pk %}" class="link-info" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="{% url 'delete_expense' expense.pk %}" class="link-dgr ml-2 confirm-delete" title="Delete" data-toggle="modal" data-target="#deleteExpense" id="expenseDelete-{{expense.pk}}">
+                                <a href="{% url 'delete_income' income.pk %}" class="link-dgr ml-2 confirm-delete" title="Delete" data-toggle="modal" data-target="#deleteIncome" id="incomeDelete-{{income.pk}}">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
-                        </tr>
-                    {% endfor %}
+                    {% endfor %} 
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock content %}
 
 {% block paginator %}
@@ -226,18 +232,19 @@
 </script>
 
 <script>
-$(document).ready(function(){
-    // jQuery to call Modal pop up for deletion of the data
-    $(document).on("click", ".confirm-delete", function(){
-        $("#deleteExpense").attr("caller-id", $(this).attr("id"));
-    })
+    $(document).ready(function(){
+        // jQuery to call Modal pop up for deletion of the data
+        $(document).on("click", ".confirm-delete", function(){
+            $("#deleteIncome").attr("caller-id", $(this).attr("id"));
+        });
 
-    // jQuery for buttons' click event inside the Modal
-    $(document).on("click", "#confirmDeleteExpense", function(){
-        var caller = $("#confirmDeleteExpense").closest(".modal").attr("caller-id");
-        window.location = $("#".concat(caller)).attr("href")
+        // jQuery for buttons' click event inside the Modal
+        $(document).on("click", "#confirmDeleteIncome", function(){
+            var caller = $("#confirmDeleteIncome").closest(".modal").attr("caller-id");
+            window.location = $("#".concat(caller)).attr("href");
+        });
     })
-})
+    
 </script>
 
 <script>
@@ -251,20 +258,20 @@ $(document).ready(function(){
 </script>
 
 <script>
-    var ctx = document.getElementById("expenseList").getContext("2d");
+    var ctx = document.getElementById("incomeList").getContext("2d");
     var chart = new Chart(ctx, {
         type: "line",
         data: {
             labels: [
-            {%for i in expense_chart_last_30_days%}"{{i.date_added}}",{%endfor%}
+            {%for i in income_chart_last_30_days%}"{{i.date_added}}",{%endfor%}
             ],
             datasets: [{
-                label: "Expense",
+                label: "Income",
                 data: [
-                {%for i in expense_chart_last_30_days%}{{i.sum}},{%endfor%}
+                {%for i in income_chart_last_30_days%}{{i.sum}},{%endfor%}
                 ],
-                backgroundColor: 'rgba(255, 99, 71, 0.450)',
-                borderColor: '#ff3f80',
+                backgroundColor: "#0290a379",
+                borderColor: "#028fa3",
                 fill: true,
                 tension: .3,
             }]
@@ -276,12 +283,11 @@ $(document).ready(function(){
             plugins: {
                 legend: {
                     display: true,
-                    labels : {
-                        color: "#9e9e9e"
-                    }
+                    labels: {
+                        color: "#9e9e9e",
+                    },
                 },
             },
-            
             scales: {
                 y: {
                     beginAtZero: true,
@@ -294,21 +300,21 @@ $(document).ready(function(){
                     grid: {
                         borderColor: "#9e9e9e",
                         drawOnChartArea: false,
-                    }
+                    },
                 },
                 x: {
                     ticks: {
                         color: "#9e9e9e",
                         font: {
                             size: 10,
-                        }
+                        },
                     },
                     grid: {
                         borderColor: "#9e9e9e",
                         drawOnChartArea: false,
-                    }
+                    },
                 },
-            },
+            }
         }
     })
 </script>

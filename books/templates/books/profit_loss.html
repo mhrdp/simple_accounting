@@ -27,7 +27,7 @@
     <div class="books-header">
         <h4><strong>Buku Penghasilan</strong></h4>
     </div>
-    <div class="books-header-subtitles subtitles mb-5">
+    <div class="books-header-    mb-5">
         <p>Daftar lengkap data penghasilan</p>
     </div>
 
@@ -84,11 +84,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_income.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_income.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -108,7 +108,7 @@
                                     Rp. {{monthly_income.sum|intcomma}}
                                 </h6>
                             {% else %}
-                                <h6 class="subtitles">Rp. 0</h6>
+                                <h6 class=" ">Rp. 0</h6>
                             {% endif %}
                         </div>
                     </div>
@@ -121,11 +121,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_raw_material.sum > 0%}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_raw_material.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -138,11 +138,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_wip.sum > 0%}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_wip.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -155,11 +155,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_finished_goods.sum > 0%}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_finished_goods.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -172,11 +172,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_production_misc.sum > 0%}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_production_misc.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -207,15 +207,15 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_gross_profit > 0 %}
-                                <h4 class="text-gr">
+                                <h4 class="text-gr"><strong>
                                     Rp. {{monthly_gross_profit|intcomma}}0
-                                </h4>
+                                </strong></h4>
                             {% elif monthly_gross_profit < 0 %}
-                                <h4 class="text-rd">
+                                <h4 class="text-rd"><strong>
                                     Rp. {{monthly_gross_profit|intcomma}}0
-                                </h4>
+                                </strong></h4>
                             {% else %}
-                                <h4>Rp. 0.00</h4>
+                                <h4><strong>Rp. 0.00</strong></h4>
                             {% endif %}
                         </div>
                     </div>
@@ -229,11 +229,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_marketing.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_marketing.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -246,11 +246,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_logistic.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_logistic.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -263,11 +263,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_operation_misc.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_operation_misc.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -281,9 +281,9 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_operational_sum > 0 %}
-                                <h6>Rp. {{monthly_operational_sum|intcomma}}0</h6>
+                                <h6><strong>Rp. {{monthly_operational_sum|intcomma}}0</strong></h6>
                             {% else %}
-                                <h6>Rp. 0</h6>
+                                <h6><strong>Rp. 0</strong></h6>
                             {% endif %}
                         </div>
                     </div>
@@ -296,11 +296,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_office_needs.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_office_needs.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -313,11 +313,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_salary.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_salary.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -330,11 +330,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_rent.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_rent.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -347,11 +347,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_administration_misc.sum > 0 %}
-                                <p class="subtitles">
+                                <p class=" ">
                                     Rp. {{monthly_administration_misc.sum|intcomma}}
                                 </p>
                             {% else %}
-                                <p class="subtitles">Rp. 0</p>
+                                <p class=" ">Rp. 0</p>
                             {% endif %}
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
@@ -365,11 +365,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_administration_sum > 0 %}
-                                <h6>
+                                <h6><strong>
                                     Rp. {{monthly_administration_sum|intcomma}}
-                                </h6>
+                                </strong></h6>
                             {% else %}
-                                <h6>Rp. 0</h6>
+                                <h6><strong>Rp. 0</strong></h6>
                             {% endif %}
                         </div>
                     </div>
@@ -382,11 +382,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_business_load_sum > 0 %}
-                                <h6 class="text-rd">
+                                <h6 class="text-rd"><strong>
                                     Rp. {{monthly_business_load_sum|intcomma}}
-                                </h6>
+                                </strong></h6>
                             {% else %}
-                                <h6 class="subtitles">Rp. 0</h6>
+                                <h6 class=" "><strong>Rp. 0</strong></h6>
                             {% endif %}
                         </div>
                     </div>
@@ -399,11 +399,11 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-3">
                             {% if monthly_nett_profit > 0 %}
-                                <h6 class="text-gr">Rp. {{monthly_nett_profit|intcomma}}0</h6>
+                                <h4 class="text-gr"><strong>Rp. {{monthly_nett_profit|intcomma}}0</strong></h4>
                             {% elif monthly_nett_profit < 0 %}
-                                <h6 class="text-rd">Rp. {{monthly_nett_profit|intcomma}}0</h6>
+                                <h4 class="text-rd"><strong>Rp. {{monthly_nett_profit|intcomma}}0</strong></h4>
                             {% else %}
-                                <h6 class="text-rd">Rp. 0</h6>
+                                <h4 class="text-rd"><strong>Rp. 0<strong></h4>
                             {% endif %}
                         </div>
                     </div>
@@ -414,352 +414,7 @@
 </div>
 
 <div style="display: none">
-    <div id="profitLoss">
-        <!-- print.js CSS for Modal warning big size -->
-        <!-- print.js is a javascript's script to call browser's print tool -->
-        <link href="/../../static/books/print.min.css" rel="stylesheet">
-
-        <style>
-            .underline {
-                border-bottom: 4px solid #3e50b4;
-            }
-
-            .upperline-bold {
-                border-top: 2px solid #000;
-            }
-
-            .upperline-light {
-                border-top: 1px solid #000;
-            }
-            
-            .zero-top {
-                margin-top: 0;
-            }
-
-            th {
-                padding-left: 25px;
-                padding-right: 25px;
-                width: 150px;
-            }
-
-            td {
-                padding-left: 20px;
-                padding-right: 20px;
-                padding-top: 2px;
-                padding-bottom: 2px;
-                width: 200px;
-            }
-
-            .text-rd {
-                color: #c93f4a;
-            }
-
-            .text-gr {
-                color: #559e3e;
-            }
-        </style>
-
-        <h2>{{company_name}}</h2>
-        
-        {% if start_date and end_date %}
-            <p class="zero-top">Laporan Laba/Rugi periode: {{start_date}} s/d {{end_date}}</p>
-        {% else %}
-            <p class="zero-top">Laporan Laba/Rugi periode: {{previous_month}}</p>
-        {% endif %}
-        <hr />
-
-        <table class="table">
-            <tr>
-                <th class="underline">Income</th>
-                <th></th>
-                <th></th>
-            </tr>
-        
-            <tr>
-                <td>Income</td>
-                <td>
-                    {% if monthly_income.sum > 0 %}
-                        <p>Rp. {{monthly_income.sum|intcomma}}</p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td class="upperline-light">
-                    {% if monthly_income.sum > 0 %}
-                        <h5 class="text-gr">
-                            Rp. {{monthly_income.sum|intcomma}}
-                        </h5>
-                    {% else %}
-                        <h5>Rp. 0.00</h5>
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
-
-        <table class="table">
-            <tr>
-                <th class="underline">Biaya Produksi</th>
-                <th></th>
-                <th></th>
-            </tr>
-        
-            <tr>
-                <td>Bahan Mentah</td>
-                <td>
-                    {% if monthly_raw_material.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_raw_material.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Barang Setengah Jadi</td>
-                <td>
-                    {% if monthly_wip.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_wip.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <bpRp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Barang Jadi</td>
-                <td>
-                    {% if monthly_finished_goods.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_finished_goods.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Biaya Produksi Lainnya</td>
-                <td>
-                    {% if monthly_production_misc.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_production_misc.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td class="upperline-light">
-                    {% if monthly_production_sum %}
-                        <h5>Rp. {{monthly_production_sum|intcomma}}</h5>
-                    {% else %}
-                        <h5>Rp. 0.00</h5>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td><h4>Laba Kotor</h4></td>
-                <td></td>
-                <td class="upperline-bold">
-                    {% if monthly_gross_profit > 0 %}
-                        <h4 class="text-gr">
-                            Rp. {{monthly_gross_profit|intcomma}}0
-                        </h4>
-                    {% elif monthly_gross_profit < 0 %}
-                        <h4 class="text-rd">
-                            Rp. {{monthly_gross_profit|intcomma}}0
-                        </h4>
-                    {% else %}
-                        <h4>Rp. 0.00</h4>
-                    {% endif %}
-                    </td>
-            </tr>
-        </table>
-
-        <h2 style="margin-bottom: 0;">Beban Usaha</h2>
-        <table class="table">
-            <tr>
-                <th class="underline">Biaya Operasional</th>
-                <th></th>
-                <th></th>
-            </tr>
-        
-            <tr>
-                <td>Biaya Pemasaran</td>
-                <td>
-                    {% if monthly_marketing.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_marketing.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Biaya Logistik</td>
-                <td>
-                    {% if monthly_logistic.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_logistic.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Biaya Operasional Lainnya</td>
-                <td>
-                    {% if monthly_operation_misc.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_operation_misc.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td class="upperline-light">
-                    {% if monthly_operational_sum > 0%}
-                        <h5>Rp. {{monthly_operational_sum|intcomma}}</h5>
-                    {% else %}
-                        <h5>Rp. 0.00</h5>
-                    {% endif %}
-                    </td>
-            </tr>
-        </table>
-
-        <br /><br /><br /><br /><br />
-
-        <table class="table">
-            <tr>
-                <th class="underline">Biaya Administrasi</th>
-                <th></th>
-                <th></th>
-            </tr>
-        
-            <tr>
-                <td>Biaya Keperluan Kantor</td>
-                <td>
-                    {% if monthly_office_needs.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_office_needs.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Biaya Gaji Karyawan</td>
-                <td>
-                    {% if monthly_salary.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_salary.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Biaya Sewa</td>
-                <td>
-                    {% if monthly_rent.sum > 0 %}
-                        <p>
-                            Rp. {{monthly_rent.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td>Biaya Administrasi Lainnya</td>
-                <td>
-                    {% if monthly_administration_misc.sum > 0 %}
-                        <0>
-                            Rp. {{monthly_administration_misc.sum|intcomma}}
-                        </p>
-                    {% else %}
-                        <p>Rp. 0.00</p>
-                    {% endif %}
-                </td>
-                <td> - </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td class="upperline-light">
-                    {% if monthly_administration_sum > 0 %}
-                        <h5>Rp. {{monthly_administration_sum|intcomma}}0</h5>
-                    {% else %}
-                        <h5>Rp. 0.00</h5>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td><h4>Total Beban Usaha</h4></td>
-                <td></td>
-                <td class="upperline-bold">
-                    {% if monthly_business_load_sum > 0 %}
-                        <h4 class="text-rd">
-                            Rp. {{monthly_business_load_sum|intcomma}}0
-                        </h4>
-                    {% else %}
-                        <h4>
-                            Rp. 0.00
-                        </h4>
-                    {% endif %}
-                </td>
-            <tr>
-                <td><h3>NETT Profit</h3></td>
-                <td></td>
-                <td class="upperline">
-                    {% if monthly_nett_profit > 0 %}
-                        <h2 class="text-gr">
-                            Rp. {{monthly_nett_profit|intcomma}}0
-                        </h2>
-                    {% elif monthly_nett_profit < 0 %}
-                        <h2 class="text-rd">
-                            Rp. {{monthly_nett_profit|intcomma}}0
-                        </h2>
-                    {% else %}
-                        <h2>
-                            Rp. 0.00
-                        </h2>
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
-
-        <!-- js script for print.js -->
-        <script src="/../../static/books/print.min.js"></script>
-    </div>
+    {% include './browser_pdf.html' %}
 </div>
 {% endblock content %}
 

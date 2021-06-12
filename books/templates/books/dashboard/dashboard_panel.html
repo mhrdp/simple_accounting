@@ -1,0 +1,137 @@
+{% load static %}
+{% load humanize %}
+
+<div class="income-margin col-12 col-md-4">
+    <div class="dashboard-container income-panel">
+        <table class="table-content-container" style="height: 100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="text-gr">
+                            <i class="fas fa-cash-register"></i>
+                        </div>
+                    </td>
+                    <td class="table-align-right">
+                        <span>
+                            <h5 class="text-gr"><strong>
+                                {% if income_in_running_month.sum > 0%}
+                                    Rp. {{income_in_running_month.sum|intcomma}}
+                                {% else %}
+                                    Rp. 0.00
+                                {% endif %}
+                            </strong></h5>
+                        </span>
+                    </td>
+                </tr>
+                <tr class="panel-footer">
+                    <td></td>
+                    <td class="table-text-middle">
+                        <p class="text-right">
+                            <strong>Penghasilan bulan ini</strong>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="col-12 col-md-4">
+    <div class="dashboard-container expense-panel">
+        <table class="table-content-container" style="height: 100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                    </td>
+                    <td class="table-align-right">
+                        <span>
+                        <h5 class="text-rd"><strong>
+                            {% if expense_in_running_month.sum > 0 %}
+                                Rp. {{expense_in_running_month.sum|intcomma}}
+                            {% else %}
+                                Rp. 0.00
+                            {% endif %}
+                        </strong></h5>
+                        </span>
+                    </td>
+                </tr>
+                <tr class="panel-footer">
+                    <td></td>
+                    <td class="table-text-middle">
+                        <p class="text-right">
+                            <strong>Pengeluaran bulan ini</strong>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="col-12 col-md-4">
+    <div class="dashboard-container profit-panel">
+        <table class="table-content-container" style="height: 100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <i class="fas fa-money-bill"></i>
+                        </div>
+                    </td>
+                    <td class="table-align-right">
+                        <span>
+                        {% if nett_profit > 0 %}
+                            <h5 class="text-gr">
+                                <strong>
+                                Rp. {{nett_profit|intcomma}}0
+                                </strong>
+                            </h5>
+                        {% elif nett_profit < 0 %}
+                            <h5 class="text-rd">
+                                <strong>
+                                Rp. {{nett_profit|intcomma}}0
+                                </strong>
+                            </h5>
+                        {% else %}
+                            <h5><strong>Rp. 0.00</strong></h5>
+                        {% endif %}
+                        
+                        </span>
+                    </td>
+                </tr>
+                <tr class="panel-footer">
+                    <td>  
+                    </td>
+                    <td class="table-text-middle">
+                        <p class="text-right">
+                            <strong>
+                                <span class="mr-1">
+                                    Profit Bulan Ini:
+                                </span>
+                                <span class="text-white" style="font-size: 18px;">
+                                <strong>
+                                {% if profit_percentage > 0 %}
+                                <span class="text-gr">
+                                    {{profit_percentage}}
+                                </span>
+                                {% elif profit_percentage < 0 %}
+                                <span class="text-rd">
+                                    {{profit_percentage}}
+                                </span>
+                                {% else %}
+                                    {{profit_percentage}}
+                                {% endif %}
+                                </strong>
+                                <span style="font-size:14px"> %</span>
+                                </span>
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

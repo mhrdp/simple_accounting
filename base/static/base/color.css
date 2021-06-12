@@ -1,0 +1,31 @@
+body {
+    --background: #121212;
+    --surface: #2a2a2a; /* PANEL */
+    --surface-inside: #313131; /* PANEL FOOTER */
+    --surface-border: #272727; /* INSIDE PANEL BORDER */
+    --surface-alt: #353535; /* SIDEBAR */
+    --surface-top: #383838; /* SIDEBAR TOP */
+
+    --primary: #3368ff; /* MAINLY FOR BUTTON */
+    --primary-hover: #2646a0;
+
+    --primary-var: #41ff33;
+    --primary-var-hover: #2ea026;
+
+    --primary-var-2: #03dac6;
+    
+    --secondary: #fff333;
+    --secondary-hover: #a09926;
+    
+    --error: #ff4d4d;
+    --error-hover: #a03535;
+
+    --normal-text: #fff; /* HEADER, ETC */
+    --normal-text-alt: #717171; /* SUBTITLES */
+    --on-primary: #121212; /* TEXT ON ACCENT */
+}
+
+body.light-mode {
+    /* This is CSS variable */
+    --background: #eceff1;
+}
