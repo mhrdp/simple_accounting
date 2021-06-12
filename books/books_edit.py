@@ -125,6 +125,7 @@ def delete_expense(request, pk):
         expense_obj = Journal.objects.get(pk=pk)
         if expense_obj:
             expense_obj.delete()
+            messages.success(request, 'Anda berhasil menghapus data ini')
             if not request.session['previous_page']:
                 return redirect('list_of_expense')
             else:

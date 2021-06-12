@@ -144,6 +144,8 @@ def journal(request):
     # Make a list to be looped with for loop
     page_range = list(paginator.page_range)[start_index:end_index]
     
+    request.session['previous_page'] = request.path_info + '?page=' + request.GET.get('page', '1')
+    
 
     content = {
         'paginate': journal,

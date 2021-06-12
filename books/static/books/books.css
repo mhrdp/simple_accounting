@@ -1,3 +1,7 @@
+label {
+	color: #fff !important;
+}
+
 .books-canvas-container {
     position: relative;
     margin: auto;

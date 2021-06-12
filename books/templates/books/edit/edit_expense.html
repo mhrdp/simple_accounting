@@ -6,7 +6,7 @@ Edit {{item_name}}
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
-<link href="/../../static/books/books_edit_expense.css" rel="stylesheet">
+<link href="/../../static/books/edit/books_edit_expense.css" rel="stylesheet">
 {% endblock css%}
 
 {% block content %}
@@ -28,7 +28,7 @@ Edit {{item_name}}
             </div>
             <form method="POST" id="expenseForm" data-expense-url="{% url 'dropdown_ajax' %}">
                 {% csrf_token %}
-                <div class="subtitles">
+                <div>
                     <p class="text-right"><strong><span class="text-rd">*</span> wajib diisi</strong></p>
 
                     <table class="w-100">

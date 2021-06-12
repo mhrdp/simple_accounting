@@ -4,12 +4,16 @@ a.expense-current {
 }
 
 .expense-form-container {
-    background-color: #29323c;
+    background-color: var(--surface);
     max-width: 60%;
     padding: 30px;
     margin: 0 auto;
-    border: 1px solid rgba(255, 255, 255, 0.336);
+    border: 1px solid var(--surface-border);
     border-radius: 20px;
+}
+
+.page-wrapper .page-content > div {
+    padding: 50px 20px 0 20px;
 }
 
 .table-border-top {
