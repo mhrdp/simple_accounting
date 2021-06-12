@@ -1,32 +1,30 @@
 {% extends 'base/base_test.html' %}
-<!-- A front end 'total' field will be added via js -->
 
 {% block title %}
-Add Income
+Edit {{product_name}}
 {% endblock title %}
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
-<link href="/../../static/books/register_income.css" rel="stylesheet">
+<link href="/../../static/books/edit/books_edit_income.css" rel="stylesheet">
 {% endblock css%}
 
 {% block content %}
 <div class="page-content">
-    <div class="w-100 h-100">
-        <div>
-            {% if messages %}
-                {% for msg in messages %}
-                    {% if msg.tags %}
-                        <div class="col-8 msg-{{msg.tags}}-container">
-                            <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        </div>
+    <div class="w-100">
+        {% if messages %}
+            {% for msg in messages %}
+                {% if msg.tags %}
+                    <div class="col-md-5 msg-{{msg.tags}}-container">
+                        <p class="msg-{{msg.tags}} text-center">{{msg}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         <div class="income-form-container">
             <div class="form-header">
-                <h5>Input Data Pemasukan</h5>
+                <h5>Edit Data Pemasukan</h5>
                 <hr />
             </div>
             <form method="POST" id="incomeForm" data-income-url="{% url 'income_form_autofill' %}">
@@ -96,16 +94,22 @@ Add Income
                             </tr>
                             <tr>
                                 <td class="cell-1">
-                                    <h5 class="subtitles">Total:</h5>
+                                    <h5>Total:</h5>
                                 </td>
                                 <td>
-                                    <h4 id="totalPrice" class="subtitles">0</h4>
+                                    <h4 id="totalPrice">0</h4>
                                 </td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td class="float-right">
-                                    <button type="submit" class="btn btn-color-primary mt-2">Submit</button>
+                                <td>
+                                </td>
+                                <td>
+                                    {% if not request.session.previous_page %}
+                                        <a href="{% url 'list_of_income' %}" class="link-info mt-3 ml-5">Cancel</a>
+                                    {% else %}
+                                        <a href="{{request.session.previous_page}}" class="link-info mt-3 ml-5">Cancel</a>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-color-primary btn-sm float-right">Submit</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -118,6 +122,16 @@ Add Income
 {% endblock content %}
 
 {% block js %}
+<script>
+    // To open the sub menu automatically when visiting this page
+    $(document).ready(function(){
+        $(".books-menu.sidebar-dropdown").addClass("active")
+        if($(".books-menu.sidebar-dropdown").hasClass("active")){
+            $(".books-menu.sidebar-dropdown > .sidebar-submenu").slideDown(200);
+        }
+    })
+</script>
+
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     $(document).ready(function(){
@@ -141,7 +155,7 @@ Add Income
 </script>
 <script>
     $(function(){
-        $("#id_quantity, #id_price, #id_additional_price").change(function(){
+        $("#id_quantity, #id_price, #id_additional_price").keyup(function(){
             var qty = parseFloat($("#id_quantity").val()) || 0;
             var prc = parseFloat($("#id_price").val()) || 0;
             var add_prc = parseFloat($("#id_additional_price").val()) || 0;

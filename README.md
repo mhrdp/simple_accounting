@@ -1,19 +1,17 @@
-# vilane-business
-Vislane's financial web based application dedicated to make simple accounting for better decisions making easier for small business owners than ever
+# Simple CRUD To Record Your Financial Activities
+A simple financial recording tools prototype that I develop for my friends. You could also use it if you are a small business owner, it covers up to income statement and convertable to pdf. Hope it can help you in any way or another!
 
-# Available Features
-<ol>
-    <li>Add data (Products, Sales, Expenditures)</li>
-    <li>Dashboard to show summary</li>
-    <li>List of your data (Products, Sales, Expenditures, Journal, Income Statement)</li>
-    <li>Various charts to understand your data easily</li>
-</ol>
+# Essential Informations
+- Demo: <a href="https://vislane-business.herokuapp.com">Here</a>
+	- For testing, you can log in with: username - test_user / test_user@mail.com; password - testing12345
+- Note that the UI's languange that was used for this tools is my native languange (not english)
+- Don't forget to install depedencies in the requirements.txt
+- To use this, you just need to register the product -> register your income or expenses -> and done.
 
-# Known Bugs
-## Collapsable sidebar acting weird in certain scenario
-Possible PC's browser only problem.
-
-This happened when you resize the screen to smaller size until the sidebar collapse automatically. <br />
-The way the bug appears was when you open the sidebar while the screen still at its small size in which the sidebar will collapse automatically, then resize the screen back to its original size while the sidebar still open at previous screen size.<br />
-This will make the sidebar close automatically, and when you wanted to open the sidebar again, normally you have to click on the toggle at the upper right section of  your screen. However, in this case when you click everywhere on the HTML body, the sidebar will appears, which it should not.<br />
- <b style="color:tomato">This only appears once everytime you change the screen size until the sidebar collapse, open it, and change it back to screen's original size</b>, after that it will back to normal where you open the sidebar using its toggle, and close it using the close icon or clicking anywhere on the HTML body.
+# Build With
+- Django 3.1
+- Python 3.6
+- Bootstrap 4
+- jQuery
+- ChartJS
+- print JS

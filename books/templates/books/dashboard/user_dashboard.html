@@ -1,0 +1,140 @@
+{% extends 'base/base_test.html' %}
+{% load humanize %}
+
+{% block title %}
+{{request.user.username}}'s Dashboard
+{% endblock title %}
+
+{% block css %}
+<link href="/../../static/books/user_dashboard/user_dashboard.css" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+<div class="page-content">
+    <h2 class="text-left" style="padding-left:30px; padding-top: 30px;">Dashboard</h2>
+
+    <div class="row">
+        {% include './dashboard_panel.html' %}
+    </div>
+
+    <div class="row">
+        {% include './dashboard_chart.html' %}
+    </div> 
+
+    <div class="row">
+        {% include './dashboard_table.html' %}
+    </div>
+</div> 
+{% endblock content %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.2/chart.min.js" integrity="sha512-dnUg2JxjlVoXHVdSMWDYm2Y5xcIrJg1N+juOuRi0yLVkku/g26rwHwysJDAMwahaDfRpr1AxFz43ktuMPr/l1A==" crossorigin="anonymous"></script>
+
+<script>
+    var ctx = document.getElementById("expenseChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+            {%for i in expense_in_running_month_per_day%}"{{i.date_added}}",{%endfor%}
+            ],
+            datasets: [{
+                label: "Expense",
+                data: [
+                {%for i in expense_in_running_month_per_day%}{{i.sum}},{%endfor%}
+                ],
+                backgroundColor: "#a03535",
+                borderColor: "#ff4d4d",
+                fill: true,
+                tension: .3,
+            }]
+        },
+        options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: true,
+
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+            scales: {
+                y: {
+                    display: true,
+                    beginAtZero: true, 
+                    ticks: {
+                        color: "#9e9e9e",
+                    },
+                    grid: {
+                        borderColor: "#9e9e9e",
+                        drawOnChartArea: false,
+                    },
+                },
+                x: {
+                    display: true,
+                    ticks: {
+                        color: "#9e9e9e",
+                    },
+                    grid: {
+                        borderColor: "#9e9e9e",
+                        drawOnChartArea: false,
+                    },
+                },
+            }
+        }
+    })
+
+    var ctx = document.getElementById("incomeChart").getContext("2d");
+    var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+            {%for i in income_in_running_month_per_day%}"{{i.date_added}}",{%endfor%}
+            ],
+            datasets: [{
+                label: "Income",
+                data: [
+                {%for i in income_in_running_month_per_day%}{{i.sum}},{%endfor%}
+                ],
+                backgroundColor: "#2ea026",
+                borderColor: "#41ff33",
+                fill: true,
+                tension: .3,
+            }]
+        },
+        options: {
+            // To make canvas height-width customizeable
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+            scales: {
+                y: {
+                    display: true,
+                    beginAtZero: true,
+                    ticks: {
+                        color: "#9e9e9e",
+                    },
+                    grid: {
+                        borderColor: "#9e9e9e",
+                        drawOnChartArea: false,
+                    },
+                },
+                x: {
+                    display: true,
+                    ticks: {
+                        color: "#9e9e9e",
+                    },
+                    grid: {
+                        borderColor: "#9e9e9e",
+                        drawOnChartArea: false,
+                    },
+                },
+            }
+        }
+    })
+</script>
+{% endblock js %}

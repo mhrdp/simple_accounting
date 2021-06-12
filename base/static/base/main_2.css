@@ -1,17 +1,7 @@
 body {
-    /* This is CSS's variable */
-    --theme-background: #121212;
-}
-
-body.light-mode {
-    /* This is CSS variable */
-    --theme-background: #eceff1;
-}
-
-body {
-    background-color: var(--theme-background);
+    background-color: var(--background);
     overflow-x: hidden;
-    font-family: 'Dosis', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .margin-auto {
@@ -47,7 +37,8 @@ a {
     width: 100vw;
     position: fixed;
     z-index: 990;
-    background-color: #3a3f48;
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--surface-alt)
 }
 
 /* Button */
@@ -61,22 +52,42 @@ a {
 }
 
 .btn-color-primary {
-    background-color: #3e50b4;
+    background-color: var(--primary);
     border-width: 2px;
-    border-color: #77a4d3;
+    border-color: var(--primary);
 }
 
 .btn-color-primary:hover {
-    background-color: #77a4d3;
+    background-color: var(--primary-hover);
 }
 
 .btn-secondary {
-    border-color: #a4a29e !important;
+    border-color: var(--secondary) !important;
     border-width: 2px;
+    background-color: var(--secondary) !important;
 }
 
 .btn-secondary:hover {
-    background-color: #a4a29e !important;
+    background-color: var(--secondary-hover) !important;
+}
+
+.btn-accent {
+    border-color: var(--primary-var);
+    background-color: var(--primary-var);
+    border-width: 2px;
+}
+
+.btn-accent:hover {
+    background-color: var(--primary-var-hover);
+}
+
+.btn-danger {
+    border-color: var(--error) !important;
+    border-width: 2px;
+    background-color: var(--error) !important;
+}
+.btn-danger:hover {
+    background-color: var(--error-hover) !important;
 }
 
 .btn-transparent {
@@ -95,24 +106,6 @@ a {
 
 .btn-transparent-scd:hover {
     color: rgba(255, 255, 255, 0.5);
-}
-
-.btn-warning {
-    border-color: #f6d33c !important;
-    border-width: 2px;
-}
-
-.btn-warning:hover {
-    background-color: #f6d33c !important;
-}
-
-.btn-danger {
-    border-color: #dc3545 !important;
-    border-width: 2px;
-    background-color: #b00020 !important;
-}
-.btn-danger:hover {
-    background-color: #dc3545 !important;
 }
 
 .btn-smooth {
@@ -149,7 +142,7 @@ a {
 }
 
 .msg-error {
-    color: red;
+    color: var(--error);
     font-weight: bold;;
 }
 
@@ -167,17 +160,16 @@ a {
 
 
 /* Text */
-h1, h2, h3, h4, h5, h6 {
-    color: #fff;
+h1, h2, h3, h4, h5, h6, p {
+    color: var(--normal-text);
 }
 
 .error-notification {
-    color: tomato
+    color: var(--error);
 }
 
 .subtitles {
-    color: #fff;
-    opacity: .7 !important;
+    color: var(--normal-text-alt)
 }
 
 .link-btn {
@@ -189,15 +181,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-gr {
-    color: #8cfe36 !important;
+    color: var(--primary-var) !important;
 }
 
 .text-rd {
-    color: #ff4646;
+    color: var(--error);
 }
 
 .text-white {
-    color: #fff;
+    color: var(--normal-text);
 }
 
 .text-inline {

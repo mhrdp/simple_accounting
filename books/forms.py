@@ -14,28 +14,39 @@ class IncomeForm(forms.ModelForm):
                 'type':'date'
                 }
         ),
-        initial=date.today,
+        initial = date.today,
     )
     quantity = forms.IntegerField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control form-control-sm'}
-        )
+            attrs={'class':'form-control form-control-sm',}
+        ),
+        initial = 0,
     )
+
     price = forms.DecimalField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control form-control-sm',}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Harga...',
+                }
         )
     )
     additional_price = forms.DecimalField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control form-control-sm'}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Harga Tambahan...',
+                }
         ),
         required=False,
         initial=0
     )
     notes = forms.CharField(
         widget=forms.Textarea(
-            attrs={'class':'form-control form-control-sm'}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Notes...',
+                }
         ),
         required=False,
     )
@@ -54,7 +65,10 @@ class IncomeForm(forms.ModelForm):
         self.fields['product_name'] = forms.ModelChoiceField(
             queryset=Product.objects.filter(username=user).order_by('product_name'),
             widget=forms.Select(
-                attrs={'class':'form-control form-control-sm'}
+                attrs={
+                    'class':'form-control form-control-sm',
+                    'placeholder': 'Nama Produk...',
+                    }
             ),
             required=True,
         )
@@ -72,34 +86,50 @@ class ExpenseForm(forms.ModelForm):
     
     item_name = forms.CharField(
         widget=forms.TextInput(
-            attrs={'class':'form-control form-control-sm'}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Nama Barang...',
+                }
         )
     )
     category = forms.ModelChoiceField(
         queryset=ExpenseCategory.objects.all().order_by('category'),
         widget=forms.Select(
-            attrs={'class':'form-control form-control-sm'}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Kategori...',
+                }
         )
     )
     sub_category = forms.ModelChoiceField(
         queryset=SubCategory.objects.none(),
         widget=forms.Select(
-            attrs={'class':'form-control form-control-sm'}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Kategori Tambahan...',
+                }
         )
     )
     quantity = forms.IntegerField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control form-control-sm'}
-        )
+            attrs={'class':'form-control form-control-sm',}
+        ),
+        initial = 0,
     )
     price = forms.DecimalField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control form-control-sm'}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Harga...',
+                }
         )
     )
     notes = forms.CharField(
         widget=forms.Textarea(
-            attrs={'class':'form-control form-control-sm'}
+            attrs={
+                'class':'form-control form-control-sm',
+                'placeholder': 'Catatan Tambahan...'
+                }
         ),
         required=False,
     )
@@ -138,18 +168,25 @@ class ProductForm(forms.ModelForm):
 
     product_name = forms.CharField(
         widget=forms.TextInput(
-            attrs={'class':'form-control'}
+            attrs={
+                'class':'form-control',
+                'placeholder': 'Nama Produk...',
+                }
         )
     )
     price = forms.DecimalField(
         widget=forms.NumberInput(
-            attrs={'class':'form-control'}
+            attrs={
+                'class':'form-control',
+                'placeholder': 'Harga...',
+                }
         )
     )
 
     types = forms.ChoiceField(
         widget=forms.Select(
-            attrs={'class':'form-control'}
+            attrs={
+                'class':'form-control'}
         ),
         choices=PRODUCT_TYPES,
     )

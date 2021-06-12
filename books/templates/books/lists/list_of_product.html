@@ -7,7 +7,7 @@ Daftar Produk
 
 {% block css %}
 <link href="/../../static/books/books.css" rel="stylesheet">
-<link href="/../../static/books/product_list.css" rel="stylesheet">
+<link href="/../../static/books/lists/product_list.css" rel="stylesheet">
 {% endblock css %}
 
 {% block content %}
@@ -17,10 +17,10 @@ Daftar Produk
 
 <div class="page-content">
     <div class="books-header">
-        <h4><strong>Buku Pengeluaran</strong></h4>
+        <h4><strong>Daftar Produk</strong></h4>
     </div>
     <div class="books-header-subtitles subtitles mb-5">
-        <p>Daftar lengkap data pengeluaran</p>
+        <p>Daftar lengkap data produk Anda</p>
     </div>
     <div class="row filter-container">
         <div class="w-100">
@@ -59,10 +59,11 @@ Daftar Produk
     </div>
 
     <div class="table-responsive-xl">
-        <table class="table table-bordered table-dark table-striped subtitles table-font-resize table-sm">
+        <table class="table table-bordered table-dark table-striped table-font-resize table-sm">
             <thead class="thead-dark">
                 <tr>
                     <th>No.</th>
+                    <th>ID</th>
                     <th>Nama Produk</th>
                     <th>Jenis</th>
                     <th>Harga</th>
@@ -73,6 +74,7 @@ Daftar Produk
                 {% for product in paginate %}
                 <tr>
                     <td scope="row">{{forloop.counter}}</td>
+                    <td>PRD-{{product.pk}}</td>
                     <td>{{product.product_name}}</td>
                     <td>{{product.types}}</td>
                     <td>Rp.{{product.price|intcomma}}</td>
